@@ -1,0 +1,423 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Certificate — {{ certificate.skill_name }} | SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/certificate.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="certificate-page">
+
+    <!-- Background decoration -->
+    <div class="certificate-bg" aria-hidden="true">
+        <div class="certificate-orb orb-one"></div>
+        <div class="certificate-orb orb-two"></div>
+        <div class="certificate-orb orb-three"></div>
+
+        <span class="certificate-sparkle sparkle-one">✦</span>
+        <span class="certificate-sparkle sparkle-two">✧</span>
+        <span class="certificate-sparkle sparkle-three">✦</span>
+        <span class="certificate-sparkle sparkle-four">✧</span>
+    </div>
+
+    <div class="certificate-container">
+
+        <!-- Top actions -->
+        <div class="certificate-page-actions">
+
+            <a
+                href="{{ url_for('certificates') }}"
+                class="back-link"
+            >
+                <span>←</span>
+                Back to Certificates
+            </a>
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="text-link"
+            >
+                Dashboard
+                <span>→</span>
+            </a>
+
+        </div>
+
+
+        <!-- Certificate document -->
+        <article class="certificate-document">
+
+            <!-- Decorative border -->
+            <div class="certificate-inner-border"></div>
+
+            <div class="certificate-decoration certificate-decoration-left">
+                ✦
+            </div>
+
+            <div class="certificate-decoration certificate-decoration-right">
+                ✦
+            </div>
+
+
+            <!-- Brand -->
+            <div class="certificate-brand">
+
+                <div class="certificate-logo">
+                    SS
+                </div>
+
+                <div class="certificate-brand-text">
+                    <strong>SkillSwap</strong>
+                    <span>Learn. Teach. Exchange.</span>
+                </div>
+
+            </div>
+
+
+            <!-- Title -->
+            <div class="certificate-title">
+
+                <span class="section-label">
+                    Certificate of Achievement
+                </span>
+
+                <h1>
+                    Certificate of Completion
+                </h1>
+
+                <p>
+                    This certificate is proudly presented to
+                </p>
+
+            </div>
+
+
+            <!-- Recipient -->
+            <div class="certificate-recipient">
+
+                <h2>
+                    {{ certificate.user_name|default(current_user.full_name) }}
+                </h2>
+
+                {% if certificate.username %}
+                <span>
+                    @{{ certificate.username }}
+                </span>
+                {% endif %}
+
+            </div>
+
+
+            <!-- Achievement -->
+            <div class="certificate-achievement">
+
+                <p>
+                    for successfully completing the
+                </p>
+
+                <h2>
+                    {{ certificate.skill_name }}
+                </h2>
+
+                {% if certificate.earned_level %}
+
+                <div class="certificate-earned-level">
+
+                    <small>
+                        Earned Skill Level
+                    </small>
+
+                    <strong>
+                        {{ certificate.earned_level }}
+                    </strong>
+
+                </div>
+
+                {% endif %}
+
+                <p>
+                    learning roadmap through structured learning,
+                    practical tasks and demonstrated progress.
+                </p>
+
+            </div>
+
+
+            <!-- Verification -->
+            <div class="certificate-verification">
+
+                <div class="verification-seal">
+                    ✓
+                </div>
+
+                <div class="verification-content">
+
+                    <span class="section-label">
+                        SkillSwap Verified Achievement
+                    </span>
+
+                    <p>
+                        This achievement is generated from the learner's
+                        recorded assessment and roadmap completion.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Details -->
+            <div class="certificate-details-grid">
+
+                <div class="certificate-detail">
+
+                    <small>
+                        Certificate ID
+                    </small>
+
+                    <strong>
+                        {{ certificate.certificate_number|default(
+                            'SS-' ~ certificate.id
+                        ) }}
+                    </strong>
+
+                </div>
+
+
+                <div class="certificate-detail">
+
+                    <small>
+                        Skill
+                    </small>
+
+                    <strong>
+                        {{ certificate.skill_name }}
+                    </strong>
+
+                </div>
+
+
+                <div class="certificate-detail">
+
+                    <small>
+                        Level Earned
+                    </small>
+
+                    <strong>
+                        {{ certificate.earned_level|default('Completed') }}
+                    </strong>
+
+                </div>
+
+
+                <div class="certificate-detail">
+
+                    <small>
+                        Issued On
+                    </small>
+
+                    <strong>
+
+                        {% if certificate.issued_at %}
+                            {{ certificate.issued_at.strftime('%d %B %Y') }}
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- Signatures -->
+            <div class="certificate-signatures">
+
+                <div class="certificate-signature">
+
+                    <div class="signature-line"></div>
+
+                    <strong>
+                        SkillSwap
+                    </strong>
+
+                    <span>
+                        Learning Platform
+                    </span>
+
+                </div>
+
+
+                <div class="certificate-seal-large">
+
+                    <span>
+                        SS
+                    </span>
+
+                    <small>
+                        VERIFIED
+                    </small>
+
+                </div>
+
+
+                <div class="certificate-signature">
+
+                    <div class="signature-line"></div>
+
+                    <strong>
+                        SkillSwap Verification
+                    </strong>
+
+                    <span>
+                        Achievement Record
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Document footer -->
+            <div class="certificate-document-footer">
+
+                <span>
+                    Learn. Practice. Prove. Grow.
+                </span>
+
+                {% if certificate.completed_at %}
+
+                <span>
+                    Completed
+                    {{ certificate.completed_at.strftime('%d %B %Y') }}
+                </span>
+
+                {% endif %}
+
+            </div>
+
+        </article>
+
+
+        <!-- Certificate information -->
+        <section class="certificate-information">
+
+            <div class="certificate-information-content">
+
+                <span class="section-label">
+                    About This Certificate
+                </span>
+
+                <h2>
+                    Your achievement is based on actual progress.
+                </h2>
+
+                <p>
+                    SkillSwap certificates are connected to your
+                    learning journey. Your skill level comes from
+                    assessment, while completion comes from working
+                    through the roadmap and finishing the required
+                    practical tasks.
+                </p>
+
+            </div>
+
+
+            <div class="certificate-information-points">
+
+                <div class="certificate-information-point">
+
+                    <span class="point-icon">
+                        ✓
+                    </span>
+
+                    <div>
+                        <strong>
+                            Assessed Skill
+                        </strong>
+
+                        <p>
+                            Your displayed level comes from your
+                            SkillSwap assessment.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="certificate-information-point">
+
+                    <span class="point-icon">
+                        ✓
+                    </span>
+
+                    <div>
+                        <strong>
+                            Roadmap Completion
+                        </strong>
+
+                        <p>
+                            Required topics and practical tasks
+                            must be completed.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="certificate-information-point">
+
+                    <span class="point-icon">
+                        ✓
+                    </span>
+
+                    <div>
+                        <strong>
+                            Achievement Record
+                        </strong>
+
+                        <p>
+                            Your certificate is linked to your
+                            SkillSwap learning record.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Bottom actions -->
+        <div class="certificate-bottom-actions">
+
+            <a
+                href="{{ url_for('certificates') }}"
+                class="btn btn-secondary"
+            >
+                All Certificates
+            </a>
+
+            <a
+                href="{{ url_for('progress') }}"
+                class="btn btn-primary"
+            >
+                View Progress
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

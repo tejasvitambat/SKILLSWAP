@@ -1,0 +1,639 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Notifications — SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/notifications.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="notifications-page">
+
+    <!-- Background decoration -->
+    <div class="notification-orb orb-one"></div>
+    <div class="notification-orb orb-two"></div>
+    <div class="notification-orb orb-three"></div>
+
+    <div class="notifications-container">
+
+        <!-- ================= HEADER ================= -->
+
+        <header class="notifications-header">
+
+            <div class="notifications-heading">
+
+                <span class="section-label">
+                    Stay Updated
+                </span>
+
+                <h1>
+                    Your <span>Notifications</span>
+                </h1>
+
+                <p>
+                    Keep track of your connections, sessions and
+                    learning progress.
+                </p>
+
+            </div>
+
+            {% if unread_count and unread_count > 0 %}
+
+            <form
+                action="{{ url_for('mark_all_notifications_read') }}"
+                method="POST"
+                class="mark-all-form"
+            >
+                <button
+                    type="submit"
+                    class="btn btn-secondary notification-mark-all"
+                >
+                    <span class="button-icon">✓</span>
+                    Mark all as read
+                </button>
+            </form>
+
+            {% endif %}
+
+        </header>
+
+
+        <!-- ================= SUMMARY ================= -->
+
+        <div class="notification-summary">
+
+            <div class="notification-summary-card unread-summary">
+
+                <div class="summary-icon">
+                    <span>✦</span>
+                </div>
+
+                <div class="summary-content">
+                    <span class="summary-number">
+                        {{ unread_count|default(0) }}
+                    </span>
+
+                    <span class="summary-label">
+                        Unread
+                    </span>
+                </div>
+
+            </div>
+
+
+            <div class="notification-summary-card total-summary">
+
+                <div class="summary-icon">
+                    <span>◌</span>
+                </div>
+
+                <div class="summary-content">
+                    <span class="summary-number">
+                        {{ total_notifications|default(0) }}
+                    </span>
+
+                    <span class="summary-label">
+                        Total Notifications
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= NOTIFICATIONS ================= -->
+
+        <div class="notifications-section">
+
+            {% if notifications %}
+
+                <div class="notifications-list">
+
+                    {% for notification in notifications %}
+
+                    <article
+                        class="notification-card
+                        {% if not notification.is_read %}
+                            unread
+                        {% endif %}"
+                    >
+
+                        <!-- Decorative glow -->
+                        <div class="notification-card-glow"></div>
+
+                        <!-- ICON -->
+
+                        <div class="notification-icon">
+
+                            <div class="notification-icon-inner">
+
+                                {% if notification.notification_type == 'connection_request' %}
+                                    ⇄
+
+                                {% elif notification.notification_type == 'connection_accepted' %}
+                                    ✓
+
+                                {% elif notification.notification_type == 'connection_declined' %}
+                                    ×
+
+                                {% elif notification.notification_type == 'session_request' %}
+                                    ◷
+
+                                {% elif notification.notification_type == 'session_accepted' %}
+                                    ✓
+
+                                {% elif notification.notification_type == 'session_declined' %}
+                                    ×
+
+                                {% elif notification.notification_type == 'session_completed' %}
+                                    ★
+
+                                {% elif notification.notification_type == 'review' %}
+                                    ★
+
+                                {% elif notification.notification_type == 'progress' %}
+                                    ↗
+
+                                {% elif notification.notification_type == 'certificate' %}
+                                    ◆
+
+                                {% else %}
+                                    •
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- CONTENT -->
+
+                        <div class="notification-content">
+
+                            <div class="notification-top">
+
+                                <div class="notification-title-wrap">
+
+                                    <h3>
+                                        {{ notification.title }}
+                                    </h3>
+
+                                    {% if not notification.is_read %}
+                                        <span
+                                            class="unread-dot"
+                                            title="Unread"
+                                        ></span>
+                                    {% endif %}
+
+                                </div>
+
+                                {% if not notification.is_read %}
+                                    <span class="unread-label">
+                                        NEW
+                                    </span>
+                                {% endif %}
+
+                            </div>
+
+
+                            {% if notification.message %}
+
+                            <p class="notification-message">
+                                {{ notification.message }}
+                            </p>
+
+                            {% endif %}
+
+
+                            <div class="notification-meta">
+
+                                {% if notification.created_at %}
+
+                                <time
+                                    datetime="{{ notification.created_at.isoformat() }}"
+                                >
+                                    <span class="meta-icon">◷</span>
+                                    {{ notification.created_at.strftime(
+                                        '%d %B %Y, %I:%M %p'
+                                    ) }}
+                                </time>
+
+                                {% endif %}
+
+
+                                {% if notification.category %}
+
+                                <span class="notification-category">
+                                    {{ notification.category }}
+                                </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- ACTION -->
+
+                            {% if notification.action_url %}
+
+                            <div class="notification-action">
+
+                                <a
+                                    href="{{ notification.action_url }}"
+                                    class="notification-link"
+                                >
+                                    {{ notification.action_text|default(
+                                        'View details'
+                                    ) }}
+                                    <span>→</span>
+                                </a>
+
+                            </div>
+
+                            {% else %}
+
+                                {% if notification.notification_type == 'connection_request' %}
+
+                                <div class="notification-action">
+                                    <a
+                                        href="{{ url_for('connections') }}"
+                                        class="notification-link"
+                                    >
+                                        View connection request
+                                        <span>→</span>
+                                    </a>
+                                </div>
+
+                                {% elif notification.notification_type in [
+                                    'connection_accepted',
+                                    'connection_declined'
+                                ] %}
+
+                                <div class="notification-action">
+                                    <a
+                                        href="{{ url_for('connections') }}"
+                                        class="notification-link"
+                                    >
+                                        View connections
+                                        <span>→</span>
+                                    </a>
+                                </div>
+
+                                {% elif notification.notification_type in [
+                                    'session_request',
+                                    'session_accepted',
+                                    'session_declined',
+                                    'session_completed'
+                                ] %}
+
+                                <div class="notification-action">
+                                    <a
+                                        href="{{ url_for('sessions') }}"
+                                        class="notification-link"
+                                    >
+                                        View sessions
+                                        <span>→</span>
+                                    </a>
+                                </div>
+
+                                {% elif notification.notification_type == 'review' %}
+
+                                <div class="notification-action">
+                                    <a
+                                        href="{{ url_for('reviews') }}"
+                                        class="notification-link"
+                                    >
+                                        View reviews
+                                        <span>→</span>
+                                    </a>
+                                </div>
+
+                                {% elif notification.notification_type == 'progress' %}
+
+                                <div class="notification-action">
+                                    <a
+                                        href="{{ url_for('progress') }}"
+                                        class="notification-link"
+                                    >
+                                        View progress
+                                        <span>→</span>
+                                    </a>
+                                </div>
+
+                                {% elif notification.notification_type == 'certificate' %}
+
+                                <div class="notification-action">
+                                    <a
+                                        href="{{ url_for('certificates') }}"
+                                        class="notification-link"
+                                    >
+                                        View certificates
+                                        <span>→</span>
+                                    </a>
+                                </div>
+
+                                {% endif %}
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- MARK READ -->
+
+                        {% if not notification.is_read %}
+
+                        <form
+                            action="{{ url_for(
+                                'mark_notification_read',
+                                notification_id=notification.id
+                            ) }}"
+                            method="POST"
+                            class="notification-read-form"
+                        >
+
+                            <button
+                                type="submit"
+                                class="notification-read-button"
+                                title="Mark as read"
+                                aria-label="Mark notification as read"
+                            >
+                                <span>✓</span>
+                            </button>
+
+                        </form>
+
+                        {% endif %}
+
+                    </article>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- ================= PAGINATION ================= -->
+
+                {% if pagination %}
+
+                <div class="notifications-pagination">
+
+                    <div class="pagination-side">
+
+                        {% if pagination.has_prev %}
+
+                        <a
+                            href="{{ url_for(
+                                'notifications',
+                                page=pagination.prev_num
+                            ) }}"
+                            class="btn btn-secondary pagination-button"
+                        >
+                            ← Previous
+                        </a>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="pagination-info">
+
+                        <span class="pagination-current">
+                            {{ pagination.page }}
+                        </span>
+
+                        <span class="pagination-divider">
+                            /
+                        </span>
+
+                        <span>
+                            {{ pagination.pages }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="pagination-side pagination-next">
+
+                        {% if pagination.has_next %}
+
+                        <a
+                            href="{{ url_for(
+                                'notifications',
+                                page=pagination.next_num
+                            ) }}"
+                            class="btn btn-secondary pagination-button"
+                        >
+                            Next →
+                        </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+
+            {% else %}
+
+                <!-- ================= EMPTY STATE ================= -->
+
+                <div class="notifications-empty">
+
+                    <div class="empty-visual">
+
+                        <div class="empty-ring ring-one"></div>
+                        <div class="empty-ring ring-two"></div>
+
+                        <div class="empty-icon">
+                            ✓
+                        </div>
+
+                    </div>
+
+                    <span class="section-label">
+                        All Caught Up
+                    </span>
+
+                    <h2>
+                        No notifications yet
+                    </h2>
+
+                    <p>
+                        When someone connects with you, schedules
+                        a session, reviews you or you make learning
+                        progress, updates will appear here.
+                    </p>
+
+
+                    <div class="empty-actions">
+
+                        <a
+                            href="{{ url_for('matches') }}"
+                            class="btn btn-primary"
+                        >
+                            Find Skill Matches
+                            <span>→</span>
+                        </a>
+
+                        <a
+                            href="{{ url_for('dashboard') }}"
+                            class="btn btn-secondary"
+                        >
+                            Go to Dashboard
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ================= NOTIFICATION TYPES ================= -->
+
+        <section class="notification-info">
+
+            <div class="notification-info-header">
+
+                <div>
+                    <span class="section-label">
+                        What You'll See
+                    </span>
+
+                    <h2>
+                        SkillSwap <span>updates</span>
+                    </h2>
+                </div>
+
+                <div class="info-sparkle">
+                    ✦
+                </div>
+
+            </div>
+
+
+            <div class="notification-types">
+
+                <div class="notification-type">
+
+                    <span class="notification-type-icon">
+                        ⇄
+                    </span>
+
+                    <div>
+                        <strong>
+                            Connections
+                        </strong>
+
+                        <p>
+                            New requests, accepted connections
+                            and connection updates.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="notification-type">
+
+                    <span class="notification-type-icon">
+                        ◷
+                    </span>
+
+                    <div>
+                        <strong>
+                            Sessions
+                        </strong>
+
+                        <p>
+                            Session requests, confirmations,
+                            changes and completions.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="notification-type">
+
+                    <span class="notification-type-icon">
+                        ↗
+                    </span>
+
+                    <div>
+                        <strong>
+                            Learning Progress
+                        </strong>
+
+                        <p>
+                            Roadmap milestones, completed topics
+                            and unlocked learning stages.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="notification-type">
+
+                    <span class="notification-type-icon">
+                        ★
+                    </span>
+
+                    <div>
+                        <strong>
+                            Reviews & Certificates
+                        </strong>
+
+                        <p>
+                            New reviews, ratings and certificates
+                            earned through your progress.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= BOTTOM ACTIONS ================= -->
+
+        <div class="notifications-bottom-actions">
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="btn btn-secondary"
+            >
+                Dashboard
+            </a>
+
+            <a
+                href="{{ url_for('matches') }}"
+                class="btn btn-primary"
+            >
+                Explore Matches
+                <span>→</span>
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

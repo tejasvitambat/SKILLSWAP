@@ -1,0 +1,971 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ user.full_name }} — SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/profile.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="profile-page">
+
+    <div class="profile-container">
+
+        <!-- =====================================================
+             PROFILE HERO
+        ====================================================== -->
+
+        <section class="profile-hero">
+
+            <div class="hero-glow hero-glow-one"></div>
+            <div class="hero-glow hero-glow-two"></div>
+
+            <div class="profile-hero-inner">
+
+                <!-- PROFILE PHOTO -->
+
+                <div class="profile-avatar-area">
+
+                    <div class="profile-avatar">
+
+                        {% if user.profile_photo %}
+
+                            <img
+                                src="{{ url_for(
+                                    'uploaded_file',
+                                    filename=user.profile_photo
+                                ) }}"
+                                alt="{{ user.full_name }}"
+                            >
+
+                        {% else %}
+
+                            <span>
+                                {{ user.full_name[0]|upper }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                    <span class="profile-status-dot"></span>
+
+                </div>
+
+
+                <!-- PROFILE INFORMATION -->
+
+                <div class="profile-identity">
+
+                    <span class="profile-eyebrow">
+                        SKILLSWAP MEMBER
+                    </span>
+
+                    <div class="profile-title-row">
+
+                        <h1>
+                            {{ user.full_name }}
+                        </h1>
+
+                        {% if user.is_verified %}
+
+                            <span class="verified-badge">
+                                ✓ Verified
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <p class="profile-username">
+                        @{{ user.username }}
+                    </p>
+
+
+                    {% if user.city or user.country %}
+
+                        <div class="profile-location">
+
+                            <span class="location-icon">
+                                ◉
+                            </span>
+
+                            <span>
+
+                                {% if user.city %}
+                                    {{ user.city }}
+                                {% endif %}
+
+                                {% if user.city and user.country %}
+                                    ,
+                                {% endif %}
+
+                                {% if user.country %}
+                                    {{ user.country }}
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <div class="profile-rating">
+
+                        <span class="rating-stars">
+                            ★★★★★
+                        </span>
+
+                        <strong>
+                            {{ user.average_rating|default(0) }}
+                        </strong>
+
+                        <span class="rating-count">
+                            {{ user.review_count|default(0) }} reviews
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PROFILE ACTION -->
+
+                <div class="profile-action">
+
+                    {% if is_self %}
+
+                        <a
+                            href="{{ url_for('edit_profile') }}"
+                            class="profile-button profile-button-primary"
+                        >
+                            <span>✦</span>
+                            Edit Profile
+                        </a>
+
+                    {% elif connection_status == 'connected' %}
+
+                        <a
+                            href="{{ url_for(
+                                'chat',
+                                connection_id=connection_id
+                            ) }}"
+                            class="profile-button profile-button-primary"
+                        >
+                            Message
+                            <span>→</span>
+                        </a>
+
+                    {% elif connection_status == 'pending_sent' %}
+
+                        <button
+                            type="button"
+                            class="profile-button profile-button-disabled"
+                            disabled
+                        >
+                            Request Sent
+                        </button>
+
+                    {% elif connection_status == 'pending_received' %}
+
+                        <form
+                            action="{{ url_for(
+                                'accept_connection_request',
+                                connection_id=connection_id
+                            ) }}"
+                            method="POST"
+                        >
+
+                            <button
+                                type="submit"
+                                class="profile-button profile-button-primary"
+                            >
+                                Accept Request
+                            </button>
+
+                        </form>
+
+                    {% else %}
+
+                        <form
+                            action="{{ url_for(
+                                'send_connection_request',
+                                user_id=user.id
+                            ) }}"
+                            method="POST"
+                        >
+
+                            <button
+                                type="submit"
+                                class="profile-button profile-button-primary"
+                            >
+                                Connect
+                                <span>→</span>
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             ABOUT
+        ====================================================== -->
+
+        <section class="profile-block about-block">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-eyebrow">
+                        ABOUT
+                    </span>
+
+                    <h2>
+                        A little about {{ user.full_name }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="about-card">
+
+                <div class="about-mark">
+                    “
+                </div>
+
+                {% if user.bio %}
+
+                    <p>
+                        {{ user.bio }}
+                    </p>
+
+                {% else %}
+
+                    <p class="empty-text">
+                        This person hasn't added a bio yet.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             STATS
+        ====================================================== -->
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ◌
+                </div>
+
+                <div class="stat-content">
+
+                    <strong>
+                        {{ completed_sessions|default(0) }}
+                    </strong>
+
+                    <span>
+                        Sessions completed
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ◷
+                </div>
+
+                <div class="stat-content">
+
+                    <strong>
+                        {{ total_learning_hours|default(0) }}
+                    </strong>
+
+                    <span>
+                        Learning hours
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ✦
+                </div>
+
+                <div class="stat-content">
+
+                    <strong>
+                        {{ skills_completed|default(0) }}
+                    </strong>
+
+                    <span>
+                        Skills progressed
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ♡
+                </div>
+
+                <div class="stat-content">
+
+                    <strong>
+                        {{ member_since|default('New') }}
+                    </strong>
+
+                    <span>
+                        Member since
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             TEACH + LEARN
+        ====================================================== -->
+
+        <section class="skills-area">
+
+            <!-- TEACH -->
+
+            <div class="profile-block skill-block">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            TEACH
+                        </span>
+
+                        <h2>
+                            Skills I can teach
+                        </h2>
+
+                        <p>
+                            Knowledge this person can share.
+                        </p>
+
+                    </div>
+
+
+                    {% if is_self %}
+
+                        <a
+                            href="{{ url_for('skills') }}"
+                            class="manage-link"
+                        >
+                            Manage
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="skill-list">
+
+                    {% for skill in teach_skills %}
+
+                        <article class="skill-card">
+
+                            <div class="skill-card-main">
+
+                                <div class="skill-icon">
+                                    +
+                                </div>
+
+                                <div class="skill-text">
+
+                                    <strong>
+                                        {{ skill.name }}
+                                    </strong>
+
+                                    <span>
+                                        {{ skill.category }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="skill-status">
+
+                                {% if skill.level %}
+
+                                    <span
+                                        class="level-badge level-{{ skill.level|lower }}"
+                                    >
+                                        {{ skill.level }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="pending-badge">
+                                        Assessment pending
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </article>
+
+                    {% else %}
+
+                        <div class="empty-skill-state">
+
+                            <div>
+                                +
+                            </div>
+
+                            <p>
+                                No teaching skills added yet.
+                            </p>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+
+            <!-- LEARN -->
+
+            <div class="profile-block skill-block">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            LEARN
+                        </span>
+
+                        <h2>
+                            Skills I want to learn
+                        </h2>
+
+                        <p>
+                            Areas this person wants to explore.
+                        </p>
+
+                    </div>
+
+
+                    {% if is_self %}
+
+                        <a
+                            href="{{ url_for('skills') }}"
+                            class="manage-link"
+                        >
+                            Manage
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="skill-list">
+
+                    {% for skill in learn_skills %}
+
+                        <article class="skill-card">
+
+                            <div class="skill-card-main">
+
+                                <div class="skill-icon learn-icon">
+                                    ↗
+                                </div>
+
+                                <div class="skill-text">
+
+                                    <strong>
+                                        {{ skill.name }}
+                                    </strong>
+
+                                    <span>
+                                        {{ skill.category }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="skill-status">
+
+                                {% if skill.progress is defined %}
+
+                                    <span class="learning-badge">
+                                        {{ skill.progress }}%
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="learning-badge">
+                                        Learning
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </article>
+
+                    {% else %}
+
+                        <div class="empty-skill-state">
+
+                            <div>
+                                +
+                            </div>
+
+                            <p>
+                                No learning skills added yet.
+                            </p>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             PROGRESS
+        ====================================================== -->
+
+        {% if is_self and teach_skills %}
+
+            <section class="profile-block progress-block">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            PROGRESS
+                        </span>
+
+                        <h2>
+                            Your skill journey
+                        </h2>
+
+                        <p>
+                            Keep learning, practicing and improving.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="progress-list">
+
+                    {% for skill in teach_skills %}
+
+                        <div class="progress-item">
+
+                            <div class="progress-top">
+
+                                <div>
+
+                                    <strong>
+                                        {{ skill.name }}
+                                    </strong>
+
+                                    <span>
+                                        {{ skill.level|default('Assessment pending') }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="progress-line">
+
+                                <div class="progress-track">
+
+                                    <span
+                                        class="progress-fill"
+                                        data-progress="{{
+                                            skill.assessment_score
+                                            |default(0)
+                                            |round
+                                            |int
+                                        }}"
+                                    ></span>
+
+                                </div>
+
+                                <strong class="progress-number">
+
+                                    {{
+                                        skill.assessment_score
+                                        |default(0)
+                                        |round
+                                        |int
+                                    }}%
+
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+        {% endif %}
+
+
+        <!-- =====================================================
+             CERTIFICATES
+        ====================================================== -->
+
+        {% if certificates %}
+
+            <section class="profile-block certificate-block">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            ACHIEVEMENTS
+                        </span>
+
+                        <h2>
+                            Earned certificates
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="certificate-grid">
+
+                    {% for certificate in certificates %}
+
+                        <a
+                            href="{{ url_for(
+                                'certificate',
+                                certificate_id=certificate.id
+                            ) }}"
+                            class="certificate-card"
+                        >
+
+                            <div class="certificate-icon">
+                                ✦
+                            </div>
+
+                            <div class="certificate-info">
+
+                                <strong>
+                                    {{ certificate.skill_name }}
+                                </strong>
+
+                                <span>
+                                    {{ certificate.earned_level|default('Completed') }}
+                                </span>
+
+                            </div>
+
+                            <span class="certificate-arrow">
+                                →
+                            </span>
+
+                        </a>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+        {% endif %}
+
+
+        <!-- =====================================================
+             REVIEWS
+        ====================================================== -->
+
+        <section class="profile-block reviews-block">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-eyebrow">
+                        REVIEWS
+                    </span>
+
+                    <h2>
+                        What skill partners say
+                    </h2>
+
+                    <p>
+                        Experiences from previous skill exchanges.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="reviews-grid">
+
+                {% for review in reviews %}
+
+                    <article class="review-card">
+
+                        <div class="review-header">
+
+                            <div class="review-person">
+
+                                <div class="review-avatar">
+
+                                    {% if review.reviewer.profile_photo %}
+
+                                        <img
+                                            src="{{ url_for(
+                                                'uploaded_file',
+                                                filename=review.reviewer.profile_photo
+                                            ) }}"
+                                            alt=""
+                                        >
+
+                                    {% else %}
+
+                                        <span>
+                                            {{ review.reviewer.full_name[0]|upper }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div>
+
+                                    <strong>
+                                        {{ review.reviewer.full_name }}
+                                    </strong>
+
+                                    <span>
+                                        {{ review.created_at.strftime('%d %b %Y') }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="review-rating">
+                                ★ {{ review.rating }}/5
+                            </div>
+
+                        </div>
+
+
+                        <p>
+                            {{ review.comment }}
+                        </p>
+
+                    </article>
+
+                {% else %}
+
+                    <div class="empty-reviews">
+
+                        <div class="empty-review-icon">
+                            ♡
+                        </div>
+
+                        <h3>
+                            No reviews yet
+                        </h3>
+
+                        <p>
+                            Skill partners will be able to leave reviews
+                            after completed sessions.
+                        </p>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             CONNECTION CTA
+        ====================================================== -->
+
+        {% if not is_self and connection_status != 'connected' %}
+
+            <section class="connection-cta">
+
+                <div class="cta-glow"></div>
+
+                <div class="cta-content">
+
+                    <span class="section-eyebrow">
+                        SKILLSWAP CONNECTION
+                    </span>
+
+                    <h2>
+                        Learn from each other.
+                    </h2>
+
+                    <p>
+                        Connect with {{ user.full_name }}
+                        and start a two-way skill exchange.
+                    </p>
+
+                </div>
+
+
+                <div class="cta-action">
+
+                    {% if connection_status == 'pending_sent' %}
+
+                        <button
+                            type="button"
+                            class="profile-button profile-button-disabled"
+                            disabled
+                        >
+                            Request Sent
+                        </button>
+
+                    {% else %}
+
+                        <form
+                            action="{{ url_for(
+                                'send_connection_request',
+                                user_id=user.id
+                            ) }}"
+                            method="POST"
+                        >
+
+                            <button
+                                type="submit"
+                                class="profile-button profile-button-primary"
+                            >
+                                Send Connection Request
+                                <span>→</span>
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     PROGRESS BAR SCRIPT
+========================================================== -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const progressBars = document.querySelectorAll(
+        ".progress-fill[data-progress]"
+    );
+
+    progressBars.forEach(function (bar) {
+
+        let value = Number(
+            bar.getAttribute("data-progress")
+        );
+
+        if (Number.isNaN(value)) {
+            value = 0;
+        }
+
+        value = Math.max(
+            0,
+            Math.min(100, value)
+        );
+
+        setTimeout(function () {
+
+            bar.style.width = value + "%";
+
+        }, 120);
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

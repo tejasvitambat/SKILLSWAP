@@ -1,0 +1,886 @@
+{% extends "base.html" %}
+
+{% block title %}
+Schedule Session — SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/schedule_session.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="schedule-page">
+
+    <div class="schedule-bg-orb schedule-bg-orb-one"></div>
+    <div class="schedule-bg-orb schedule-bg-orb-two"></div>
+    <div class="schedule-bg-orb schedule-bg-orb-three"></div>
+
+    <div class="schedule-sparkles" aria-hidden="true">
+        <span>✦</span>
+        <span>✧</span>
+        <span>⋆</span>
+        <span>✦</span>
+        <span>✧</span>
+        <span>⋆</span>
+    </div>
+
+
+    <div class="schedule-container">
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <div class="page-header">
+
+            <div class="page-header-content">
+
+                <span class="auth-label">
+                    Skill Exchange
+                </span>
+
+                <h1>
+                    Schedule a Session
+                </h1>
+
+                <p>
+                    Plan a focused learning session with your
+                    SkillSwap partner.
+                </p>
+
+            </div>
+
+            <div class="page-header-actions">
+
+                <a
+                    href="{{ url_for(
+                        'chat',
+                        connection_id=connection.id
+                    ) }}"
+                    class="btn btn-secondary"
+                >
+                    <span class="btn-icon">←</span>
+                    Back to Chat
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             PARTNER
+        ====================================================== -->
+
+        <div class="schedule-partner-card">
+
+            <div class="schedule-partner-info">
+
+                <div class="schedule-avatar">
+
+                    {% if partner.profile_photo %}
+
+                        <img
+                            src="{{ url_for(
+                                'uploaded_file',
+                                filename=partner.profile_photo
+                            ) }}"
+                            alt="{{ partner.full_name }}"
+                        >
+
+                    {% else %}
+
+                        <span>
+                            {{ partner.full_name[0]|upper }}
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="partner-details">
+
+                    <span class="session-type">
+                        Your Skill Partner
+                    </span>
+
+                    <h2>
+                        {{ partner.full_name }}
+                    </h2>
+
+                    <p>
+                        @{{ partner.username }}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <a
+                href="{{ url_for(
+                    'view_profile',
+                    username=partner.username
+                ) }}"
+                class="btn btn-secondary"
+            >
+                View Profile
+                <span class="btn-icon">↗</span>
+            </a>
+
+        </div>
+
+
+        <!-- =====================================================
+             MAIN LAYOUT
+        ====================================================== -->
+
+        <div class="schedule-layout">
+
+
+            <!-- =================================================
+                 FORM
+            ================================================== -->
+
+            <div class="schedule-main-card">
+
+                <div class="card-header">
+
+                    <span class="section-label">
+                        Session Details
+                    </span>
+
+                    <h2>
+                        Plan your learning session
+                    </h2>
+
+                    <p>
+                        Choose a skill, time and session format.
+                    </p>
+
+                </div>
+
+
+                {% if errors and errors.get('general') %}
+
+                    <div class="form-error-box">
+
+                        <span>!</span>
+
+                        {{ errors.get('general') }}
+
+                    </div>
+
+                {% endif %}
+
+
+                <form
+                    action="{{ url_for(
+                        'schedule_session',
+                        connection_id=connection.id
+                    ) }}"
+                    method="POST"
+                    class="schedule-form"
+                    novalidate
+                >
+
+
+                    <!-- =================================================
+                         SKILL
+                    ================================================== -->
+
+                    <div class="form-group">
+
+                        <label for="skill">
+                            Skill
+                        </label>
+
+                        <select
+                            id="skill"
+                            name="skill"
+                            required
+                        >
+
+                            <option
+                                value=""
+                                disabled
+                                {% if not request.form.get('skill') %}
+                                    selected
+                                {% endif %}
+                            >
+                                Select a skill
+                            </option>
+
+
+                            {% for skill in exchange_skills %}
+
+                                <option
+                                    value="{{ skill }}"
+                                    {% if request.form.get('skill') == skill %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ skill }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+
+                        {% if errors and errors.get('skill') %}
+
+                            <small class="form-error">
+                                {{ errors.get('skill') }}
+                            </small>
+
+                        {% endif %}
+
+
+                        {% if not exchange_skills %}
+
+                            <small class="form-error">
+                                No exchange skill is available for this connection.
+                            </small>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         TOPIC
+                    ================================================== -->
+
+                    <div class="form-group">
+
+                        <label for="topic">
+                            Topic
+                        </label>
+
+                        <input
+                            type="text"
+                            id="topic"
+                            name="topic"
+                            maxlength="150"
+                            placeholder="e.g. Functions, Flexbox, SEO Basics"
+                            value="{{ request.form.get('topic', '') }}"
+                        >
+
+                        <small class="form-help">
+                            Optional — choose the exact topic you want
+                            to focus on.
+                        </small>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         DATE + TIME
+                    ================================================== -->
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label for="session_date">
+                                Date
+                            </label>
+
+                            <input
+                                type="date"
+                                id="session_date"
+                                name="session_date"
+                                value="{{ request.form.get('session_date', '') }}"
+                                required
+                            >
+
+                            {% if errors and errors.get('session_date') %}
+
+                                <small class="form-error">
+                                    {{ errors.get('session_date') }}
+                                </small>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="session_time">
+                                Time
+                            </label>
+
+                            <input
+                                type="time"
+                                id="session_time"
+                                name="session_time"
+                                value="{{ request.form.get('session_time', '') }}"
+                                required
+                            >
+
+                            {% if errors and errors.get('session_time') %}
+
+                                <small class="form-error">
+                                    {{ errors.get('session_time') }}
+                                </small>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         DURATION
+                    ================================================== -->
+
+                    <div class="form-group">
+
+                        <label for="duration">
+                            Session Duration
+                        </label>
+
+                        <select
+                            id="duration"
+                            name="duration"
+                            required
+                        >
+
+                            <option
+                                value=""
+                                disabled
+                                {% if not request.form.get('duration') %}
+                                    selected
+                                {% endif %}
+                            >
+                                Select duration
+                            </option>
+
+                            <option
+                                value="30 Minutes"
+                                {% if request.form.get('duration') == '30 Minutes' %}
+                                    selected
+                                {% endif %}
+                            >
+                                30 minutes
+                            </option>
+
+                            <option
+                                value="1 Hour"
+                                {% if request.form.get('duration') == '1 Hour' %}
+                                    selected
+                                {% endif %}
+                            >
+                                1 hour
+                            </option>
+
+                            <option
+                                value="1.5 Hours"
+                                {% if request.form.get('duration') == '1.5 Hours' %}
+                                    selected
+                                {% endif %}
+                            >
+                                1 hour 30 minutes
+                            </option>
+
+                            <option
+                                value="2 Hours"
+                                {% if request.form.get('duration') == '2 Hours' %}
+                                    selected
+                                {% endif %}
+                            >
+                                2 hours
+                            </option>
+
+                        </select>
+
+
+                        {% if errors and errors.get('duration') %}
+
+                            <small class="form-error">
+                                {{ errors.get('duration') }}
+                            </small>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         SESSION MODE
+                    ================================================== -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Session Mode
+                        </label>
+
+
+                        <div class="session-type-options">
+
+
+                            <label class="radio-card">
+
+                                <input
+                                    type="radio"
+                                    name="mode"
+                                    value="online"
+                                    {% if request.form.get(
+                                        'mode',
+                                        'online'
+                                    ) == 'online' %}
+                                        checked
+                                    {% endif %}
+                                >
+
+                                <span class="radio-card-content">
+
+                                    <span class="radio-icon">
+                                        ◇
+                                    </span>
+
+                                    <span class="radio-text">
+
+                                        <strong>
+                                            Online
+                                        </strong>
+
+                                        <small>
+                                            Learn together online.
+                                        </small>
+
+                                    </span>
+
+                                </span>
+
+                            </label>
+
+
+
+                            <label class="radio-card">
+
+                                <input
+                                    type="radio"
+                                    name="mode"
+                                    value="offline"
+                                    {% if request.form.get('mode') == 'offline' %}
+                                        checked
+                                    {% endif %}
+                                >
+
+                                <span class="radio-card-content">
+
+                                    <span class="radio-icon">
+                                        ✦
+                                    </span>
+
+                                    <span class="radio-text">
+
+                                        <strong>
+                                            Offline
+                                        </strong>
+
+                                        <small>
+                                            Meet in person and learn together.
+                                        </small>
+
+                                    </span>
+
+                                </span>
+
+                            </label>
+
+
+
+                            <label class="radio-card">
+
+                                <input
+                                    type="radio"
+                                    name="mode"
+                                    value="hybrid"
+                                    {% if request.form.get('mode') == 'hybrid' %}
+                                        checked
+                                    {% endif %}
+                                >
+
+                                <span class="radio-card-content">
+
+                                    <span class="radio-icon">
+                                        ⇄
+                                    </span>
+
+                                    <span class="radio-text">
+
+                                        <strong>
+                                            Hybrid
+                                        </strong>
+
+                                        <small>
+                                            Mix online and offline learning.
+                                        </small>
+
+                                    </span>
+
+                                </span>
+
+                            </label>
+
+                        </div>
+                                                    <!-- Online Meeting Link -->
+                            <div class="form-group">
+                                <label for="meeting_url">
+                                    Online Meeting Link
+                                </label>
+
+                                <input
+                                    type="url"
+                                    id="meeting_url"
+                                    name="meeting_url"
+                                    placeholder="https://zoom.us/j/..."
+                                    value="{{ request.form.get('meeting_url', '') }}"
+                                >
+
+                                <small>
+                                    Paste your Zoom or Google Meet link for online sessions.
+                                </small>
+                            </div>
+
+
+                        {% if errors and errors.get('mode') %}
+
+                            <small class="form-error">
+                                {{ errors.get('mode') }}
+                            </small>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         MESSAGE
+                    ================================================== -->
+
+                    <div class="form-group">
+
+                        <label for="notes">
+                            Message to your partner
+                        </label>
+
+                        <textarea
+                            id="notes"
+                            name="notes"
+                            rows="5"
+                            maxlength="1000"
+                            placeholder="Tell your partner what you'd like to cover..."
+                        >{{ request.form.get('notes', '') }}</textarea>
+
+                        <small class="form-help">
+                            Mention your learning goal,
+                            preparation or anything your partner should know.
+                        </small>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         ACTIONS
+                    ================================================== -->
+
+                    <div class="schedule-form-actions">
+
+                        <a
+                            href="{{ url_for(
+                                'chat',
+                                connection_id=connection.id
+                            ) }}"
+                            class="btn btn-secondary"
+                        >
+                            Cancel
+                        </a>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            {% if not exchange_skills %}
+                                disabled
+                            {% endif %}
+                        >
+
+                            <span>
+                                Send Session Request
+                            </span>
+
+                            <span class="btn-arrow">
+                                →
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SIDEBAR
+            ================================================== -->
+
+            <aside class="schedule-sidebar">
+
+
+                <!-- =================================================
+                     EXCHANGE SKILLS
+                ================================================== -->
+
+                <div class="schedule-info-card">
+
+                    <div class="info-card-icon">
+                        ⇄
+                    </div>
+
+                    <span class="section-label">
+                        Your Exchange
+                    </span>
+
+                    <h3>
+                        Skills in this connection
+                    </h3>
+
+
+                    <!-- YOU WANT TO LEARN -->
+
+                    <div class="schedule-skill-group">
+
+                        <span class="skill-group-label">
+                            You want to learn
+                        </span>
+
+                        <div class="skill-pills">
+
+                            {% for skill in current_user_learns %}
+
+                                {% if skill in partner_teaches %}
+
+                                    <span class="skill-pill">
+                                        {{ skill }}
+                                    </span>
+
+                                {% endif %}
+
+                            {% else %}
+
+                                <span class="empty-skill">
+                                    No skill selected
+                                </span>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- YOU CAN TEACH -->
+
+                    <div class="schedule-skill-group">
+
+                        <span class="skill-group-label">
+                            You can teach
+                        </span>
+
+                        <div class="skill-pills">
+
+                            {% for skill in current_user_teaches %}
+
+                                {% if skill in partner_learns %}
+
+                                    <span class="skill-pill teach">
+                                        {{ skill }}
+                                    </span>
+
+                                {% endif %}
+
+                            {% else %}
+
+                                <span class="empty-skill">
+                                    No skill selected
+                                </span>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     GUIDELINES
+                ================================================== -->
+
+                <div class="schedule-info-card">
+
+                    <div class="info-card-icon">
+                        ✦
+                    </div>
+
+                    <span class="section-label">
+                        Good Session
+                    </span>
+
+                    <h3>
+                        Make the most of your time
+                    </h3>
+
+
+                    <ul class="session-guidelines">
+
+                        <li>
+                            <span>01</span>
+                            <p>
+                                Choose one clear topic.
+                            </p>
+                        </li>
+
+                        <li>
+                            <span>02</span>
+                            <p>
+                                Set a realistic learning goal.
+                            </p>
+                        </li>
+
+                        <li>
+                            <span>03</span>
+                            <p>
+                                Practice during the session.
+                            </p>
+                        </li>
+
+                        <li>
+                            <span>04</span>
+                            <p>
+                                Update your progress afterwards.
+                            </p>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     EXISTING SESSIONS
+                ================================================== -->
+
+                <div class="schedule-info-card">
+
+                    <div class="info-card-icon">
+                        ◷
+                    </div>
+
+                    <span class="section-label">
+                        Upcoming
+                    </span>
+
+                    <h3>
+                        Scheduled sessions
+                    </h3>
+
+
+                    {% if sessions %}
+
+                        <div class="existing-sessions">
+
+                            {% for scheduled_session in sessions %}
+
+                                <a
+                                    href="{{ url_for(
+                                        'session_detail',
+                                        session_id=scheduled_session.id
+                                    ) }}"
+                                    class="existing-session-item"
+                                >
+
+                                    <strong>
+                                        {{ scheduled_session.skill }}
+                                    </strong>
+
+                                    <span>
+                                        {{ scheduled_session.scheduled_at.strftime('%d %b %Y, %I:%M %p') }}
+                                    </span>
+
+                                    <small>
+                                        {{ scheduled_session.duration_minutes }} minutes
+                                        ·
+                                        {{ scheduled_session.status|capitalize }}
+                                    </small>
+
+                                </a>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% else %}
+
+                        <p class="empty-skill">
+                            No sessions scheduled yet.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </aside>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             BOTTOM NOTE
+        ====================================================== -->
+
+        <div class="schedule-note">
+
+            <span class="note-icon">
+                ✦
+            </span>
+
+            <p>
+                The session request will be sent to
+                <strong>{{ partner.full_name }}</strong>.
+                It becomes confirmed after your partner accepts it.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

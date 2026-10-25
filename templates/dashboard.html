@@ -1,0 +1,493 @@
+
+{% extends "base.html" %}
+
+{% block title %}Dashboard | SkillSwap{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<section class="ss-dashboard" id="overview">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="ss-sidebar">
+        <a href="#overview" class="ss-brand">
+            <span class="ss-brand-icon">S</span>
+            <span>SkillSwap<small>LEARN • TEACH • GROW</small></span>
+        </a>
+
+        <p class="ss-nav-label">WORKSPACE</p>
+
+        <nav class="ss-nav">
+            <a href="#overview" class="ss-nav-link active">
+                <span class="ss-nav-icon">⌂</span> Dashboard
+            </a>
+            <a href="{{ url_for('skills') }}" class="ss-nav-link">
+                <span class="ss-nav-icon">◇</span> My Skills
+            </a>
+            <a href="{{ url_for('matches') }}" class="ss-nav-link">
+                <span class="ss-nav-icon">⇄</span> Find Matches
+            </a>
+            <a href="{{ url_for('connections') }}" class="ss-nav-link">
+                <span class="ss-nav-icon">♡</span> Connections
+            </a>
+            <a href="{{ url_for('sessions') }}" class="ss-nav-link">
+                <span class="ss-nav-icon">▦</span> Sessions
+            </a>
+            <a href="{{ url_for('progress') }}" class="ss-nav-link">
+                <span class="ss-nav-icon">↗</span> My Progress
+            </a>
+            <a href="{{ url_for('notifications') }}" class="ss-nav-link">
+                <span class="ss-nav-icon">♧</span> Notifications
+            </a>
+        </nav>
+
+        <div class="ss-sidebar-help">
+            <span class="ss-help-icon">✦</span>
+            <strong>Keep growing!</strong>
+            <p>Every skill you share creates a new opportunity to learn.</p>
+            <a href="{{ url_for('matches') }}">Find a partner →</a>
+        </div>
+
+        <a href="{{ url_for('profile') }}" class="ss-sidebar-profile">
+            <span class="ss-sidebar-avatar">
+                {% if user.profile_photo %}
+                    <img src="{{ url_for('uploaded_file', filename=user.profile_photo) }}"
+                         alt="Profile photo">
+                {% else %}
+                    {{ (user.full_name or user.name or 'U')[0]|upper }}
+                {% endif %}
+            </span>
+            <span class="ss-sidebar-user">
+                <strong>{{ user.full_name or user.name }}</strong>
+                <small>View your profile</small>
+            </span>
+            <span class="ss-profile-arrow">↗</span>
+        </a>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="ss-main">
+
+        <header class="ss-topbar">
+            <button type="button" class="ss-menu-toggle"
+                    aria-label="Toggle navigation"
+                    aria-expanded="false">☰</button>
+
+            <div class="ss-breadcrumb">
+                <span>Workspace</span><span class="ss-crumb-divider">/</span>
+                <strong>Dashboard</strong>
+            </div>
+
+            <div class="ss-top-actions">
+                <a href="{{ url_for('notifications') }}"
+                   class="ss-notification-button"
+                   aria-label="Open notifications">♧</a>
+                <a href="{{ url_for('profile') }}" class="ss-top-avatar">
+                    {% if user.profile_photo %}
+                        <img src="{{ url_for('uploaded_file', filename=user.profile_photo) }}"
+                             alt="Profile photo">
+                    {% else %}
+                        {{ (user.full_name or user.name or 'U')[0]|upper }}
+                    {% endif %}
+                </a>
+            </div>
+        </header>
+
+        <div class="ss-main-inner">
+
+            <!-- WELCOME -->
+            <section class="ss-welcome">
+                <div class="ss-welcome-copy">
+                    <span class="ss-eyebrow"><span class="ss-live-dot"></span> YOUR LEARNING SPACE</span>
+                    <h1>Welcome back, <span>{{ user.full_name or user.name }}!</span></h1>
+                    <p>Your next skill starts with one small step. What would you like to do today?</p>
+                </div>
+                <div class="ss-welcome-decoration" aria-hidden="true">
+                    <span class="ss-decor-star">✦</span>
+                    <span class="ss-decor-circle"></span>
+                    <span class="ss-decor-spark">✧</span>
+                </div>
+            </section>
+
+            <!-- PRIMARY ACTIONS -->
+            <section class="ss-action-grid" aria-label="Main actions">
+                <a href="{{ url_for('skills') }}" class="ss-action-card ss-action-learn">
+                    <span class="ss-action-icon">↓</span>
+                    <span class="ss-action-text">
+                        <strong>Learn a Skill</strong>
+                        <small>Explore skills and start your roadmap.</small>
+                    </span>
+                    <span class="ss-action-arrow">↗</span>
+                </a>
+
+                <a href="{{ url_for('skills') }}" class="ss-action-card ss-action-teach">
+                    <span class="ss-action-icon">↑</span>
+                    <span class="ss-action-text">
+                        <strong>Teach a Skill</strong>
+                        <small>Manage the skills you can share.</small>
+                    </span>
+                    <span class="ss-action-arrow">↗</span>
+                </a>
+
+                <a href="{{ url_for('matches') }}" class="ss-action-card ss-action-match">
+                    <span class="ss-action-icon">♡</span>
+                    <span class="ss-action-text">
+                        <strong>Find a Partner</strong>
+                        <small>Connect with compatible learners.</small>
+                    </span>
+                    <span class="ss-action-arrow">↗</span>
+                </a>
+            </section>
+
+            <!-- OVERVIEW STATS -->
+            <section class="ss-stats-grid" aria-label="Your overview">
+                <article class="ss-stat-card">
+                    <span class="ss-stat-icon">◇</span>
+                    <span class="ss-stat-label">Learning skills</span>
+                    <strong>{{ learning_skills|length if learning_skills is defined else 0 }}</strong>
+                    <small>Your learning goals</small>
+                </article>
+                <article class="ss-stat-card">
+                    <span class="ss-stat-icon">↑</span>
+                    <span class="ss-stat-label">Teaching skills</span>
+                    <strong>{{ teaching_skills|length if teaching_skills is defined else 0 }}</strong>
+                    <small>Skills you can share</small>
+                </article>
+                <article class="ss-stat-card">
+                    <span class="ss-stat-icon">▦</span>
+                    <span class="ss-stat-label">Upcoming sessions</span>
+                    <strong>{{ upcoming_sessions|length if upcoming_sessions is defined else 0 }}</strong>
+                    <small>Planned learning time</small>
+                </article>
+                <article class="ss-stat-card">
+                    <span class="ss-stat-icon">♡</span>
+                    <span class="ss-stat-label">Connections</span>
+                    <strong>{{ connections|length if connections is defined else 0 }}</strong>
+                    <small>Your skill partners</small>
+                </article>
+            </section>
+
+            <!-- MAIN TWO-COLUMN AREA -->
+            <div class="ss-content-grid">
+                <div class="ss-content-primary">
+
+                    <!-- LEARNING PROGRESS -->
+                    <section class="ss-panel">
+                        <div class="ss-panel-heading">
+                            <div>
+                                <span class="ss-section-kicker">KEEP GOING</span>
+                                <h2>Your learning progress</h2>
+                                <p>Continue where you left off.</p>
+                            </div>
+                            <a href="{{ url_for('skills') }}" class="ss-text-link">All skills →</a>
+                        </div>
+
+                        {% if learning_progress %}
+                            <div class="ss-learning-list">
+                                {% for item in learning_progress[:4] %}
+                                    {% set percentage = item.percentage|default(0)|int %}
+                                    <article class="ss-learning-item">
+                                        <div class="ss-learning-top">
+                                            <span class="ss-learning-symbol">✦</span>
+                                            <div class="ss-learning-name">
+                                                <strong>{{ item.skill_name }}</strong>
+                                                <small>{{ item.category|default('Learning roadmap') }}</small>
+                                            </div>
+                                            <strong class="ss-percent">{{ percentage }}%</strong>
+                                        </div>
+
+                                        <div class="ss-progress-track"
+                                             role="progressbar"
+                                             aria-valuenow="{{ percentage }}"
+                                             aria-valuemin="0"
+                                             aria-valuemax="100"
+                                             aria-label="{{ item.skill_name }} progress">
+                                            <span class="ss-progress-fill"
+                                                  data-progress="{{ percentage }}"></span>
+                                        </div>
+
+                                        <div class="ss-learning-bottom">
+                                            <span>{{ item.completed_topics|default(0) }} of {{ item.total_topics|default(0) }} topics completed</span>
+                                            {% if item.next_topic %}
+                                                <a href="{{ url_for('topic_learning', skill=item.skill_slug, topic_id=item.next_topic.id) }}">Continue learning →</a>
+                                            {% else %}
+                                                <a href="{{ url_for('roadmap', skill=item.skill_slug) }}">View roadmap →</a>
+                                            {% endif %}
+                                        </div>
+                                    </article>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="ss-empty-state">
+                                <span class="ss-empty-icon">✦</span>
+                                <div>
+                                    <strong>Your learning journey starts here</strong>
+                                    <p>Choose a skill, complete its assessment and begin your roadmap.</p>
+                                    <a href="{{ url_for('skills') }}" class="ss-button ss-button-primary">Explore skills →</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </section>
+
+                    <!-- UPCOMING SESSION -->
+                    <section class="ss-panel">
+                        <div class="ss-panel-heading">
+                            <div>
+                                <span class="ss-section-kicker">LEARN TOGETHER</span>
+                                <h2>Upcoming session</h2>
+                            </div>
+                            <a href="{{ url_for('sessions') }}" class="ss-text-link">All sessions →</a>
+                        </div>
+
+                        {% if upcoming_sessions %}
+                            {% set session = upcoming_sessions[0] %}
+                            <article class="ss-session-item">
+                                <div class="ss-session-date">
+                                    {% if session.scheduled_at %}
+                                        <small>{{ session.scheduled_at.strftime('%b') }}</small>
+                                        <strong>{{ session.scheduled_at.strftime('%d') }}</strong>
+                                        <span>{{ session.scheduled_at.strftime('%a') }}</span>
+                                    {% else %}
+                                        <small>DATE</small><strong>—</strong>
+                                    {% endif %}
+                                </div>
+                                <div class="ss-session-details">
+                                    <span class="ss-status-pill">{{ session.status|default('Confirmed', true)|replace('_', ' ')|title }}</span>
+                                    <h3>{{ session.title or 'Learning session' }}</h3>
+                                    <div class="ss-session-meta">
+                                        {% if session.scheduled_at %}
+                                            <span>◷ {{ session.scheduled_at.strftime('%I:%M %p') }}</span>
+                                        {% endif %}
+                                        {% if session.duration_minutes %}
+                                            <span>{{ session.duration_minutes }} min</span>
+                                        {% endif %}
+                                        {% if session.skill %}
+                                            <span>{{ session.skill }}</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="ss-session-buttons">
+                                        <a href="{{ url_for('session_detail', session_id=session.id) }}" class="ss-button ss-button-primary">View session</a>
+                                        {% if session.connection_id %}
+                                            <a href="{{ url_for('chat', connection_id=session.connection_id) }}" class="ss-button ss-button-light">Open chat</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </article>
+                        {% else %}
+                            <div class="ss-empty-state ss-empty-compact">
+                                <span class="ss-empty-icon">▦</span>
+                                <div>
+                                    <strong>No upcoming sessions yet</strong>
+                                    <p>Find a learning partner and plan your next skill exchange.</p>
+                                    <a href="{{ url_for('matches') }}" class="ss-text-link">Find a match →</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </section>
+
+                    <!-- RECENT ACTIVITY -->
+                    <section class="ss-panel">
+                        <div class="ss-panel-heading">
+                            <div>
+                                <span class="ss-section-kicker">YOUR JOURNEY</span>
+                                <h2>Recent activity</h2>
+                            </div>
+                            <a href="{{ url_for('progress') }}" class="ss-text-link">View progress →</a>
+                        </div>
+
+                        {% if recent_activity %}
+                            <div class="ss-activity-list">
+                                {% for activity in recent_activity[:5] %}
+                                    <article class="ss-activity-item">
+                                        <span class="ss-activity-icon">
+                                            {% if activity.type == 'topic_completed' %}✓
+                                            {% elif activity.type == 'assessment' %}★
+                                            {% elif activity.type == 'session_completed' %}▦
+                                            {% elif activity.type == 'skill_completed' %}◆
+                                            {% else %}✦{% endif %}
+                                        </span>
+                                        <div class="ss-activity-copy">
+                                            <strong>{{ activity.title }}</strong>
+                                            {% if activity.description %}<p>{{ activity.description }}</p>{% endif %}
+                                            {% if activity.created_at %}<small>{{ activity.created_at.strftime('%d %b %Y, %I:%M %p') }}</small>{% endif %}
+                                        </div>
+                                    </article>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="ss-empty-state ss-empty-compact">
+                                <span class="ss-empty-icon">♡</span>
+                                <div>
+                                    <strong>Your activity will appear here</strong>
+                                    <p>Complete a topic, assessment or session to track your progress.</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </section>
+                </div>
+
+                <!-- RIGHT INFORMATION PANEL -->
+                <aside class="ss-content-aside">
+
+                    <!-- PROFILE -->
+                    <section class="ss-panel ss-profile-panel">
+                        <div class="ss-panel-heading">
+                            <div>
+                                <span class="ss-section-kicker">YOUR ACCOUNT</span>
+                                <h2>My profile</h2>
+                            </div>
+                            <a href="{{ url_for('profile') }}" class="ss-text-link">Edit →</a>
+                        </div>
+                        <div class="ss-profile-summary">
+                            <span class="ss-profile-photo">
+                                {% if user.profile_photo %}
+                                    <img src="{{ url_for('uploaded_file', filename=user.profile_photo) }}"
+                                         alt="Profile photo">
+                                {% else %}
+                                    {{ (user.full_name or user.name or 'U')[0]|upper }}
+                                {% endif %}
+                            </span>
+                            <div>
+                                <strong>{{ user.full_name or user.name }}</strong>
+                                {% if user.username %}<small>@{{ user.username }}</small>{% endif %}
+                            </div>
+                        </div>
+                        <a href="{{ url_for('profile') }}" class="ss-button ss-button-light ss-full-button">View profile</a>
+                    </section>
+
+                    <!-- LEARN & TEACH -->
+                    <section class="ss-panel">
+                        <div class="ss-panel-heading">
+                            <div>
+                                <span class="ss-section-kicker">SKILL EXCHANGE</span>
+                                <h2>Learn & teach</h2>
+                            </div>
+                            <a href="{{ url_for('skills') }}" class="ss-text-link">Manage →</a>
+                        </div>
+
+                        <div class="ss-skill-group">
+                            <div class="ss-skill-group-heading">
+                                <span class="ss-skill-direction learn-direction">↓</span>
+                                <strong>Skills I want to learn</strong>
+                            </div>
+                            <div class="ss-skill-pills">
+                                {% if learning_skills %}
+                                    {% for skill in learning_skills[:5] %}
+                                        <span>{{ skill.name|default(skill) }}</span>
+                                    {% endfor %}
+                                {% else %}
+                                    <small class="ss-muted">No learning skills added yet.</small>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="ss-skill-separator"></div>
+
+                        <div class="ss-skill-group">
+                            <div class="ss-skill-group-heading">
+                                <span class="ss-skill-direction teach-direction">↑</span>
+                                <strong>Skills I can teach</strong>
+                            </div>
+                            <div class="ss-skill-pills ss-teach-pills">
+                                {% if teaching_skills %}
+                                    {% for skill in teaching_skills[:5] %}
+                                        <span>{{ skill.name|default(skill) }}</span>
+                                    {% endfor %}
+                                {% else %}
+                                    <small class="ss-muted">No teaching skills added yet.</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <a href="{{ url_for('skills') }}" class="ss-button ss-button-light ss-full-button">Manage my skills</a>
+                    </section>
+
+                    <!-- PENDING REQUESTS -->
+                    <section class="ss-panel">
+                        <div class="ss-panel-heading">
+                            <div>
+                                <span class="ss-section-kicker">NEEDS YOUR ATTENTION</span>
+                                <h2>Pending sessions</h2>
+                            </div>
+                            <span class="ss-count-badge">{{ pending_sessions|length if pending_sessions is defined else 0 }}</span>
+                        </div>
+
+                        {% if pending_sessions %}
+                            <div class="ss-pending-list">
+                                {% for pending in pending_sessions[:3] %}
+                                    <a href="{{ url_for('session_detail', session_id=pending.id) }}" class="ss-pending-item">
+                                        <span class="ss-pending-icon">◷</span>
+                                        <span class="ss-pending-copy">
+                                            <strong>{{ pending.title or 'Session request' }}</strong>
+                                            {% if pending.scheduled_at %}<small>{{ pending.scheduled_at.strftime('%d %b %Y') }}</small>{% else %}<small>View request details</small>{% endif %}
+                                        </span>
+                                        <span class="ss-pending-arrow">→</span>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                            <a href="{{ url_for('sessions') }}" class="ss-text-link ss-bottom-link">View all sessions →</a>
+                        {% else %}
+                            <div class="ss-pending-empty">
+                                <span>✓</span>
+                                <p>You're all caught up. No pending session requests.</p>
+                            </div>
+                        {% endif %}
+                    </section>
+
+                    <!-- QUICK LINKS -->
+                    <section class="ss-panel ss-shortcuts-panel">
+                        <div class="ss-panel-heading">
+                            <div>
+                                <span class="ss-section-kicker">SHORTCUTS</span>
+                                <h2>Quick links</h2>
+                            </div>
+                        </div>
+                        <a href="{{ url_for('skills') }}" class="ss-shortcut-link"><span>◇</span> Explore skills <b>→</b></a>
+                        <a href="{{ url_for('matches') }}" class="ss-shortcut-link"><span>♡</span> Find a partner <b>→</b></a>
+                        <a href="{{ url_for('sessions') }}" class="ss-shortcut-link"><span>▦</span> Manage sessions <b>→</b></a>
+                        <a href="{{ url_for('connections') }}" class="ss-shortcut-link"><span>⇄</span> My connections <b>→</b></a>
+                    </section>
+                </aside>
+            </div>
+
+            <footer class="ss-dashboard-footer">
+                <span class="ss-footer-heart">♡</span>
+                <span><strong>Learn something new. Share what you know.</strong><small>Real people. Real practice. Shared progress.</small></span>
+                <a href="{{ url_for('matches') }}">Find your partner →</a>
+            </footer>
+
+        </div>
+    </main>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".ss-progress-fill").forEach(function (bar) {
+        const value = Math.max(0, Math.min(100, Number(bar.dataset.progress || 0)));
+        requestAnimationFrame(function () {
+            bar.style.width = value + "%";
+        });
+    });
+
+    const dashboard = document.querySelector(".ss-dashboard");
+    const menuButton = document.querySelector(".ss-menu-toggle");
+
+    if (dashboard && menuButton) {
+        menuButton.addEventListener("click", function () {
+            const isOpen = dashboard.classList.toggle("ss-sidebar-open");
+            menuButton.setAttribute("aria-expanded", String(isOpen));
+        });
+
+        dashboard.addEventListener("click", function (event) {
+            if (event.target.closest(".ss-nav-link") && window.innerWidth <= 900) {
+                dashboard.classList.remove("ss-sidebar-open");
+                menuButton.setAttribute("aria-expanded", "false");
+            }
+        });
+    }
+});
+</script>
+
+{% endblock %}

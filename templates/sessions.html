@@ -1,0 +1,1242 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Sessions — SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/sessions.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="sessions-page">
+
+    <!-- =====================================================
+         BACKGROUND
+    ====================================================== -->
+
+    <div class="sessions-orb sessions-orb-one"></div>
+    <div class="sessions-orb sessions-orb-two"></div>
+    <div class="sessions-orb sessions-orb-three"></div>
+
+    <span class="sessions-sparkle sparkle-one">✦</span>
+    <span class="sessions-sparkle sparkle-two">✧</span>
+    <span class="sessions-sparkle sparkle-three">✦</span>
+
+
+    <div class="sessions-container">
+
+
+        <!-- =====================================================
+             PAGE HEADER
+        ====================================================== -->
+
+        <header class="page-header">
+
+            <div class="page-header-content">
+
+                <span class="auth-label">
+                    Skill Exchange
+                </span>
+
+                <h1>
+                    Your Sessions
+                </h1>
+
+                <p>
+                    Manage upcoming, pending and completed learning
+                    sessions with your SkillSwap partners.
+                </p>
+
+            </div>
+
+
+            <div class="page-header-actions">
+
+                <a
+                    href="{{ url_for('connections') }}"
+                    class="btn btn-secondary"
+                >
+                    My Connections
+                </a>
+
+                <a
+                    href="{{ url_for('matches') }}"
+                    class="btn btn-primary"
+                >
+                    Find a Match
+                    <span>→</span>
+                </a>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================================
+             SUMMARY
+        ====================================================== -->
+
+        <section class="session-stats">
+
+            <article class="session-stat-card">
+
+                <div class="stat-icon">
+                    ◷
+                </div>
+
+                <div class="stat-info">
+
+                    <span class="session-stat-label">
+                        Upcoming
+                    </span>
+
+                    <strong>
+                        {{ upcoming_sessions|length }}
+                    </strong>
+
+                    <p>
+                        Scheduled sessions
+                    </p>
+
+                </div>
+
+            </article>
+
+
+            <article class="session-stat-card">
+
+                <div class="stat-icon">
+                    ⌛
+                </div>
+
+                <div class="stat-info">
+
+                    <span class="session-stat-label">
+                        Pending
+                    </span>
+
+                    <strong>
+                        {{ pending_sessions|length }}
+                    </strong>
+
+                    <p>
+                        Awaiting confirmation
+                    </p>
+
+                </div>
+
+            </article>
+
+
+            <article class="session-stat-card">
+
+                <div class="stat-icon">
+                    ✓
+                </div>
+
+                <div class="stat-info">
+
+                    <span class="session-stat-label">
+                        Completed
+                    </span>
+
+                    <strong>
+                        {{ completed_sessions|length }}
+                    </strong>
+
+                    <p>
+                        Sessions completed
+                    </p>
+
+                </div>
+
+            </article>
+
+
+            <article class="session-stat-card">
+
+                <div class="stat-icon">
+                    ✦
+                </div>
+
+                <div class="stat-info">
+
+                    <span class="session-stat-label">
+                        Learning Hours
+                    </span>
+
+                    <strong>
+                        {{ total_learning_hours|default(0) }}
+                    </strong>
+
+                    <p>
+                        Total learning time
+                    </p>
+
+                </div>
+
+            </article>
+
+        </section>
+
+
+        <!-- =====================================================
+             UPCOMING SESSIONS
+        ====================================================== -->
+
+        <section class="sessions-section">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        Next Up
+                    </span>
+
+                    <h2>
+                        Upcoming Sessions
+                    </h2>
+
+                </div>
+
+                <span class="section-count">
+                    {{ upcoming_sessions|length }} scheduled
+                </span>
+
+            </div>
+
+
+            {% if upcoming_sessions %}
+
+                <div class="session-list">
+
+                    {% for session in upcoming_sessions %}
+
+                        <article class="session-card upcoming-session">
+
+
+                            <!-- DATE -->
+
+                            <div class="session-date">
+
+                                {% if session.scheduled_at is defined and session.scheduled_at %}
+
+                                    <span class="session-month">
+                                        {{ session.scheduled_at.strftime('%b') }}
+                                    </span>
+
+                                    <strong>
+                                        {{ session.scheduled_at.strftime('%d') }}
+                                    </strong>
+
+                                    <span class="session-day">
+                                        {{ session.scheduled_at.strftime('%a') }}
+                                    </span>
+
+                                {% elif session.date %}
+
+                                    <span class="session-month">
+                                        {{ session.date.strftime('%b') }}
+                                    </span>
+
+                                    <strong>
+                                        {{ session.date.strftime('%d') }}
+                                    </strong>
+
+                                    <span class="session-day">
+                                        {{ session.date.strftime('%a') }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="session-month">
+                                        DATE
+                                    </span>
+
+                                    <strong>
+                                        —
+                                    </strong>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- MAIN -->
+
+                            <div class="session-main">
+
+
+                                <!-- TOP -->
+
+                                <div class="session-top-row">
+
+                                    <div class="session-heading-content">
+
+                                        <span class="session-type">
+                                            {{ session.session_type|default('Skill Exchange', true) }}
+                                        </span>
+
+                                        <h3>
+                                            {% if session.title %}
+                                                {{ session.title }}
+                                            {% elif session.skill %}
+                                                {{ session.skill }} Session
+                                            {% else %}
+                                                Skill Exchange Session
+                                            {% endif %}
+                                        </h3>
+
+                                    </div>
+
+
+                                    <span class="session-status status-{{ session.status|default('scheduled', true)|lower }}">
+
+                                        {{ session.status|default('Scheduled', true)|replace('_', ' ')|title }}
+
+                                    </span>
+
+                                </div>
+
+
+                                <!-- DESCRIPTION -->
+
+                                {% if session.description %}
+
+                                    <p class="session-description">
+                                        {{ session.description }}
+                                    </p>
+
+                                {% elif session.notes %}
+
+                                    <p class="session-description">
+                                        {{ session.notes }}
+                                    </p>
+
+                                {% else %}
+
+                                    <p class="session-description">
+                                        Your upcoming SkillSwap learning session.
+                                    </p>
+
+                                {% endif %}
+
+
+                                <!-- DETAILS -->
+
+                                <div class="session-meta">
+
+                                    {% if session.scheduled_at is defined and session.scheduled_at %}
+
+                                        <span>
+                                            📅
+                                            {{ session.scheduled_at.strftime('%d %B %Y') }}
+                                        </span>
+
+                                        <span>
+                                            🕒
+                                            {{ session.scheduled_at.strftime('%I:%M %p') }}
+                                        </span>
+
+                                    {% else %}
+
+                                        {% if session.date %}
+
+                                            <span>
+                                                📅
+                                                {{ session.date.strftime('%d %B %Y') }}
+                                            </span>
+
+                                        {% endif %}
+
+                                        {% if session.time %}
+
+                                            <span>
+                                                🕒
+                                                {{ session.time.strftime('%I:%M %p') }}
+                                            </span>
+
+                                        {% endif %}
+
+                                    {% endif %}
+
+
+                                    {% if session.skill %}
+
+                                        <span>
+                                            ✦
+                                            {{ session.skill }}
+                                        </span>
+
+                                    {% endif %}
+
+
+                                    {% if session.duration_minutes %}
+
+                                        <span>
+                                            ⏱
+                                            {{ session.duration_minutes }} min
+                                        </span>
+
+                                    {% elif session.duration %}
+
+                                        <span>
+                                            ⏱
+                                            {{ session.duration }}
+                                        </span>
+
+                                    {% endif %}
+
+
+                                    {% if session.mode %}
+
+                                        <span>
+                                            ◇
+                                            {{ session.mode|capitalize }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <!-- PARTNER -->
+
+                                <div class="session-partner">
+
+                                    {% set session_partner = session.partner|default(None) %}
+
+                                    {% if session_partner %}
+
+                                        <div class="session-partner-avatar">
+
+                                            {% if session_partner.profile_photo %}
+
+                                                <img
+                                                    src="{{ url_for(
+                                                        'uploaded_file',
+                                                        filename=session_partner.profile_photo
+                                                    ) }}"
+                                                    alt="{{ session_partner.full_name }}"
+                                                >
+
+                                            {% else %}
+
+                                                <span>
+                                                    {{ session_partner.full_name[0]|upper }}
+                                                </span>
+
+                                            {% endif %}
+
+                                        </div>
+
+
+                                        <div class="session-partner-info">
+
+                                            <small>
+                                                Learning with
+                                            </small>
+
+                                            <strong>
+                                                {{ session_partner.full_name }}
+                                            </strong>
+
+                                        </div>
+
+                                    {% else %}
+
+                                        <div class="session-partner-avatar fallback">
+                                            ✦
+                                        </div>
+
+                                        <div class="session-partner-info">
+
+                                            <small>
+                                                SkillSwap
+                                            </small>
+
+                                            <strong>
+                                                Your learning partner
+                                            </strong>
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <!-- ACTIONS -->
+
+                                
+                                <!-- ACTIONS -->
+
+                                <div class="session-actions">
+
+                                    <a
+                                        href="{{ url_for(
+                                            'session_detail',
+                                            session_id=session.id
+                                        ) }}"
+                                        class="btn btn-primary"
+                                    >
+                                        View Session
+                                        <span>→</span>
+                                    </a>
+
+                                    {% if session.meeting_url %}
+
+                                        <a
+                                            href="{{ session.meeting_url }}"
+                                            class="btn btn-primary"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Join Meeting
+                                            <span>↗</span>
+                                        </a>
+
+                                    {% endif %}
+
+                                    {% if session.connection_id %}
+
+                                        <a
+                                            href="{{ url_for(
+                                                'chat',
+                                                connection_id=session.connection_id
+                                            ) }}"
+                                            class="btn btn-secondary"
+                                        >
+                                            Open Chat
+                                        </a>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-state-icon">
+                        ◷
+                    </div>
+
+                    <span class="empty-state-label">
+                        Nothing scheduled
+                    </span>
+
+                    <h3>
+                        No upcoming sessions
+                    </h3>
+
+                    <p>
+                        Once you schedule a session with your SkillSwap
+                        partner, it will appear here with all the session details.
+                    </p>
+
+                    <a
+                        href="{{ url_for('matches') }}"
+                        class="btn btn-primary"
+                    >
+                        Find a Skill Partner
+                        <span>→</span>
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- =====================================================
+             PENDING SESSIONS
+        ====================================================== -->
+
+        <section class="sessions-section">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        Waiting
+                    </span>
+
+                    <h2>
+                        Pending Sessions
+                    </h2>
+
+                </div>
+
+                <span class="section-count pending-count">
+                    {{ pending_sessions|length }} pending
+                </span>
+
+            </div>
+
+
+            {% if pending_sessions %}
+
+                <div class="session-list">
+
+                    {% for session in pending_sessions %}
+
+                        <article class="session-card pending-session">
+
+
+                            <!-- PENDING ICON -->
+
+                            <div class="status-icon pending-icon">
+                                ⌛
+                            </div>
+
+
+                            <div class="session-main">
+
+
+                                <div class="session-top-row">
+
+                                    <div class="session-heading-content">
+
+                                        <span class="session-type">
+                                            Session Request
+                                        </span>
+
+                                        <h3>
+                                            {% if session.title %}
+                                                {{ session.title }}
+                                            {% elif session.skill %}
+                                                {{ session.skill }} Session
+                                            {% else %}
+                                                Learning Session Request
+                                            {% endif %}
+                                        </h3>
+
+                                    </div>
+
+                                    <span class="session-status status-pending">
+                                        Pending
+                                    </span>
+
+                                </div>
+
+
+                                <div class="session-meta">
+
+                                    {% if session.scheduled_at is defined and session.scheduled_at %}
+
+                                        <span>
+                                            📅
+                                            {{ session.scheduled_at.strftime('%d %B %Y') }}
+                                        </span>
+
+                                        <span>
+                                            🕒
+                                            {{ session.scheduled_at.strftime('%I:%M %p') }}
+                                        </span>
+
+                                    {% else %}
+
+                                        {% if session.date %}
+
+                                            <span>
+                                                📅
+                                                {{ session.date.strftime('%d %B %Y') }}
+                                            </span>
+
+                                        {% endif %}
+
+                                        {% if session.time %}
+
+                                            <span>
+                                                🕒
+                                                {{ session.time.strftime('%I:%M %p') }}
+                                            </span>
+
+                                        {% endif %}
+
+                                    {% endif %}
+
+
+                                    {% if session.skill %}
+
+                                        <span>
+                                            ✦
+                                            {{ session.skill }}
+                                        </span>
+
+                                    {% endif %}
+
+
+                                    {% if session.duration_minutes %}
+
+                                        <span>
+                                            ⏱
+                                            {{ session.duration_minutes }} min
+                                        </span>
+
+                                    {% elif session.duration %}
+
+                                        <span>
+                                            ⏱
+                                            {{ session.duration }}
+                                        </span>
+
+                                    {% endif %}
+
+
+                                    {% if session.mode %}
+
+                                        <span>
+                                            ◇
+                                            {{ session.mode|capitalize }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="pending-message">
+
+                                    <span class="pending-message-icon">
+                                        !
+                                    </span>
+
+                                    <p>
+                                        This session is waiting for confirmation.
+                                        Review the request to see the complete details.
+                                    </p>
+
+                                </div>
+
+
+                                <div class="session-actions">
+
+                                    <a
+                                        href="{{ url_for(
+                                            'session_detail',
+                                            session_id=session.id
+                                        ) }}"
+                                        class="btn btn-primary"
+                                    >
+                                        Review Session
+                                        <span>→</span>
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="small-empty-state">
+
+                    <span class="small-empty-icon">
+                        ✓
+                    </span>
+
+                    <div>
+                        <strong>
+                            No pending sessions
+                        </strong>
+
+                        <p>
+                            There are no session requests waiting for confirmation.
+                        </p>
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- =====================================================
+             COMPLETED SESSIONS
+        ====================================================== -->
+
+        <section class="sessions-section">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        Your Progress
+                    </span>
+
+                    <h2>
+                        Completed Sessions
+                    </h2>
+
+                </div>
+
+                <span class="section-count completed-count">
+                    {{ completed_sessions|length }} completed
+                </span>
+
+            </div>
+
+
+            {% if completed_sessions %}
+
+                <div class="session-list completed-list">
+
+                    {% for session in completed_sessions %}
+
+                        <article class="session-card completed-session">
+
+
+                            <div class="status-icon completed-icon">
+                                ✓
+                            </div>
+
+
+                            <div class="session-main">
+
+
+                                <div class="session-top-row">
+
+                                    <div class="session-heading-content">
+
+                                        <span class="session-type">
+                                            Completed
+                                        </span>
+
+                                        <h3>
+                                            {% if session.title %}
+                                                {{ session.title }}
+                                            {% elif session.skill %}
+                                                {{ session.skill }} Session
+                                            {% else %}
+                                                Completed Skill Session
+                                            {% endif %}
+                                        </h3>
+
+                                    </div>
+
+                                    <span class="session-status status-completed">
+                                        Completed
+                                    </span>
+
+                                </div>
+
+
+                                <div class="session-meta">
+
+                                    {% if session.scheduled_at is defined and session.scheduled_at %}
+
+                                        <span>
+                                            📅
+                                            {{ session.scheduled_at.strftime('%d %B %Y') }}
+                                        </span>
+
+                                        <span>
+                                            🕒
+                                            {{ session.scheduled_at.strftime('%I:%M %p') }}
+                                        </span>
+
+                                    {% else %}
+
+                                        {% if session.date %}
+
+                                            <span>
+                                                📅
+                                                {{ session.date.strftime('%d %B %Y') }}
+                                            </span>
+
+                                        {% endif %}
+
+                                        {% if session.time %}
+
+                                            <span>
+                                                🕒
+                                                {{ session.time.strftime('%I:%M %p') }}
+                                            </span>
+
+                                        {% endif %}
+
+                                    {% endif %}
+
+
+                                    {% if session.skill %}
+
+                                        <span>
+                                            ✦
+                                            {{ session.skill }}
+                                        </span>
+
+                                    {% endif %}
+
+
+                                    {% if session.duration_minutes %}
+
+                                        <span>
+                                            ⏱
+                                            {{ session.duration_minutes }} min
+                                        </span>
+
+                                    {% elif session.duration %}
+
+                                        <span>
+                                            ⏱
+                                            {{ session.duration }}
+                                        </span>
+
+                                    {% endif %}
+
+
+                                    {% if session.mode %}
+
+                                        <span>
+                                            ◇
+                                            {{ session.mode|capitalize }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                {% set session_partner = session.partner|default(None) %}
+
+                                {% if session_partner %}
+
+                                    <div class="session-partner">
+
+                                        <div class="session-partner-avatar">
+
+                                            {% if session_partner.profile_photo %}
+
+                                                <img
+                                                    src="{{ url_for(
+                                                        'uploaded_file',
+                                                        filename=session_partner.profile_photo
+                                                    ) }}"
+                                                    alt="{{ session_partner.full_name }}"
+                                                >
+
+                                            {% else %}
+
+                                                <span>
+                                                    {{ session_partner.full_name[0]|upper }}
+                                                </span>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                        <div class="session-partner-info">
+
+                                            <small>
+                                                Session with
+                                            </small>
+
+                                            <strong>
+                                                {{ session_partner.full_name }}
+                                            </strong>
+
+                                        </div>
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                <div class="session-actions">
+
+                                    <a
+                                        href="{{ url_for(
+                                            'session_detail',
+                                            session_id=session.id
+                                        ) }}"
+                                        class="btn btn-secondary"
+                                    >
+                                        View Session
+                                    </a>
+
+
+                                    {% if not session.review_submitted %}
+
+                                        <a
+                                            href="{{ url_for(
+                                                'create_review',
+                                                session_id=session.id
+                                            ) }}"
+                                            class="btn btn-primary"
+                                        >
+                                            Leave Review
+                                            <span>→</span>
+                                        </a>
+
+                                    {% else %}
+
+                                        <span class="review-submitted">
+                                            ✓ Review Submitted
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-state-icon">
+                        ✓
+                    </div>
+
+                    <span class="empty-state-label">
+                        Keep Learning
+                    </span>
+
+                    <h3>
+                        No completed sessions yet
+                    </h3>
+
+                    <p>
+                        Your finished SkillSwap sessions will appear here
+                        as you learn and exchange skills.
+                    </p>
+
+                    <a
+                        href="{{ url_for('matches') }}"
+                        class="btn btn-primary"
+                    >
+                        Find a Skill Partner
+                        <span>→</span>
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- =====================================================
+             CANCELLED SESSIONS
+        ====================================================== -->
+
+        {% if cancelled_sessions %}
+
+            <section class="sessions-section cancelled-section">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            History
+                        </span>
+
+                        <h2>
+                            Cancelled Sessions
+                        </h2>
+
+                    </div>
+
+                    <span class="section-count cancelled-count">
+                        {{ cancelled_sessions|length }} cancelled
+                    </span>
+
+                </div>
+
+
+                <div class="session-list">
+
+                    {% for session in cancelled_sessions %}
+
+                        <article class="session-card cancelled-session">
+
+                            <div class="status-icon cancelled-icon">
+                                ×
+                            </div>
+
+
+                            <div class="session-main">
+
+                                <div class="session-top-row">
+
+                                    <div class="session-heading-content">
+
+                                        <span class="session-type">
+                                            Cancelled
+                                        </span>
+
+                                        <h3>
+                                            {% if session.title %}
+                                                {{ session.title }}
+                                            {% elif session.skill %}
+                                                {{ session.skill }} Session
+                                            {% else %}
+                                                Cancelled Session
+                                            {% endif %}
+                                        </h3>
+
+                                    </div>
+
+                                    <span class="session-status status-cancelled">
+                                        Cancelled
+                                    </span>
+
+                                </div>
+
+
+                                <div class="session-meta">
+
+                                    {% if session.scheduled_at is defined and session.scheduled_at %}
+
+                                        <span>
+                                            📅
+                                            {{ session.scheduled_at.strftime('%d %B %Y') }}
+                                        </span>
+
+                                        <span>
+                                            🕒
+                                            {{ session.scheduled_at.strftime('%I:%M %p') }}
+                                        </span>
+
+                                    {% else %}
+
+                                        {% if session.date %}
+
+                                            <span>
+                                                📅
+                                                {{ session.date.strftime('%d %B %Y') }}
+                                            </span>
+
+                                        {% endif %}
+
+                                        {% if session.time %}
+
+                                            <span>
+                                                🕒
+                                                {{ session.time.strftime('%I:%M %p') }}
+                                            </span>
+
+                                        {% endif %}
+
+                                    {% endif %}
+
+
+                                    {% if session.skill %}
+
+                                        <span>
+                                            ✦
+                                            {{ session.skill }}
+                                        </span>
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="session-actions">
+
+                                    <a
+                                        href="{{ url_for(
+                                            'session_detail',
+                                            session_id=session.id
+                                        ) }}"
+                                        class="btn btn-secondary"
+                                    >
+                                        View Details
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+        {% endif %}
+
+
+        <!-- =====================================================
+             BOTTOM CTA
+        ====================================================== -->
+
+        <section class="sessions-cta">
+
+            <div class="sessions-cta-content">
+
+                <span class="auth-label">
+                    Keep Learning
+                </span>
+
+                <h2>
+                    Ready for your next skill exchange?
+                </h2>
+
+                <p>
+                    Find someone who can teach what you want to learn,
+                    while you teach what you already know.
+                </p>
+
+            </div>
+
+
+            <div class="sessions-cta-actions">
+
+                <a
+                    href="{{ url_for('matches') }}"
+                    class="btn btn-primary"
+                >
+                    Explore Matches
+                    <span>→</span>
+                </a>
+
+                <a
+                    href="{{ url_for('dashboard') }}"
+                    class="btn btn-secondary"
+                >
+                    Back to Dashboard
+                </a>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</section>
+
+{% endblock %}

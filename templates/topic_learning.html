@@ -1,0 +1,1099 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ topic.title }} — {{ skill_name }} | SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/topic_learning.css') }}"
+>
+{% endblock %}
+
+
+{% block content %}
+
+{% set current_topic_percentage =
+    topic_progress_percentage|default(topic_percentage|default(0))
+%}
+
+<div class="topic-page">
+
+    <!-- ==============================
+         BACKGROUND
+         ============================== -->
+
+    <div class="topic-glow topic-glow-one"></div>
+    <div class="topic-glow topic-glow-two"></div>
+
+    <div class="topic-sparkles" aria-hidden="true">
+        <span>✦</span>
+        <span>✧</span>
+        <span>·</span>
+        <span>✦</span>
+    </div>
+
+
+    <!-- ==============================
+         TOP BAR
+         ============================== -->
+
+    <header class="topic-topbar">
+
+        <div class="topic-container topic-topbar-inner">
+
+            <a
+                href="{{ url_for('roadmap', skill=skill.slug) }}"
+                class="back-link"
+            >
+                <span class="back-icon">←</span>
+                <span>{{ skill_name }} Roadmap</span>
+            </a>
+
+
+            <div class="topic-topbar-progress">
+
+                <span class="top-progress-label">
+                    Topic Progress
+                </span>
+
+                <div class="top-progress-track">
+                    <div
+                        class="top-progress-fill"
+                        data-progress="{{ current_topic_percentage }}"
+                    ></div>
+                </div>
+
+                <strong>
+                    {{ current_topic_percentage }}%
+                </strong>
+
+            </div>
+
+
+            <div class="topic-status">
+
+                {% if topic.status == 'completed' %}
+
+                    <span class="status-dot completed"></span>
+                    Completed
+
+                {% elif learning_completed %}
+
+                    <span class="status-dot progress"></span>
+                    In Progress
+
+                {% else %}
+
+                    <span class="status-dot"></span>
+                    Available
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ==============================
+         MAIN WORKSPACE
+         ============================== -->
+
+    <div class="topic-container topic-workspace">
+
+
+        <!-- ==============================
+             LEFT ROADMAP
+             ============================== -->
+
+        <aside class="topic-roadmap-sidebar">
+
+            <div class="roadmap-sidebar-header">
+
+                <span class="eyebrow">
+                    {{ skill_name }}
+                </span>
+
+                <h2>
+                    Roadmap
+                </h2>
+
+                <a
+                    href="{{ url_for('roadmap', skill=skill.slug) }}"
+                    class="view-roadmap-link"
+                >
+                    View full roadmap
+                    <span>→</span>
+                </a>
+
+            </div>
+
+
+            <div class="roadmap-current-topic">
+
+                <span class="current-dot"></span>
+
+                <div>
+                    <small>CURRENT TOPIC</small>
+
+                    <strong>
+                        {{ topic.title }}
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <!-- Current topic progress -->
+
+            <div class="roadmap-steps">
+
+                <div
+                    class="roadmap-step
+                    {% if learning_completed %}completed{% else %}current{% endif %}"
+                >
+
+                    <span class="roadmap-step-number">
+                        {% if learning_completed %}
+                            ✓
+                        {% else %}
+                            01
+                        {% endif %}
+                    </span>
+
+                    <div>
+                        <strong>Learn</strong>
+                        <small>Understand</small>
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="roadmap-step
+                    {% if practice_completed %}
+                        completed
+                    {% elif learning_completed %}
+                        current
+                    {% endif %}"
+                >
+
+                    <span class="roadmap-step-number">
+                        {% if practice_completed %}
+                            ✓
+                        {% else %}
+                            02
+                        {% endif %}
+                    </span>
+
+                    <div>
+                        <strong>Practice</strong>
+                        <small>Try it yourself</small>
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="roadmap-step
+                    {% if task_completed %}
+                        completed
+                    {% elif practice_completed %}
+                        current
+                    {% endif %}"
+                >
+
+                    <span class="roadmap-step-number">
+                        {% if task_completed %}
+                            ✓
+                        {% else %}
+                            03
+                        {% endif %}
+                    </span>
+
+                    <div>
+                        <strong>Challenge</strong>
+                        <small>Prove your skill</small>
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="roadmap-step
+                    {% if task_completed %}completed{% endif %}
+                "
+                >
+
+                    <span class="roadmap-step-number">
+                        {% if task_completed %}
+                            ✓
+                        {% else %}
+                            04
+                        {% endif %}
+                    </span>
+
+                    <div>
+                        <strong>Complete</strong>
+                        <small>Unlock next topic</small>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- ==============================
+             MAIN CONTENT
+             ============================== -->
+
+        <main class="topic-main">
+
+
+            <!-- ==============================
+                 TOPIC HEADER
+                 ============================== -->
+
+            <section class="topic-header">
+
+                <div class="topic-header-badge">
+                    <span></span>
+                    {{ skill_name }}
+                </div>
+
+                <h1>
+                    {{ topic.title }}
+                </h1>
+
+                <p>
+                    Learn the concept, practice it, and complete
+                    the practical task to unlock the next topic.
+                </p>
+
+            </section>
+
+
+
+            <!-- ==============================
+                 LEARNING WORKSPACE
+                 ============================== -->
+
+            <section class="learning-workspace">
+
+
+                <!-- ==========================
+                     STEP 01 — LEARN
+                     ========================== -->
+
+                <div
+                    id="understand"
+                    class="workspace-section learn-section"
+                >
+
+                    <div class="workspace-section-header">
+
+                        <div class="workspace-number">
+                            01
+                        </div>
+
+                        <div>
+                            <span class="section-eyebrow">
+                                LEARN
+                            </span>
+
+                            <h2>
+                                Understand the Topic
+                            </h2>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Description -->
+
+                    {% if topic.description %}
+
+                        <div class="topic-description">
+                            {{ topic.description }}
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- Main Explanation -->
+
+                    {% if topic.explanation %}
+
+                        <div class="explanation-content">
+
+                            <span class="content-label">
+                                CORE CONCEPT
+                            </span>
+
+                            <div class="explanation-text">
+                                {{ topic.explanation }}
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- ==========================
+                         EXAMPLE
+                         ========================== -->
+
+                    {% if topic.example or topic.code_example %}
+
+                        <div class="example-area">
+
+                            <div class="example-heading">
+
+                                <span class="example-icon">
+                                    ✦
+                                </span>
+
+                                <div>
+
+                                    <span class="content-label">
+                                        SEE IT IN ACTION
+                                    </span>
+
+                                    <h3>
+                                        Example
+                                    </h3>
+
+                                </div>
+
+                            </div>
+
+
+                            {% if topic.example %}
+
+                                <div class="example-text">
+                                    {{ topic.example }}
+                                </div>
+
+                            {% endif %}
+
+
+                            {% if topic.code_example %}
+
+                                <div class="code-card">
+
+                                    <div class="code-card-header">
+
+                                        <div class="code-dots">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+
+                                        <span class="code-language">
+                                            {{ skill_name }}
+                                        </span>
+
+                                    </div>
+
+                                    <pre><code>{{ topic.code_example }}</code></pre>
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- Learn confirmation -->
+
+                    <div class="workspace-action">
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'mark_topic_learned',
+                                topic_id=topic.id
+                            ) }}"
+                        >
+
+                            <label class="confirmation">
+
+                                <input
+                                    type="checkbox"
+                                    name="learned_confirm"
+                                    {% if learning_completed %}checked{% endif %}
+                                    onchange="this.form.submit()"
+                                >
+
+                                <span class="custom-check"></span>
+
+                                <span>
+                                    I understand this topic
+                                </span>
+
+                            </label>
+
+                        </form>
+
+
+                        {% if learning_completed %}
+
+                            <a
+                                href="#practice"
+                                class="primary-action"
+                            >
+                                Continue to Practice
+                                <span>→</span>
+                            </a>
+
+                        {% else %}
+
+                            <button
+                                type="button"
+                                class="primary-action disabled"
+                                disabled
+                            >
+                                Continue to Practice
+                                <span>→</span>
+                            </button>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==========================
+                     STEP 02 — PRACTICE
+                     ========================== -->
+
+                <div
+                    id="practice"
+                    class="workspace-section practice-section"
+                >
+
+                    <div class="workspace-section-header">
+
+                        <div class="workspace-number">
+                            02
+                        </div>
+
+                        <div>
+                            <span class="section-eyebrow">
+                                PRACTICE
+                            </span>
+
+                            <h2>
+                                Try It Yourself
+                            </h2>
+                        </div>
+
+                    </div>
+
+
+                    <div class="practice-content">
+
+                        <div class="practice-icon">
+                            ✦
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Practice the concept
+                            </h3>
+
+                            <p>
+                                Use what you just learned to create
+                                your own example. Change values,
+                                try a different approach, and
+                                observe the result.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="workspace-action">
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'mark_topic_practiced',
+                                topic_id=topic.id
+                            ) }}"
+                        >
+
+                            <label class="confirmation">
+
+                                <input
+                                    type="checkbox"
+                                    name="practice_confirm"
+                                    {% if practice_completed %}checked{% endif %}
+                                    {% if not learning_completed %}disabled{% endif %}
+                                    onchange="this.form.submit()"
+                                >
+
+                                <span class="custom-check"></span>
+
+                                <span>
+                                    I practiced this topic
+                                </span>
+
+                            </label>
+
+                        </form>
+
+
+                        {% if practice_completed %}
+
+                            <a
+                                href="#task"
+                                class="secondary-action"
+                            >
+                                Continue to Challenge
+                                <span>→</span>
+                            </a>
+
+                        {% else %}
+
+                            <button
+                                type="button"
+                                class="secondary-action disabled"
+                                disabled
+                            >
+                                Continue to Challenge
+                                <span>→</span>
+                            </button>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==========================
+                     STEP 03 — PRACTICAL TASK
+                     ========================== -->
+
+                <div
+                    id="task"
+                    class="workspace-section task-section"
+                >
+
+                    <div class="workspace-section-header">
+
+                        <div class="workspace-number">
+                            03
+                        </div>
+
+                        <div>
+
+                            <span class="section-eyebrow">
+                                PRACTICAL TASK
+                            </span>
+
+                            <h2>
+                                Prove Your Skill
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    {% if task_error %}
+
+                        <div class="task-error">
+                            {{ task_error }}
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- ==========================
+                         PASSED
+                         ========================== -->
+
+                    {% if task_completed %}
+
+                        <div class="task-success">
+
+                            <div class="task-result-icon">
+                                ✓
+                            </div>
+
+                            <div>
+
+                                <span class="content-label">
+                                    CHALLENGE PASSED
+                                </span>
+
+                                <h3>
+                                    You completed this topic
+                                </h3>
+
+                                <p>
+                                    Your practical task was
+                                    successfully completed.
+                                    The next topic is now unlocked.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+
+                    <!-- ==========================
+                         AVAILABLE TASK
+                         ========================== -->
+
+                    {% elif practice_completed %}
+
+                        <div class="task-instructions">
+
+                            <span class="content-label">
+                                YOUR CHALLENGE
+                            </span>
+
+                            <h3>
+                                Complete this practical task
+                            </h3>
+
+
+                            {% if topic.task_description %}
+
+                                <div class="task-description">
+                                    {{ topic.task_description }}
+                                </div>
+
+                            {% else %}
+
+                                <p>
+                                    Apply what you learned in this
+                                    topic and submit your solution.
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Previous submission result -->
+
+                        {% if task_submission %}
+
+                            <div class="task-feedback failed">
+
+                                <div class="feedback-icon">
+                                    !
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Submission needs improvement
+                                    </strong>
+
+                                    <p>
+                                        Review the topic and submit
+                                        your solution again.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+
+
+                        <!-- Submission -->
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'submit_topic_task',
+                                topic_id=topic.id
+                            ) }}"
+                            class="task-form"
+                        >
+
+                            <label for="task_answer">
+                                Your Solution
+                            </label>
+
+
+                            <textarea
+                                id="task_answer"
+                                name="answer"
+                                rows="8"
+                                placeholder="Write your solution, code, explanation, strategy, answer, or creative response here..."
+                                required
+                            ></textarea>
+
+
+                            <div class="task-form-footer">
+
+                                <span>
+                                    Your submission will be
+                                    evaluated before this topic
+                                    is marked complete.
+                                </span>
+
+                                <button
+                                    type="submit"
+                                    class="primary-action"
+                                >
+                                    Submit Task
+                                    <span>→</span>
+                                </button>
+
+                            </div>
+
+                        </form>
+
+
+
+                    <!-- ==========================
+                         LOCKED TASK
+                         ========================== -->
+
+                    {% else %}
+
+                        <div class="task-locked">
+
+                            <div class="locked-icon">
+                                🔒
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Practical Task Locked
+                                </strong>
+
+                                <p>
+                                    Complete the Practice step
+                                    first to unlock this task.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <!-- ==========================
+                     COMPLETION
+                     ========================== -->
+
+                {% if task_completed %}
+
+                    <div class="topic-complete">
+
+                        <div class="complete-icon">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <span>
+                                TOPIC COMPLETE
+                            </span>
+
+                            <h2>
+                                Great work ✦
+                            </h2>
+
+                            <p>
+                                You successfully completed
+                                <strong>{{ topic.title }}</strong>.
+                                Continue to the next topic.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+
+
+                <!-- ==========================
+                     TEACHER
+                     ========================== -->
+
+                <section class="teacher-strip">
+
+                    <div>
+
+                        <span class="content-label">
+                            SKILL EXCHANGE
+                        </span>
+
+                        <h3>
+                            Need help with {{ skill_name }}?
+                        </h3>
+
+                        <p>
+                            Learn this skill with someone who
+                            can teach you one-to-one.
+                        </p>
+
+                    </div>
+
+
+                    <a
+                        href="{{ url_for('connections') }}"
+                        class="secondary-action"
+                    >
+                        Find a Teacher
+                        <span>→</span>
+                    </a>
+
+                </section>
+
+
+
+                <!-- ==========================
+                     PREVIOUS / NEXT
+                     ========================== -->
+
+                <div class="topic-navigation">
+
+
+                    <!-- Previous -->
+
+                    <div class="navigation-side">
+
+                        {% if previous_topic %}
+
+                            <a
+                                href="{{ url_for(
+                                    'topic_learning',
+                                    topic_id=previous_topic.id
+                                ) }}"
+                                class="navigation-link previous"
+                            >
+
+                                <span class="navigation-arrow">
+                                    ←
+                                </span>
+
+                                <div>
+
+                                    <small>
+                                        PREVIOUS
+                                    </small>
+
+                                    <strong>
+                                        {{ previous_topic.title }}
+                                    </strong>
+
+                                </div>
+
+                            </a>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- Next -->
+
+                    <div class="navigation-side next">
+
+                        {% if next_topic and topic.status == 'completed' %}
+
+                            <a
+                                href="{{ url_for(
+                                    'topic_learning',
+                                    topic_id=next_topic.id
+                                ) }}"
+                                class="navigation-link"
+                            >
+
+                                <div>
+
+                                    <small>
+                                        NEXT TOPIC
+                                    </small>
+
+                                    <strong>
+                                        {{ next_topic.title }}
+                                    </strong>
+
+                                </div>
+
+                                <span class="navigation-arrow">
+                                    →
+                                </span>
+
+                            </a>
+
+
+                        {% elif not next_topic and topic.status == 'completed' %}
+
+                            <a
+                                href="{{ url_for(
+                                    'roadmap',
+                                    skill=skill.slug
+                                ) }}"
+                                class="navigation-link"
+                            >
+
+                                <div>
+
+                                    <small>
+                                        ROADMAP COMPLETE
+                                    </small>
+
+                                    <strong>
+                                        View Full Roadmap
+                                    </strong>
+
+                                </div>
+
+                                <span class="navigation-arrow">
+                                    →
+                                </span>
+
+                            </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</div>
+
+
+
+<!-- ==============================
+     PAGE JAVASCRIPT
+     ============================== -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* --------------------------------
+       Progress bars
+       -------------------------------- */
+
+    document
+        .querySelectorAll(
+            ".top-progress-fill"
+        )
+        .forEach(function (bar) {
+
+            const value = Number(
+                bar.getAttribute(
+                    "data-progress"
+                ) || 0
+            );
+
+            const safeValue = Math.min(
+                100,
+                Math.max(
+                    0,
+                    Number.isFinite(value)
+                        ? value
+                        : 0
+                )
+            );
+
+            requestAnimationFrame(function () {
+
+                bar.style.width =
+                    safeValue + "%";
+
+            });
+
+        });
+
+
+
+    /* --------------------------------
+       Smooth internal navigation
+       -------------------------------- */
+
+    document
+        .querySelectorAll(
+            'a[href^="#"]'
+        )
+        .forEach(function (link) {
+
+            link.addEventListener(
+                "click",
+                function (event) {
+
+                    const targetId =
+                        this.getAttribute(
+                            "href"
+                        );
+
+                    if (
+                        !targetId ||
+                        targetId === "#"
+                    ) {
+                        return;
+                    }
+
+                    const target =
+                        document.querySelector(
+                            targetId
+                        );
+
+                    if (!target) {
+                        return;
+                    }
+
+                    event.preventDefault();
+
+                    target.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+
+                }
+            );
+
+        });
+
+});
+
+</script>
+
+{% endblock %}

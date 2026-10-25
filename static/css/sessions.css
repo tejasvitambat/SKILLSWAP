@@ -1,0 +1,1682 @@
+/* =========================================================
+   SKILLSWAP — SESSIONS PAGE
+   Premium White + Baby Pink + Rosy Pink + Burgundy
+   ========================================================= */
+
+:root {
+    --session-white: #ffffff;
+
+    --session-bg: #fffafb;
+    --session-blush: #f3dce3;
+    --session-blush-light: #fcf6f8;
+    --session-blush-soft: #f8e8ed;
+
+    --session-rose: #c95c78;
+    --session-rose-dark: #b64c69;
+    --session-rose-light: #dc8097;
+
+    --session-burgundy: #4a2430;
+    --session-burgundy-soft: #6c4853;
+
+    --session-text: #59404a;
+    --session-muted: #927c85;
+    --session-light: #aa979f;
+
+    --session-border: #eadde2;
+    --session-border-light: #f2e8ec;
+
+    --session-green: #6d9678;
+    --session-green-bg: #eef7f1;
+
+    --session-yellow: #af8451;
+    --session-yellow-bg: #fcf6ed;
+
+    --session-red: #b56873;
+    --session-red-bg: #fff4f6;
+
+    --session-shadow-sm:
+        0 8px 24px rgba(74, 36, 48, 0.055);
+
+    --session-shadow-md:
+        0 16px 40px rgba(74, 36, 48, 0.08);
+
+    --session-shadow-lg:
+        0 26px 65px rgba(74, 36, 48, 0.10);
+}
+
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+.sessions-page {
+    position: relative;
+
+    min-height: 100vh;
+
+    padding: 42px 0 90px;
+
+    background:
+        radial-gradient(
+            circle at 5% 8%,
+            rgba(243, 220, 227, 0.72),
+            transparent 22%
+        ),
+        radial-gradient(
+            circle at 96% 27%,
+            rgba(243, 220, 227, 0.58),
+            transparent 24%
+        ),
+        radial-gradient(
+            circle at 50% 98%,
+            rgba(201, 92, 120, 0.055),
+            transparent 25%
+        ),
+        #ffffff;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   BACKGROUND ORBS
+   ========================================================= */
+
+.sessions-orb {
+    position: absolute;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    filter: blur(15px);
+
+    opacity: 0.48;
+
+    animation: sessionOrbFloat 9s ease-in-out infinite;
+}
+
+.sessions-orb-one {
+    width: 230px;
+    height: 230px;
+
+    top: 90px;
+    left: -125px;
+
+    background: rgba(243, 220, 227, 0.66);
+}
+
+.sessions-orb-two {
+    width: 300px;
+    height: 300px;
+
+    top: 570px;
+    right: -170px;
+
+    background: rgba(248, 229, 235, 0.56);
+
+    animation-delay: 1.6s;
+}
+
+.sessions-orb-three {
+    width: 150px;
+    height: 150px;
+
+    bottom: 160px;
+    left: 17%;
+
+    background: rgba(201, 92, 120, 0.07);
+
+    animation-delay: 3.2s;
+}
+
+@keyframes sessionOrbFloat {
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    50% {
+        transform: translate3d(0, -15px, 0);
+    }
+}
+
+
+/* =========================================================
+   SPARKLES
+   ========================================================= */
+
+.sessions-sparkle {
+    position: absolute;
+
+    pointer-events: none;
+
+    color: rgba(201, 92, 120, 0.42);
+
+    animation:
+        sessionSparkleMove 4s ease-in-out infinite,
+        sessionSparklePulse 3s ease-in-out infinite;
+}
+
+.sessions-page .sparkle-one {
+    top: 120px;
+    left: 7%;
+
+    font-size: 15px;
+}
+
+.sessions-page .sparkle-two {
+    top: 370px;
+    right: 7%;
+
+    font-size: 12px;
+
+    animation-delay: 0.8s;
+}
+
+.sessions-page .sparkle-three {
+    bottom: 190px;
+    left: 8%;
+
+    font-size: 14px;
+
+    animation-delay: 1.6s;
+}
+
+@keyframes sessionSparkleMove {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-7px);
+    }
+}
+
+@keyframes sessionSparklePulse {
+    0%,
+    100% {
+        opacity: 0.25;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+
+.sessions-container {
+    position: relative;
+
+    z-index: 2;
+
+    width: min(1120px, calc(100% - 42px));
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   GENERAL BUTTONS
+   ========================================================= */
+
+.sessions-page .btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    min-height: 39px;
+
+    padding: 0 13px;
+
+    border-radius: 10px;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.sessions-page .btn-primary {
+    border: 1px solid var(--session-rose);
+
+    background: var(--session-rose);
+
+    color: #ffffff;
+
+    box-shadow:
+        0 7px 17px rgba(201, 92, 120, 0.15);
+}
+
+.sessions-page .btn-primary:hover {
+    transform: translateY(-2px);
+
+    background: var(--session-rose-dark);
+
+    box-shadow:
+        0 11px 24px rgba(201, 92, 120, 0.23);
+}
+
+.sessions-page .btn-secondary {
+    border: 1px solid var(--session-border);
+
+    background: #ffffff;
+
+    color: var(--session-burgundy);
+
+    box-shadow: 0 4px 12px rgba(74, 36, 48, 0.035);
+}
+
+.sessions-page .btn-secondary:hover {
+    transform: translateY(-2px);
+
+    border-color: #dcb9c4;
+
+    background: var(--session-blush-light);
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.page-header {
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    gap: 28px;
+
+    margin-bottom: 27px;
+}
+
+.page-header-content {
+    max-width: 730px;
+}
+
+.auth-label {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-bottom: 8px;
+
+    color: var(--session-rose);
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    letter-spacing: 0.13em;
+
+    text-transform: uppercase;
+}
+
+.auth-label::before {
+    content: "";
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: var(--session-rose);
+
+    box-shadow:
+        0 0 0 4px rgba(201, 92, 120, 0.10);
+}
+
+.page-header h1 {
+    margin: 0;
+
+    color: var(--session-burgundy);
+
+    font-family: "DM Serif Display", serif;
+
+    font-size: clamp(48px, 6vw, 68px);
+
+    font-weight: 400;
+
+    line-height: 0.98;
+
+    letter-spacing: -0.03em;
+}
+
+.page-header p {
+    max-width: 680px;
+
+    margin: 12px 0 0;
+
+    color: var(--session-muted);
+
+    font-size: 11px;
+
+    line-height: 1.8;
+}
+
+.page-header-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   STATS
+   ========================================================= */
+
+.session-stats {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 11px;
+
+    margin-bottom: 38px;
+}
+
+.session-stat-card {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    min-height: 91px;
+
+    padding: 15px;
+
+    border: 1px solid var(--session-border);
+
+    border-radius: 16px;
+
+    background: rgba(255, 255, 255, 0.96);
+
+    box-shadow: var(--session-shadow-sm);
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.session-stat-card:hover {
+    transform: translateY(-3px);
+
+    border-color: #dec1ca;
+
+    box-shadow: var(--session-shadow-md);
+}
+
+.stat-icon {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    width: 39px;
+    height: 39px;
+
+    border-radius: 11px;
+
+    background: var(--session-blush-soft);
+
+    color: var(--session-rose);
+
+    font-size: 14px;
+}
+
+.stat-info {
+    min-width: 0;
+}
+
+.session-stat-label {
+    display: block;
+
+    color: var(--session-muted);
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.06em;
+}
+
+.session-stat-card .stat-info strong {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--session-burgundy);
+
+    font-family: "DM Serif Display", serif;
+
+    font-size: 28px;
+
+    font-weight: 400;
+
+    line-height: 1;
+}
+
+.session-stat-card .stat-info p {
+    margin: 4px 0 0;
+
+    color: var(--session-light);
+
+    font-size: 7px;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   SECTION
+   ========================================================= */
+
+.sessions-section {
+    margin-bottom: 40px;
+}
+
+.section-heading {
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 15px;
+}
+
+.section-label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: var(--session-rose);
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    letter-spacing: 0.12em;
+
+    text-transform: uppercase;
+}
+
+.section-heading h2 {
+    margin: 0;
+
+    color: var(--session-burgundy);
+
+    font-family: "DM Serif Display", serif;
+
+    font-size: 34px;
+
+    font-weight: 400;
+
+    line-height: 1.05;
+}
+
+.section-count {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 28px;
+
+    padding: 0 10px;
+
+    border: 1px solid var(--session-border);
+
+    border-radius: 999px;
+
+    background: #ffffff;
+
+    color: var(--session-rose);
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+.pending-count {
+    color: var(--session-yellow);
+}
+
+.completed-count {
+    color: var(--session-green);
+}
+
+.cancelled-count {
+    color: var(--session-red);
+}
+
+
+/* =========================================================
+   LIST
+   ========================================================= */
+
+.session-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 11px;
+}
+
+
+/* =========================================================
+   SESSION CARD
+   ========================================================= */
+
+.session-card {
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns: 70px minmax(0, 1fr);
+
+    gap: 17px;
+
+    padding: 17px;
+
+    border: 1px solid var(--session-border);
+
+    border-radius: 17px;
+
+    background: rgba(255, 255, 255, 0.97);
+
+    box-shadow: var(--session-shadow-sm);
+
+    transition:
+        transform 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease;
+}
+
+.session-card:hover {
+    transform: translateY(-2px);
+
+    border-color: #ddc2cb;
+
+    box-shadow: var(--session-shadow-md);
+}
+
+
+/* =========================================================
+   DATE CARD
+   ========================================================= */
+
+.session-date {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 70px;
+
+    min-height: 94px;
+
+    border: 1px solid #efd9e1;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #fff8fa,
+            #f8e8ed
+        );
+
+    text-align: center;
+}
+
+.session-month {
+    color: var(--session-rose);
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.08em;
+}
+
+.session-date strong {
+    margin-top: 2px;
+
+    color: var(--session-burgundy);
+
+    font-family: "DM Serif Display", serif;
+
+    font-size: 31px;
+
+    font-weight: 400;
+
+    line-height: 1;
+}
+
+.session-day {
+    margin-top: 4px;
+
+    color: var(--session-muted);
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   STATUS ICON
+   ========================================================= */
+
+.status-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 55px;
+    height: 55px;
+
+    align-self: flex-start;
+
+    border-radius: 14px;
+
+    font-size: 18px;
+}
+
+.pending-icon {
+    background: var(--session-yellow-bg);
+
+    color: var(--session-yellow);
+}
+
+.completed-icon {
+    background: var(--session-green-bg);
+
+    color: var(--session-green);
+}
+
+.cancelled-icon {
+    background: var(--session-red-bg);
+
+    color: var(--session-red);
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.session-main {
+    min-width: 0;
+}
+
+.session-top-row {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+.session-heading-content {
+    min-width: 0;
+}
+
+.session-type {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: var(--session-rose);
+
+    font-size: 7px;
+
+    font-weight: 900;
+
+    letter-spacing: 0.10em;
+
+    text-transform: uppercase;
+}
+
+.session-top-row h3 {
+    margin: 0;
+
+    color: var(--session-burgundy);
+
+    font-family: "DM Serif Display", serif;
+
+    font-size: 25px;
+
+    font-weight: 400;
+
+    line-height: 1.12;
+}
+
+.session-description {
+    max-width: 760px;
+
+    margin: 7px 0 0;
+
+    color: var(--session-muted);
+
+    font-size: 10px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.session-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    min-height: 24px;
+
+    padding: 0 9px;
+
+    border-radius: 999px;
+
+    font-size: 7px;
+
+    font-weight: 900;
+
+    letter-spacing: 0.05em;
+
+    text-transform: uppercase;
+}
+
+.status-scheduled,
+.status-confirmed,
+.status-accepted {
+    background: var(--session-green-bg);
+
+    color: var(--session-green);
+}
+
+.status-pending {
+    background: var(--session-yellow-bg);
+
+    color: var(--session-yellow);
+}
+
+.status-completed {
+    background: var(--session-green-bg);
+
+    color: var(--session-green);
+}
+
+.status-cancelled,
+.status-declined,
+.status-rejected {
+    background: var(--session-red-bg);
+
+    color: var(--session-red);
+}
+
+
+/* =========================================================
+   SESSION META
+   ========================================================= */
+
+.session-meta {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+
+    margin-top: 11px;
+}
+
+.session-meta span {
+    display: inline-flex;
+
+    align-items: center;
+
+    min-height: 24px;
+
+    padding: 0 8px;
+
+    border: 1px solid var(--session-border-light);
+
+    border-radius: 999px;
+
+    background: #fffafb;
+
+    color: var(--session-muted);
+
+    font-size: 7px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   PARTNER
+   ========================================================= */
+
+.session-partner {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 12px;
+}
+
+.session-partner-avatar {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 34px;
+
+    flex-shrink: 0;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+    background: var(--session-blush-soft);
+
+    color: var(--session-rose);
+
+    font-family: "DM Serif Display", serif;
+
+    font-size: 13px;
+}
+
+.session-partner-avatar img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.session-partner-avatar.fallback {
+    font-size: 12px;
+}
+
+.session-partner-info {
+    min-width: 0;
+}
+
+.session-partner-info small {
+    display: block;
+
+    color: var(--session-light);
+
+    font-size: 7px;
+}
+
+.session-partner-info strong {
+    display: block;
+
+    margin-top: 2px;
+
+    overflow: hidden;
+
+    color: var(--session-burgundy);
+
+    font-size: 9px;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.session-actions {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    margin-top: 13px;
+
+    padding-top: 12px;
+
+    border-top: 1px solid var(--session-border-light);
+}
+
+.session-actions .btn {
+    min-height: 37px;
+}
+
+.review-submitted {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 37px;
+
+    padding: 0 11px;
+
+    border-radius: 9px;
+
+    background: var(--session-green-bg);
+
+    color: var(--session-green);
+
+    font-size: 8px;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   PENDING MESSAGE
+   ========================================================= */
+
+.pending-message {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 12px;
+
+    padding: 10px 11px;
+
+    border: 1px solid #eee2d0;
+
+    border-radius: 10px;
+
+    background: #fffbf4;
+}
+
+.pending-message-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 24px;
+    height: 24px;
+
+    flex-shrink: 0;
+
+    border-radius: 7px;
+
+    background: var(--session-yellow-bg);
+
+    color: var(--session-yellow);
+
+    font-size: 9px;
+
+    font-weight: 900;
+}
+
+.pending-message p {
+    margin: 0;
+
+    color: #967c5d;
+
+    font-size: 8px;
+
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-state {
+    padding: 48px 25px;
+
+    border: 1px dashed #e1cbd3;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #fff8fa
+        );
+
+    text-align: center;
+}
+
+.empty-state-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 49px;
+    height: 49px;
+
+    margin: 0 auto 12px;
+
+    border-radius: 14px;
+
+    background: var(--session-blush-soft);
+
+    color: var(--session-rose);
+
+    font-size: 18px;
+}
+
+.empty-state-label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--session-rose);
+
+    font-size: 7px;
+
+    font-weight: 900;
+
+    letter-spacing: 0.10em;
+
+    text-transform: uppercase;
+}
+
+.empty-state h3 {
+    margin: 0;
+
+    color: var(--session-burgundy);
+
+    font-family: "DM Serif Display", serif;
+
+    font-size: 30px;
+
+    font-weight: 400;
+}
+
+.empty-state p {
+    max-width: 570px;
+
+    margin: 7px auto 18px;
+
+    color: var(--session-muted);
+
+    font-size: 10px;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   SMALL EMPTY STATE
+   ========================================================= */
+
+.small-empty-state {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 14px 16px;
+
+    border: 1px solid var(--session-border);
+
+    border-radius: 13px;
+
+    background: #fffdfd;
+}
+
+.small-empty-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 30px;
+    height: 30px;
+
+    flex-shrink: 0;
+
+    border-radius: 9px;
+
+    background: var(--session-green-bg);
+
+    color: var(--session-green);
+
+    font-size: 10px;
+
+    font-weight: 900;
+}
+
+.small-empty-state strong {
+    display: block;
+
+    color: var(--session-burgundy);
+
+    font-size: 9px;
+
+    font-weight: 900;
+}
+
+.small-empty-state p {
+    margin: 3px 0 0;
+
+    color: var(--session-muted);
+
+    font-size: 8px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   CANCELLED
+   ========================================================= */
+
+.cancelled-section {
+    opacity: 0.93;
+}
+
+.cancelled-session {
+    background: #fffdfd;
+}
+
+.cancelled-session .session-top-row h3 {
+    color: #755d65;
+}
+
+.cancelled-session .session-meta span {
+    color: #99868d;
+}
+
+
+/* =========================================================
+   BOTTOM CTA
+   ========================================================= */
+
+.sessions-cta {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 25px;
+
+    overflow: hidden;
+
+    padding: 29px 31px;
+
+    border: 1px solid #ecd2da;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            125deg,
+            #fffafb,
+            #f8e8ed
+        );
+
+    box-shadow: var(--session-shadow-md);
+}
+
+.sessions-cta::after {
+    content: "";
+
+    position: absolute;
+
+    width: 260px;
+    height: 260px;
+
+    top: -140px;
+    right: -90px;
+
+    border-radius: 50%;
+
+    background: rgba(201, 92, 120, 0.10);
+
+    filter: blur(14px);
+
+    pointer-events: none;
+}
+
+.sessions-cta-content {
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 680px;
+}
+
+.sessions-cta-content h2 {
+    margin: 0;
+
+    color: var(--session-burgundy);
+
+    font-family: "DM Serif Display", serif;
+
+    font-size: 35px;
+
+    font-weight: 400;
+
+    line-height: 1.1;
+}
+
+.sessions-cta-content p {
+    max-width: 630px;
+
+    margin: 7px 0 0;
+
+    color: var(--session-muted);
+
+    font-size: 10px;
+
+    line-height: 1.75;
+}
+
+.sessions-cta-actions {
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   RESPONSIVE — 1000px
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .session-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .page-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — 800px
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .sessions-page {
+        padding: 32px 0 70px;
+    }
+
+    .sessions-container {
+        width: min(100% - 28px, 1120px);
+    }
+
+    .page-header h1 {
+        font-size: 51px;
+    }
+
+    .page-header-actions {
+        width: 100%;
+    }
+
+    .session-card {
+        grid-template-columns: 58px minmax(0, 1fr);
+    }
+
+    .session-date {
+        width: 58px;
+
+        min-height: 84px;
+    }
+
+    .session-date strong {
+        font-size: 27px;
+    }
+
+    .sessions-cta {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .sessions-cta-actions {
+        width: 100%;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE — 620px
+   ========================================================= */
+
+@media (max-width: 620px) {
+
+    .sessions-page {
+        padding: 25px 0 60px;
+    }
+
+    .sessions-container {
+        width: min(100% - 24px, 1120px);
+    }
+
+
+    /* Header */
+
+    .page-header h1 {
+        font-size: 43px;
+    }
+
+    .page-header p {
+        font-size: 10px;
+    }
+
+    .page-header-actions {
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 7px;
+    }
+
+    .page-header-actions .btn {
+        width: 100%;
+    }
+
+
+    /* Stats */
+
+    .session-stats {
+        grid-template-columns: 1fr;
+
+        gap: 9px;
+
+        margin-bottom: 31px;
+    }
+
+    .session-stat-card {
+        min-height: 78px;
+    }
+
+
+    /* Section */
+
+    .section-heading {
+        display: block;
+    }
+
+    .section-heading h2 {
+        font-size: 29px;
+    }
+
+    .section-count {
+        margin-top: 7px;
+    }
+
+
+    /* Cards */
+
+    .session-card {
+        grid-template-columns: 1fr;
+
+        gap: 13px;
+
+        padding: 15px;
+    }
+
+    .session-date {
+        width: 100%;
+
+        min-height: 57px;
+
+        flex-direction: row;
+
+        justify-content: center;
+
+        gap: 8px;
+    }
+
+    .session-month {
+        order: 1;
+    }
+
+    .session-date strong {
+        order: 2;
+
+        font-size: 25px;
+    }
+
+    .session-day {
+        order: 3;
+
+        margin-top: 0;
+    }
+
+
+    /* Status */
+
+    .session-top-row {
+        display: block;
+    }
+
+    .session-status {
+        margin-top: 7px;
+    }
+
+
+    /* Meta */
+
+    .session-meta {
+        gap: 5px;
+    }
+
+
+    /* Actions */
+
+    .session-actions {
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .session-actions .btn {
+        width: 100%;
+    }
+
+    .review-submitted {
+        width: 100%;
+    }
+
+
+    /* Pending */
+
+    .pending-message {
+        align-items: flex-start;
+    }
+
+
+    /* CTA */
+
+    .sessions-cta {
+        padding: 24px 19px;
+    }
+
+    .sessions-cta-content h2 {
+        font-size: 30px;
+    }
+
+    .sessions-cta-actions {
+        display: grid;
+
+        grid-template-columns: 1fr;
+
+        width: 100%;
+    }
+
+    .sessions-cta-actions .btn {
+        width: 100%;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE — 430px
+   ========================================================= */
+
+@media (max-width: 430px) {
+
+    .page-header h1 {
+        font-size: 38px;
+    }
+
+    .page-header-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .session-stat-card {
+        min-height: 76px;
+    }
+
+    .session-card {
+        padding: 14px;
+    }
+
+    .session-top-row h3 {
+        font-size: 22px;
+    }
+
+    .session-meta span {
+        font-size: 6.5px;
+    }
+
+    .session-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .empty-state h3 {
+        font-size: 27px;
+    }
+
+    .sessions-cta-content h2 {
+        font-size: 27px;
+    }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.sessions-page a:focus-visible,
+.sessions-page button:focus-visible {
+    outline: 2px solid var(--session-rose);
+
+    outline-offset: 3px;
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .sessions-orb,
+    .sessions-sparkle {
+        animation: none;
+    }
+
+    .session-card,
+    .session-stat-card,
+    .sessions-page .btn {
+        transition: none;
+    }
+
+}

@@ -1,0 +1,431 @@
+{% extends "base.html" %}
+
+{% block title %}
+    SkillSwap — Learn. Teach. Grow.
+{% endblock %}
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/home.css') }}?v=10"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<section class="home-page">
+
+    <!-- =====================================================
+         AMBIENT GLOWS
+    ====================================================== -->
+
+    <div class="home-glow home-glow-one"></div>
+    <div class="home-glow home-glow-two"></div>
+    <div class="home-glow home-glow-three"></div>
+
+
+    <!-- =====================================================
+         SPARKLES
+    ====================================================== -->
+
+    <div class="home-sparkles" aria-hidden="true">
+
+        <span class="spark spark-1">✦</span>
+        <span class="spark spark-2">✧</span>
+        <span class="spark spark-3">✦</span>
+        <span class="spark spark-4">⋆</span>
+        <span class="spark spark-5">✧</span>
+        <span class="spark spark-6">✦</span>
+
+    </div>
+
+
+    <div class="home-container">
+
+
+        <!-- =================================================
+             HERO
+        ================================================== -->
+
+        <section class="home-hero">
+
+            <!-- LEFT -->
+
+            <div class="hero-content">
+
+                <div class="hero-badge">
+
+                    <span class="badge-dot"></span>
+
+                    Learn
+
+                    <i>•</i>
+
+                    Teach
+
+                    <i>•</i>
+
+                    Grow Together
+
+                </div>
+
+
+                <!-- MOVING WORD HEADING -->
+
+                <h1 class="hero-title">
+
+                    <span class="hero-line line-one">
+                        Learn Skills.
+                    </span>
+
+                    <span class="hero-line line-two">
+                        Teach Skills.
+                    </span>
+
+                    <span class="hero-line line-three">
+                        <em>Grow Together.</em>
+                    </span>
+
+                </h1>
+
+
+                <p class="hero-description">
+
+                    SkillSwap connects people who can teach what
+                    you want to learn with people who want to
+                    learn what you already know.
+
+                </p>
+
+
+                <!-- ACTIONS -->
+
+                <div class="hero-actions">
+
+                    <a
+                        href="{{ url_for('signup') }}"
+                        class="hero-primary"
+                    >
+
+                        <span>
+                            Get Started
+                        </span>
+
+                        <b>
+                            →
+                        </b>
+
+                    </a>
+
+
+                    <a
+                        href="{{ url_for('how_it_works') }}"
+                        class="hero-secondary"
+                    >
+
+                        <span class="play-circle">
+                            ▶
+                        </span>
+
+                        <span>
+                            How It Works
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+                <!-- TRUST -->
+
+                <div class="hero-trust">
+
+                    <div class="trust-avatars">
+
+                        <span>A</span>
+                        <span>R</span>
+                        <span>P</span>
+                        <span>S</span>
+
+                    </div>
+
+
+                    <div class="trust-text">
+
+                        <span>
+                            Built for meaningful
+                        </span>
+
+                        <strong>
+                            skill exchange.
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 RIGHT VISUAL
+            ================================================== -->
+
+            <div class="hero-visual">
+
+                <div class="visual-aura"></div>
+
+
+                <div class="glass-image-card">
+
+                    <div class="image-border"></div>
+
+                    <div class="image-shine"></div>
+
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='images/tejasvi.png'
+                        ) }}"
+                        alt="SkillSwap learning and teaching"
+                        class="hero-image"
+                    >
+
+
+                    <!-- FLOATING CARD -->
+
+                    <div class="floating-card floating-left">
+
+                        <div class="floating-icon">
+                            ⇄
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Smart Matching
+                            </strong>
+
+                            <small>
+                                Find the right partner
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- FLOATING CARD -->
+
+                    <div class="floating-card floating-right">
+
+                        <div class="floating-icon">
+                            ✦
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Learn Together
+                            </strong>
+
+                            <small>
+                                Grow through real practice
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TOP BADGE -->
+
+                    <div class="visual-badge">
+
+                        <span>
+                            ✦
+                        </span>
+
+                        Skill Exchange
+
+                    </div>
+
+
+                    <!-- HEART -->
+
+                    <div class="visual-heart">
+                        ♥
+                    </div>
+
+
+                    <!-- MINI SPARKLES -->
+
+                    <span class="image-spark image-spark-one">
+                        ✦
+                    </span>
+
+                    <span class="image-spark image-spark-two">
+                        ✧
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             SMALL GLASS HIGHLIGHTS
+        ================================================== -->
+
+        <section class="hero-highlights">
+
+
+            <div class="highlight-card">
+
+                <div class="highlight-icon">
+                    ⇄
+                </div>
+
+                <div>
+
+                    <strong>
+                        Smart Matching
+                    </strong>
+
+                    <small>
+                        Find complementary skills
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="highlight-card">
+
+                <div class="highlight-icon">
+                    ✦
+                </div>
+
+                <div>
+
+                    <strong>
+                        Interactive Learning
+                    </strong>
+
+                    <small>
+                        Learn through real practice
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="highlight-card">
+
+                <div class="highlight-icon">
+                    ✓
+                </div>
+
+                <div>
+
+                    <strong>
+                        Verified Skills
+                    </strong>
+
+                    <small>
+                        Levels earned through assessment
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="highlight-card">
+
+                <div class="highlight-icon">
+                    ★
+                </div>
+
+                <div>
+
+                    <strong>
+                        Real Progress
+                    </strong>
+
+                    <small>
+                        Build skills step by step
+                    </small>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
+             COMPACT CTA
+        ================================================== -->
+
+        <section class="home-cta">
+
+            <div class="cta-glow"></div>
+
+            <span class="cta-spark cta-spark-one">
+                ✦
+            </span>
+
+            <span class="cta-spark cta-spark-two">
+                ✧
+            </span>
+
+
+            <div class="cta-content">
+
+                <span class="cta-label">
+                    START YOUR JOURNEY
+                </span>
+
+                <h2>
+                    Teach what you know.
+                    <em>Learn what you love.</em>
+                </h2>
+
+                <p>
+                    One skill can teach you something new.
+                    One connection can change how you learn.
+                </p>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('signup') }}"
+                class="cta-button"
+            >
+
+                Start SkillSwapping
+
+                <span>
+                    →
+                </span>
+
+            </a>
+
+        </section>
+
+    </div>
+
+</section>
+
+{% endblock %}

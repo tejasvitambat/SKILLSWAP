@@ -1,0 +1,763 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Learning Progress — SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/progress.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="progress-page">
+
+    <!-- =========================================
+         BACKGROUND
+         ========================================= -->
+
+    <div class="progress-bg" aria-hidden="true">
+
+        <div class="progress-orb orb-one"></div>
+        <div class="progress-orb orb-two"></div>
+        <div class="progress-orb orb-three"></div>
+
+        <span class="progress-sparkle sparkle-one">✦</span>
+        <span class="progress-sparkle sparkle-two">✧</span>
+        <span class="progress-sparkle sparkle-three">✦</span>
+        <span class="progress-sparkle sparkle-four">✧</span>
+        <span class="progress-sparkle sparkle-five">✦</span>
+
+    </div>
+
+
+    <div class="progress-container">
+
+
+        <!-- =========================================
+             HEADER
+             ========================================= -->
+
+        <header class="progress-header">
+
+            <div class="progress-header-content">
+
+                <span class="section-label">
+                    Your Growth
+                </span>
+
+                <h1>
+                    Learning Progress
+                </h1>
+
+                <p>
+                    Track what you've learned, what you're practicing
+                    and what you should learn next.
+                </p>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="btn btn-secondary"
+            >
+                <span>←</span>
+                Dashboard
+            </a>
+
+        </header>
+
+
+
+        <!-- =========================================
+             OVERALL STATS
+             ========================================= -->
+
+        <section class="progress-stats" aria-label="Learning statistics">
+
+
+            <article class="progress-stat-card">
+
+                <div class="progress-stat-icon">
+                    ✓
+                </div>
+
+                <div>
+                    <small>
+                        Topics Completed
+                    </small>
+
+                    <strong>
+                        {{ total_completed_topics|default(0) }}
+                    </strong>
+                </div>
+
+            </article>
+
+
+
+            <article class="progress-stat-card">
+
+                <div class="progress-stat-icon">
+                    ◈
+                </div>
+
+                <div>
+                    <small>
+                        Skills In Progress
+                    </small>
+
+                    <strong>
+                        {{ skills_in_progress|default(0) }}
+                    </strong>
+                </div>
+
+            </article>
+
+
+
+            <article class="progress-stat-card">
+
+                <div class="progress-stat-icon">
+                    ◷
+                </div>
+
+                <div>
+                    <small>
+                        Learning Hours
+                    </small>
+
+                    <strong>
+                        {{ total_learning_hours|default(0) }}
+                    </strong>
+                </div>
+
+            </article>
+
+
+
+            <article class="progress-stat-card">
+
+                <div class="progress-stat-icon">
+                    ★
+                </div>
+
+                <div>
+                    <small>
+                        Skills Completed
+                    </small>
+
+                    <strong>
+                        {{ skills_completed|default(0) }}
+                    </strong>
+                </div>
+
+            </article>
+
+        </section>
+
+
+
+        <!-- =========================================
+             SKILL PROGRESS
+             ========================================= -->
+
+        <section class="progress-section">
+
+            <div class="progress-section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        Skill Roadmaps
+                    </span>
+
+                    <h2>
+                        Your Learning Journey
+                    </h2>
+
+                    <p>
+                        Track each skill separately and continue
+                        from the next available topic.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            {% if skill_progress %}
+
+                <div class="skill-progress-grid">
+
+                    {% for item in skill_progress %}
+
+                        {% set percentage = item.percentage|default(0)|int %}
+
+
+                        <article class="skill-progress-card">
+
+
+                            <!-- CARD HEADER -->
+
+                            <div class="skill-progress-card-header">
+
+                                <div>
+
+                                    <span class="section-label">
+                                        {{ item.category|default('Skill') }}
+                                    </span>
+
+                                    <h3>
+                                        {{ item.skill_name }}
+                                    </h3>
+
+                                </div>
+
+
+                                <div class="skill-level-badge">
+
+                                    {% if item.level %}
+
+                                        {{ item.level }}
+
+                                    {% else %}
+
+                                        Not Assessed
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- PROGRESS -->
+
+                            <div class="skill-progress-percentage">
+
+                                <strong>
+                                    {{ percentage }}%
+                                </strong>
+
+                                <span>
+                                    {{ item.completed_topics|default(0) }}
+                                    /
+                                    {{ item.total_topics|default(0) }}
+                                    topics
+                                </span>
+
+                            </div>
+
+
+                            <div
+                                class="progress-bar"
+                                role="progressbar"
+                                aria-valuenow="{{ percentage }}"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                            >
+
+                                <div
+                                    class="progress-bar-fill"
+                                    data-progress="{{ percentage }}"
+                                ></div>
+
+                            </div>
+
+
+
+                            <!-- CURRENT TOPIC -->
+
+                            {% if item.next_topic %}
+
+                                <div class="current-topic">
+
+                                    <small>
+                                        Continue with
+                                    </small>
+
+                                    <strong>
+                                        {{ item.next_topic.title }}
+                                    </strong>
+
+                                </div>
+
+
+                            {% elif percentage >= 100 %}
+
+                                <div class="skill-completed-message">
+
+                                    <span>
+                                        ✓
+                                    </span>
+
+                                    <p>
+                                        Roadmap completed
+                                    </p>
+
+                                </div>
+
+
+                            {% else %}
+
+                                <div class="current-topic">
+
+                                    <small>
+                                        Next step
+                                    </small>
+
+                                    <strong>
+                                        Complete your assessment
+                                    </strong>
+
+                                </div>
+
+                            {% endif %}
+
+
+
+                            <!-- ACTION -->
+
+                            <div class="skill-progress-actions">
+
+                                {% if item.next_topic %}
+
+                                    <a
+                                        href="{{ url_for(
+                                            'topic_learning',
+                                            skill=item.skill_slug,
+                                            topic_id=item.next_topic.id
+                                        ) }}"
+                                        class="btn btn-primary"
+                                    >
+                                        Continue Learning
+                                    </a>
+
+
+                                {% elif percentage >= 100 %}
+
+                                    <a
+                                        href="{{ url_for(
+                                            'roadmap',
+                                            skill=item.skill_slug
+                                        ) }}"
+                                        class="btn btn-secondary"
+                                    >
+                                        View Completed Roadmap
+                                    </a>
+
+
+                                {% else %}
+
+                                    <a
+                                        href="{{ url_for(
+                                            'roadmap',
+                                            skill=item.skill_slug
+                                        ) }}"
+                                        class="btn btn-secondary"
+                                    >
+                                        View Roadmap
+                                    </a>
+
+                                {% endif %}
+
+                            </div>
+
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+
+            {% else %}
+
+                <!-- =================================
+                     EMPTY STATE
+                     ================================= -->
+
+                <div class="progress-empty-state">
+
+                    <div class="empty-icon">
+                        ◈
+                    </div>
+
+                    <span class="section-label">
+                        No Learning Progress Yet
+                    </span>
+
+                    <h2>
+                        Your learning journey starts here.
+                    </h2>
+
+                    <p>
+                        Choose a skill you want to learn, take the
+                        assessment and start your roadmap.
+                    </p>
+
+                    <a
+                        href="{{ url_for('skills') }}"
+                        class="btn btn-primary"
+                    >
+                        Explore Skills
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+
+        <!-- =========================================
+             RECENT ACTIVITY
+             ========================================= -->
+
+        <section class="progress-section">
+
+            <div class="progress-section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        Activity
+                    </span>
+
+                    <h2>
+                        Recent Learning Activity
+                    </h2>
+
+                    <p>
+                        Your latest assessments, completed topics,
+                        sessions and skill achievements.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            {% if recent_activity %}
+
+                <div class="activity-list">
+
+                    {% for activity in recent_activity %}
+
+                        <article class="activity-item">
+
+
+                            <!-- ICON -->
+
+                            <div class="activity-icon">
+
+                                {% if activity.type == 'topic_completed' %}
+
+                                    ✓
+
+                                {% elif activity.type == 'assessment' %}
+
+                                    ★
+
+                                {% elif activity.type == 'session_completed' %}
+
+                                    ◷
+
+                                {% elif activity.type == 'skill_completed' %}
+
+                                    ◆
+
+                                {% elif activity.type == 'task_completed' %}
+
+                                    ✓
+
+                                {% else %}
+
+                                    •
+
+                                {% endif %}
+
+                            </div>
+
+
+
+                            <!-- CONTENT -->
+
+                            <div class="activity-content">
+
+                                <strong>
+                                    {{ activity.title }}
+                                </strong>
+
+
+                                {% if activity.description %}
+
+                                    <p>
+                                        {{ activity.description }}
+                                    </p>
+
+                                {% endif %}
+
+
+                                {% if activity.created_at %}
+
+                                    <small>
+                                        {{ activity.created_at.strftime(
+                                            '%d %B %Y, %I:%M %p'
+                                        ) }}
+                                    </small>
+
+                                {% endif %}
+
+                            </div>
+
+
+
+                            <!-- LINK -->
+
+                            {% if activity.skill_slug and activity.topic_id %}
+
+                                <a
+                                    href="{{ url_for(
+                                        'topic_learning',
+                                        skill=activity.skill_slug,
+                                        topic_id=activity.topic_id
+                                    ) }}"
+                                    class="activity-link"
+                                >
+                                    View →
+                                </a>
+
+
+                            {% elif activity.skill_slug %}
+
+                                <a
+                                    href="{{ url_for(
+                                        'roadmap',
+                                        skill=activity.skill_slug
+                                    ) }}"
+                                    class="activity-link"
+                                >
+                                    Roadmap →
+                                </a>
+
+                            {% endif %}
+
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+
+            {% else %}
+
+                <!-- =================================
+                     ACTIVITY EMPTY STATE
+                     ================================= -->
+
+                <div class="activity-empty-state">
+
+                    <div class="empty-icon">
+                        ◷
+                    </div>
+
+                    <span class="section-label">
+                        No Recent Activity
+                    </span>
+
+                    <h3>
+                        Your learning activity will appear here.
+                    </h3>
+
+                    <p>
+                        Complete an assessment, topic, practical task
+                        or learning session to start building your
+                        activity history.
+                    </p>
+
+                    <a
+                        href="{{ url_for('skills') }}"
+                        class="btn btn-secondary"
+                    >
+                        Explore Skills
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+
+        <!-- =========================================
+             LEARNING PRINCIPLE
+             ========================================= -->
+
+        <section class="progress-info-card">
+
+            <div class="progress-info-icon">
+                ✦
+            </div>
+
+            <div>
+
+                <span class="section-label">
+                    SkillSwap Learning Principle
+                </span>
+
+                <h2>
+                    Progress is earned through practice.
+                </h2>
+
+                <p>
+                    Reading a topic or watching an explanation does not
+                    automatically mark it as completed. You need to
+                    understand the concept, practice it and complete
+                    the required practical task.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             LEARNING FLOW
+             ========================================= -->
+
+        <section class="progress-learning-flow">
+
+
+            <article class="progress-flow-item">
+
+                <span>
+                    01
+                </span>
+
+                <div>
+
+                    <strong>
+                        Learn
+                    </strong>
+
+                    <p>
+                        Understand the topic and its explanation.
+                    </p>
+
+                </div>
+
+            </article>
+
+
+
+            <article class="progress-flow-item">
+
+                <span>
+                    02
+                </span>
+
+                <div>
+
+                    <strong>
+                        Practice
+                    </strong>
+
+                    <p>
+                        Apply what you learned through guided practice.
+                    </p>
+
+                </div>
+
+            </article>
+
+
+
+            <article class="progress-flow-item">
+
+                <span>
+                    03
+                </span>
+
+                <div>
+
+                    <strong>
+                        Complete
+                    </strong>
+
+                    <p>
+                        Finish the required practical task.
+                    </p>
+
+                </div>
+
+            </article>
+
+
+
+            <article class="progress-flow-item">
+
+                <span>
+                    04
+                </span>
+
+                <div>
+
+                    <strong>
+                        Unlock
+                    </strong>
+
+                    <p>
+                        Complete the topic and unlock the next one.
+                    </p>
+
+                </div>
+
+            </article>
+
+
+        </section>
+
+
+
+        <!-- =========================================
+             BOTTOM ACTIONS
+             ========================================= -->
+
+        <div class="progress-bottom-actions">
+
+            <a
+                href="{{ url_for('skills') }}"
+                class="btn btn-secondary"
+            >
+                Manage Skills
+            </a>
+
+
+            <a
+                href="{{ url_for('matches') }}"
+                class="btn btn-primary"
+            >
+                Find a Skill Partner
+            </a>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+{% endblock %}

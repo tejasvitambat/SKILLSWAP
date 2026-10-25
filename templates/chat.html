@@ -1,0 +1,376 @@
+```html
+{% extends "base.html" %}
+
+{% block title %}Chat with {{ partner.full_name or partner.username }} | SkillSwap{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+
+<div class="chat-page">
+    <div class="chat-decoration chat-decoration-one"></div>
+    <div class="chat-decoration chat-decoration-two"></div>
+    <div class="chat-decoration chat-decoration-three"></div>
+
+    <main class="chat-shell">
+
+        <!-- Page heading -->
+        <div class="chat-page-heading">
+            <a href="{{ url_for('connections') }}" class="chat-back-link">
+                <span aria-hidden="true">←</span> Connections
+            </a>
+            <div>
+                <span class="chat-eyebrow">YOUR LEARNING SPACE</span>
+                <h1>Let's <span>connect.</span></h1>
+                <p>Every conversation is a step towards learning something new.</p>
+            </div>
+        </div>
+
+        <!-- Conversation header -->
+        <section class="chat-profile-card">
+            <div class="chat-profile-main">
+                <div class="chat-avatar-wrap">
+                    {% set partner_photo = partner.profile_photo | profile_image %}
+
+                    {% if partner_photo %}
+                        <img
+                            src="{{ partner_photo }}"
+                            alt="{{ partner.full_name or partner.username }}"
+                            class="chat-avatar"
+                        >
+                    {% else %}
+                        <div class="chat-avatar chat-avatar-placeholder">
+                            {{ (partner.full_name or partner.username or 'U')[0]|upper }}
+                        </div>
+                    {% endif %}
+
+                    <span class="chat-status-dot" title="Connection"></span>
+                </div>
+
+                <div class="chat-person-info">
+                    <span class="chat-eyebrow">YOUR LEARNING PARTNER</span>
+                    <h2>
+                        {{ partner.full_name or partner.username }}
+                        {% if partner.is_verified %}
+                            <span class="chat-verified" title="Verified">✓</span>
+                        {% endif %}
+                    </h2>
+                    <p>@{{ partner.username }}</p>
+                    <span class="chat-connection-label">
+                        <span class="chat-status-dot-small"></span>
+                        Your SkillSwap connection
+                    </span>
+                </div>
+            </div>
+
+            <div class="chat-profile-actions">
+                <a
+                    href="{{ url_for('view_profile', username=partner.username) }}"
+                    class="chat-outline-button"
+                >
+                    View profile <span aria-hidden="true">↗</span>
+                </a>
+                <a
+                    href="{{ url_for('schedule_session', connection_id=connection.id) }}"
+                    class="chat-primary-button"
+                >
+                    <span aria-hidden="true">＋</span> Schedule session
+                </a>
+            </div>
+        </section>
+
+        <!-- Skill exchange -->
+        <section class="chat-exchange-card">
+            <div class="exchange-heading">
+                <div class="exchange-heading-icon">✳</div>
+                <div>
+                    <h3>Your skill exchange</h3>
+                    <p>Share what you know. Discover something new.</p>
+                </div>
+            </div>
+
+            <div class="exchange-content">
+                <div class="exchange-column">
+                    <span class="exchange-label">YOU LEARN</span>
+                    <div class="exchange-pills">
+                        {% if connection.skills_you_learn %}
+                            {% for skill in connection.skills_you_learn %}
+                                <span class="exchange-pill learn-pill">{{ skill }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="exchange-pill learn-pill">Learning together</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="exchange-middle" aria-hidden="true">⇄</div>
+
+                <div class="exchange-column">
+                    <span class="exchange-label">YOU TEACH</span>
+                    <div class="exchange-pills">
+                        {% if connection.skills_you_teach %}
+                            {% for skill in connection.skills_you_teach %}
+                                <span class="exchange-pill teach-pill">{{ skill }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="exchange-pill teach-pill">Sharing knowledge</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main conversation -->
+        <section class="chat-conversation-card">
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="conversation-date">
+                    <span>YOUR SKILLS, YOUR JOURNEY</span>
+                </div>
+
+                {% if messages %}
+                    {% for message in messages %}
+
+                        {% if message.sender_id == current_user.id %}
+                            <!-- Current user's message -->
+                            <div class="message-row message-own">
+                                <div class="message-content">
+                                    <span class="message-author">You</span>
+
+                                    <div class="message-bubble own-bubble">
+                                        <p class="message-text">{{ message.message }}</p>
+                                    </div>
+
+                                    <span class="message-time">
+                                        {{ message.created_at | ist_time }}
+                                    </span>
+                                </div>
+
+                                {% set my_photo = current_user.profile_photo | profile_image %}
+
+                                {% if my_photo %}
+                                    <img
+                                        src="{{ my_photo }}"
+                                        alt="Your profile photo"
+                                        class="message-avatar own-avatar"
+                                    >
+                                {% else %}
+                                    <div class="message-avatar own-avatar">
+                                        {{ (current_user.full_name or current_user.username or 'Y')[0]|upper }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                        {% else %}
+                            <!-- Learning partner's message -->
+                            <div class="message-row message-partner">
+                                {% set partner_photo = partner.profile_photo | profile_image %}
+
+                                {% if partner_photo %}
+                                    <img
+                                        src="{{ partner_photo }}"
+                                        alt="{{ partner.full_name or partner.username }}"
+                                        class="message-avatar partner-avatar"
+                                    >
+                                {% else %}
+                                    <div class="message-avatar partner-avatar">
+                                        {{ (partner.full_name or partner.username or 'U')[0]|upper }}
+                                    </div>
+                                {% endif %}
+
+                                <div class="message-content">
+                                    <span class="message-author">
+                                        {{ partner.full_name or partner.username }}
+                                    </span>
+
+                                    <div class="message-bubble partner-bubble">
+                                        <p class="message-text">{{ message.message }}</p>
+                                    </div>
+
+                                    <span class="message-time">
+                                        {{ message.created_at | ist_time }}
+                                    </span>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                    {% endfor %}
+
+                {% else %}
+                    <!-- Empty conversation -->
+                    <div class="empty-chat">
+                        <div class="empty-chat-art">
+                            <span class="empty-art-heart">♡</span>
+                            <span class="empty-art-sparkle sparkle-one">✦</span>
+                            <span class="empty-art-sparkle sparkle-two">✧</span>
+                            <div class="empty-art-bubble">Hi!</div>
+                        </div>
+
+                        <h3>Your story starts here.</h3>
+                        <p>
+                            Say hello to your learning partner and start
+                            exchanging ideas, skills and inspiration.
+                        </p>
+                        <span class="empty-chat-hint">
+                            A simple hello can open a world of possibilities.
+                        </span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Message composer -->
+            <div class="chat-composer-area">
+                <form
+                    action="{{ url_for('send_message', connection_id=connection.id) }}"
+                    method="POST"
+                    class="message-form"
+                    id="messageForm"
+                >
+                    <div class="composer-input-box">
+                        <div class="composer-icon">✎</div>
+
+                        <textarea
+                            name="message"
+                            id="message"
+                            rows="1"
+                            maxlength="200"
+                            placeholder="Write something lovely..."
+                            autocomplete="off"
+                            aria-label="Write your message"
+                            required
+                        ></textarea>
+
+                        <span class="composer-limit">200</span>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="message-send-button"
+                        aria-label="Send message"
+                    >
+                        <span>Send message</span>
+                        <span class="send-arrow" aria-hidden="true">➤</span>
+                    </button>
+                </form>
+
+                <p class="composer-note">
+                    <span>♡</span> Keep it kind. Keep learning.
+                    <span class="composer-key-hint">
+                        Enter to send · Shift + Enter for a new line
+                    </span>
+                </p>
+            </div>
+        </section>
+
+        <!-- Learning session -->
+        <section class="chat-session-card">
+            <div class="session-illustration" aria-hidden="true">
+                <span>✦</span>
+                <div class="session-calendar">
+                    <div class="calendar-top"></div>
+                    <div class="calendar-heart">♡</div>
+                </div>
+            </div>
+
+            <div class="session-copy">
+                <span class="chat-eyebrow">MAKE TIME TO GROW</span>
+
+                {% if upcoming_session %}
+                    <h3>Your next learning session awaits!</h3>
+                    <p>
+                        You have an upcoming session with
+                        {{ partner.full_name or partner.username }}.
+                    </p>
+                    <a
+                        href="{{ url_for('session_detail', session_id=upcoming_session.id) }}"
+                        class="session-action-link"
+                    >
+                        View session details <span aria-hidden="true">→</span>
+                    </a>
+                {% else %}
+                    <h3>Learning is better together.</h3>
+                    <p>
+                        Turn your conversation into a real learning session
+                        and make progress together.
+                    </p>
+                    <a
+                        href="{{ url_for('schedule_session', connection_id=connection.id) }}"
+                        class="session-action-link"
+                    >
+                        Plan a learning session <span aria-hidden="true">→</span>
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="session-side-note">
+                <span>01</span>
+                <p>Connect.<br>Learn. Grow.</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="chat-footer">
+            <a href="{{ url_for('connections') }}">← All connections</a>
+            <span>
+                Made for learning, powered by people.
+                <span class="footer-heart">♥</span>
+            </span>
+            <a href="{{ url_for('matches') }}">Discover people →</a>
+        </footer>
+
+    </main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const messagesContainer = document.getElementById("chatMessages");
+    const textarea = document.getElementById("message");
+    const form = document.getElementById("messageForm");
+    const counter = document.querySelector(".composer-limit");
+
+    if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    if (textarea) {
+        function resizeTextarea() {
+            textarea.style.height = "auto";
+            textarea.style.height =
+                Math.min(textarea.scrollHeight, 100) + "px";
+        }
+
+        function updateCounter() {
+            if (counter) {
+                counter.textContent = 200 - textarea.value.length;
+            }
+        }
+
+        textarea.addEventListener("input", function () {
+            resizeTextarea();
+            updateCounter();
+        });
+
+        textarea.addEventListener("keydown", function (event) {
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey &&
+                !event.isComposing
+            ) {
+                event.preventDefault();
+
+                if (textarea.value.trim() && form) {
+                    if (typeof form.requestSubmit === "function") {
+                        form.requestSubmit();
+                    } else {
+                        form.submit();
+                    }
+                }
+            }
+        });
+
+        resizeTextarea();
+        updateCounter();
+    }
+});
+</script>
+{% endblock %}
+```

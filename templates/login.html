@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+
+{% block title %}
+Login | SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/login.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<main class="login-page">
+
+    <div class="login-orb login-orb-one"></div>
+    <div class="login-orb login-orb-two"></div>
+
+    <div class="login-shell">
+
+        <!-- LEFT SIDE -->
+        <section class="login-intro">
+
+            <span class="login-kicker">
+                ✦ Welcome back
+            </span>
+
+            <h1>
+                Learn more.
+                <span>Grow more.</span>
+            </h1>
+
+            <p>
+                Welcome back to SkillSwap.
+                Continue your learning journey,
+                connect with people and exchange skills.
+            </p>
+
+            <div class="login-highlights">
+
+                <div class="login-highlight">
+                    <span>✦</span>
+                    <div>
+                        <strong>Smart Skill Matching</strong>
+                        <small>Find people with complementary skills.</small>
+                    </div>
+                </div>
+
+                <div class="login-highlight">
+                    <span>✓</span>
+                    <div>
+                        <strong>Verified Learning</strong>
+                        <small>Build your level through real assessments.</small>
+                    </div>
+                </div>
+
+                <div class="login-highlight">
+                    <span>↗</span>
+                    <div>
+                        <strong>Real Progress</strong>
+                        <small>Learn, practice and grow together.</small>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- LOGIN CARD -->
+        <section class="login-card">
+
+            <div class="login-card-glow"></div>
+
+            <div class="login-card-content">
+
+                <div class="login-logo-mobile">
+                    <span>S</span>
+                    SkillSwap
+                </div>
+
+                <div class="login-heading">
+
+                    <span class="login-mini-label">
+                        ACCOUNT ACCESS
+                    </span>
+
+                    <h2>
+                        Welcome back
+                    </h2>
+
+                    <p>
+                        Log in to continue your SkillSwap journey.
+                    </p>
+
+                </div>
+
+
+                <form
+                    method="POST"
+                    action="{{ url_for('login') }}"
+                    class="login-form"
+                >
+
+                    <div class="login-field">
+
+                        <label for="email">
+                            Email Address
+                        </label>
+
+                        <div class="input-wrap">
+
+                            <span class="input-icon">
+                                @
+                            </span>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="you@example.com"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="login-field">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <div class="input-wrap">
+
+                            <span class="input-icon">
+                                ◈
+                            </span>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="login-options">
+
+                        <label class="remember-me">
+
+                            <input
+                                type="checkbox"
+                                name="remember"
+                            >
+
+                            <span>
+                                Remember me
+                            </span>
+
+                        </label>
+
+                        <a href="{{ url_for('forgot_password') }}">
+                            Forgot password?
+                        </a>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="login-submit"
+                    >
+
+                        <span>
+                            Log In
+                        </span>
+
+                        <span class="login-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+                </form>
+
+
+                <div class="login-divider">
+                    <span>or</span>
+                </div>
+
+
+                <a
+                    href="{{ url_for('google_login') }}"
+                    class="google-login"
+                >
+                    <span class="google-icon">
+                        G
+                    </span>
+
+                    Continue with Google
+                </a>
+
+
+                <p class="login-signup">
+
+                    New to SkillSwap?
+
+                    <a href="{{ url_for('signup') }}">
+                        Create an account
+                    </a>
+
+                </p>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Access Restricted — SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/403.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="error-page error-403-page">
+
+    <!-- Background -->
+    <div class="error-bg" aria-hidden="true">
+        <span class="error-orb error-orb-one"></span>
+        <span class="error-orb error-orb-two"></span>
+        <span class="error-orb error-orb-three"></span>
+
+        <span class="error-sparkle sparkle-one">✦</span>
+        <span class="error-sparkle sparkle-two">✧</span>
+        <span class="error-sparkle sparkle-three">✦</span>
+        <span class="error-sparkle sparkle-four">·</span>
+        <span class="error-sparkle sparkle-five">✧</span>
+    </div>
+
+
+    <div class="error-container">
+
+        <!-- Visual -->
+        <div class="error-visual">
+
+            <div class="error-ring ring-one"></div>
+            <div class="error-ring ring-two"></div>
+
+            <div class="error-lock">
+
+                <div class="lock-shackle"></div>
+
+                <div class="lock-body">
+                    <span class="lock-keyhole"></span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Error Code -->
+        <div class="error-code">
+            403
+        </div>
+
+
+        <!-- Content -->
+        <div class="error-content">
+
+            <span class="section-label">
+                Access Restricted
+            </span>
+
+            <h1>
+                This learning space
+                <span>isn't available yet.</span>
+            </h1>
+
+            <p>
+                You don't have permission to access this page right now.
+                You can return to your learning journey or explore other parts
+                of SkillSwap.
+            </p>
+
+        </div>
+
+
+        <!-- Actions -->
+        <div class="error-actions">
+
+            <a
+                href="{{ url_for('home') }}"
+                class="btn btn-primary"
+            >
+                <span>Back to Home</span>
+                <span class="btn-arrow">→</span>
+            </a>
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="btn btn-secondary"
+            >
+                <span>Open Dashboard</span>
+                <span class="btn-arrow">→</span>
+            </a>
+
+        </div>
+
+
+        <!-- Quick Links -->
+        <div class="error-quick-links">
+
+            <span class="quick-label">
+                Or continue exploring
+            </span>
+
+            <a href="{{ url_for('skills') }}">
+                Skills
+            </a>
+
+            <span class="quick-dot">•</span>
+
+            <a href="{{ url_for('matches') }}">
+                Matches
+            </a>
+
+            <span class="quick-dot">•</span>
+
+            <a href="{{ url_for('how_it_works') }}">
+                How It Works
+            </a>
+
+        </div>
+
+
+        <!-- Note -->
+        <div class="error-note">
+
+            <span class="error-note-icon">
+                ✦
+            </span>
+
+            <div>
+
+                <strong>
+                    Your learning journey is safe.
+                </strong>
+
+                <span>
+                    Head back and continue where you left off.
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

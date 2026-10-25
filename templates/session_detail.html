@@ -1,0 +1,533 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+    {{ session.title }} — SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/session_detail.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="session-detail-page">
+
+    <div class="session-detail-bg-orb orb-one"></div>
+    <div class="session-detail-bg-orb orb-two"></div>
+    <div class="session-detail-bg-orb orb-three"></div>
+
+    <div class="session-detail-sparkles" aria-hidden="true">
+        <span>✦</span>
+        <span>✧</span>
+        <span>⋆</span>
+        <span>✦</span>
+        <span>✧</span>
+        <span>⋆</span>
+    </div>
+
+    <div class="session-detail-container">
+
+        <!-- BACK NAVIGATION -->
+        <div class="detail-back">
+            <a href="{{ url_for('sessions') }}" class="back-link">
+                <span>←</span>
+                Back to Sessions
+            </a>
+        </div>
+
+        <!-- SESSION HEADER -->
+        <div class="session-detail-header">
+            <div class="session-detail-heading">
+                <span class="section-label">
+                    {{ session.session_type|default('Skill Exchange')|replace('_', ' ')|title }}
+                </span>
+
+                <h1>{{ session.title }}</h1>
+
+                <p>
+                    {{ session.description|default(
+                        'A focused SkillSwap learning session.'
+                    ) }}
+                </p>
+            </div>
+
+            <div class="session-detail-status">
+                <span class="session-status status-{{ session.status|lower }}">
+                    <span class="status-dot"></span>
+                    {{ session.status|replace('_', ' ')|title }}
+                </span>
+            </div>
+        </div>
+
+        <!-- SESSION INFORMATION -->
+        <div class="session-detail-layout">
+
+            <main class="session-detail-main">
+
+                <!-- DATE / TIME -->
+                <div class="detail-card session-time-card">
+                    <span class="section-label">Session Schedule</span>
+
+                    <div class="session-time-grid">
+
+                        <div class="session-time-item">
+                            <span class="detail-icon">📅</span>
+                            <div>
+                                <small>Date</small>
+                                <strong>
+                                    {{ session.scheduled_at.strftime('%d %B %Y') }}
+                                </strong>
+                            </div>
+                        </div>
+
+                        <div class="session-time-item">
+                            <span class="detail-icon">🕒</span>
+                            <div>
+                                <small>Start Time</small>
+                                <strong>
+                                    {{ session.scheduled_at.strftime('%I:%M %p') }}
+                                </strong>
+                            </div>
+                        </div>
+
+                        <div class="session-time-item">
+                            <span class="detail-icon">⏱</span>
+                            <div>
+                                <small>Duration</small>
+                                <strong>
+                                    {{ session.duration_minutes|default(60) }}
+                                    minutes
+                                </strong>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- SKILL + TOPIC -->
+                <div class="detail-card">
+                    <span class="section-label">Learning Focus</span>
+                    <h2>What you'll work on</h2>
+
+                    <div class="learning-focus">
+                        <div class="focus-item">
+                            <span>Skill</span>
+                            <strong>
+                                {{ session.skill_name|default(
+                                    session.skill|default('Skill Exchange')
+                                ) }}
+                            </strong>
+                        </div>
+
+                        {% if session.topic %}
+                            <div class="focus-item">
+                                <span>Topic</span>
+                                <strong>{{ session.topic }}</strong>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- SESSION MESSAGE -->
+                {% if session.message %}
+                    <div class="detail-card">
+                        <span class="section-label">Session Message</span>
+                        <blockquote class="session-message">
+                            {{ session.message }}
+                        </blockquote>
+                    </div>
+                {% endif %}
+
+                <!-- SESSION GOAL -->
+                {% if session.goal %}
+                    <div class="detail-card">
+                        <span class="section-label">Learning Goal</span>
+                        <h2>Session Goal</h2>
+                        <p class="session-goal">{{ session.goal }}</p>
+                    </div>
+                {% endif %}
+
+                <!-- COMPLETION SUMMARY -->
+                {% if session.status == 'completed' %}
+                    <div class="detail-card completion-card">
+                        <div class="completion-icon">✓</div>
+                        <div>
+                            <span class="section-label">Completed</span>
+                            <h2>Session completed successfully</h2>
+
+                            {% if session.completion_note %}
+                                <p>{{ session.completion_note }}</p>
+                            {% else %}
+                                <p>
+                                    Great work. You can now update your
+                                    learning progress and review your partner.
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- SESSION ACTIONS -->
+                <div class="session-action-card">
+                    <span class="section-label">Session Actions</span>
+
+                    <div class="session-detail-actions">
+
+                        <!-- JOIN ONLINE MEETING -->
+                        {% if session.meeting_url %}
+                            <a
+                                href="{{ session.meeting_url }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="btn btn-primary"
+                            >
+                                Join Meeting ↗
+                            </a>
+                        {% elif session.session_type|lower == 'online' %}
+                            <p class="meeting-notice">
+                                Meeting link has not been added yet.
+                            </p>
+                        {% endif %}
+
+                        <!-- PENDING -->
+                        {% if session.status == 'pending' %}
+
+                            {% if session.can_accept %}
+                                <form
+                                    action="{{ url_for(
+                                        'accept_session',
+                                        session_id=session.id
+                                    ) }}"
+                                    method="POST"
+                                >
+                                    <button type="submit" class="btn btn-primary">
+                                        ✓ Accept Session
+                                    </button>
+                                </form>
+                            {% endif %}
+
+                            {% if session.can_decline %}
+                                <form
+                                    action="{{ url_for(
+                                        'decline_session',
+                                        session_id=session.id
+                                    ) }}"
+                                    method="POST"
+                                >
+                                    <button type="submit" class="btn btn-secondary">
+                                        Decline Session
+                                    </button>
+                                </form>
+                            {% endif %}
+
+                            {% if session.can_cancel %}
+                                <form
+                                    action="{{ url_for(
+                                        'cancel_session',
+                                        session_id=session.id
+                                    ) }}"
+                                    method="POST"
+                                >
+                                    <button type="submit" class="btn btn-secondary">
+                                        Cancel Request
+                                    </button>
+                                </form>
+                            {% endif %}
+
+                        <!-- CONFIRMED -->
+                        {% elif session.status == 'confirmed' %}
+
+                            <a
+                                href="{{ url_for(
+                                    'chat',
+                                    connection_id=session.connection_id
+                                ) }}"
+                                class="btn btn-primary"
+                            >
+                                Open Chat →
+                            </a>
+
+                            {% if session.can_complete %}
+                                <form
+                                    action="{{ url_for(
+                                        'complete_session',
+                                        session_id=session.id
+                                    ) }}"
+                                    method="POST"
+                                >
+                                    <button type="submit" class="btn btn-primary">
+                                        ✓ Mark as Completed
+                                    </button>
+                                </form>
+                            {% endif %}
+
+                            {% if session.can_cancel %}
+                                <form
+                                    action="{{ url_for(
+                                        'cancel_session',
+                                        session_id=session.id
+                                    ) }}"
+                                    method="POST"
+                                >
+                                    <button type="submit" class="btn btn-secondary">
+                                        Cancel Session
+                                    </button>
+                                </form>
+                            {% endif %}
+
+                        <!-- COMPLETED -->
+                        {% elif session.status == 'completed' %}
+
+                            <a
+                                href="{{ url_for(
+                                    'update_progress',
+                                    session_id=session.id
+                                ) }}"
+                                class="btn btn-primary"
+                            >
+                                Update Progress →
+                            </a>
+
+                            {% if not session.review_submitted %}
+                                <a
+                                    href="{{ url_for(
+                                        'create_review',
+                                        session_id=session.id
+                                    ) }}"
+                                    class="btn btn-secondary"
+                                >
+                                    Leave Review
+                                </a>
+                            {% else %}
+                                <span class="review-submitted">
+                                    ✓ Review Submitted
+                                </span>
+                            {% endif %}
+
+                        <!-- CANCELLED -->
+                        {% elif session.status == 'cancelled' %}
+                            <span class="session-ended-message">
+                                This session has been cancelled.
+                            </span>
+                        {% endif %}
+
+                    </div>
+                </div>
+
+            </main>
+
+            <!-- SIDEBAR -->
+            <aside class="session-detail-sidebar">
+
+                <!-- PARTNER -->
+                <div class="detail-card partner-detail-card">
+                    <span class="section-label">Learning Partner</span>
+
+                    <div class="detail-partner">
+                        <div class="detail-partner-avatar">
+                            {% if partner.profile_photo %}
+                                <img
+                                    src="{{ url_for(
+                                        'uploaded_file',
+                                        filename=partner.profile_photo
+                                    ) }}"
+                                    alt="{{ partner.full_name }}"
+                                >
+                            {% else %}
+                                <span>{{ partner.full_name[0]|upper }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="partner-text">
+                            <h3>{{ partner.full_name }}</h3>
+                            <p>@{{ partner.username }}</p>
+
+                            {% if partner.is_verified %}
+                                <span class="verified-badge">✓ Verified</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="partner-actions">
+                        <a
+                            href="{{ url_for(
+                                'view_profile',
+                                username=partner.username
+                            ) }}"
+                            class="btn btn-secondary"
+                        >
+                            View Profile
+                        </a>
+
+                        {% if session.connection_id %}
+                            <a
+                                href="{{ url_for(
+                                    'chat',
+                                    connection_id=session.connection_id
+                                ) }}"
+                                class="btn btn-primary"
+                            >
+                                Message Partner
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- SKILL EXCHANGE -->
+                <div class="detail-card">
+                    <span class="section-label">Skill Exchange</span>
+                    <h3>Your exchange</h3>
+
+                    <div class="exchange-detail">
+
+                        <div class="exchange-column">
+                            <span>You learn</span>
+                            <div class="skill-pills">
+                                {% for skill in connection.skills_you_learn %}
+                                    <span class="skill-pill">{{ skill }}</span>
+                                {% else %}
+                                    <span class="empty-skill">No skill selected</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="exchange-column">
+                            <span>You teach</span>
+                            <div class="skill-pills">
+                                {% for skill in connection.skills_you_teach %}
+                                    <span class="skill-pill teach">{{ skill }}</span>
+                                {% else %}
+                                    <span class="empty-skill">No skill selected</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ROADMAP -->
+                {% if session.skill %}
+                    <div class="detail-card roadmap-detail-card">
+                        <span class="section-label">Continue Learning</span>
+                        <h3>Skill Roadmap</h3>
+                        <p>
+                            Continue your roadmap and complete the
+                            required topic tasks to make progress.
+                        </p>
+
+                        <a
+                            href="{{ url_for('roadmap', skill=session.skill) }}"
+                            class="btn btn-secondary"
+                        >
+                            Open Roadmap →
+                        </a>
+                    </div>
+                {% endif %}
+
+                <!-- PROGRESS -->
+                {% if session.status == 'completed' %}
+                    <div class="detail-card progress-detail-card">
+                        <span class="section-label">Your Growth</span>
+                        <h3>Update your progress</h3>
+                        <p>
+                            Record what you learned from this session
+                            and keep your roadmap moving forward.
+                        </p>
+
+                        <a
+                            href="{{ url_for(
+                                'update_progress',
+                                session_id=session.id
+                            ) }}"
+                            class="btn btn-primary"
+                        >
+                            Update Progress →
+                        </a>
+                    </div>
+                {% endif %}
+
+            </aside>
+        </div>
+
+        <!-- STATUS TIMELINE -->
+        <div class="session-timeline-card">
+            <span class="section-label">Session Journey</span>
+            <h2>Session Progress</h2>
+
+            <div class="session-timeline">
+
+                <div class="timeline-step timeline-completed">
+                    <span class="timeline-number">01</span>
+                    <div>
+                        <strong>Session Requested</strong>
+                        <p>The session request was created.</p>
+                    </div>
+                </div>
+
+                <div
+                    class="
+                        timeline-step
+                        {% if session.status in ['confirmed', 'completed'] %}
+                            timeline-completed
+                        {% endif %}
+                    "
+                >
+                    <span class="timeline-number">02</span>
+                    <div>
+                        <strong>Session Confirmed</strong>
+                        <p>Both participants agreed to the session.</p>
+                    </div>
+                </div>
+
+                <div
+                    class="
+                        timeline-step
+                        {% if session.status == 'completed' %}
+                            timeline-completed
+                        {% endif %}
+                    "
+                >
+                    <span class="timeline-number">03</span>
+                    <div>
+                        <strong>Learning Session</strong>
+                        <p>Meet, practice and exchange skills.</p>
+                    </div>
+                </div>
+
+                <div
+                    class="
+                        timeline-step
+                        {% if session.status == 'completed' %}
+                            timeline-completed
+                        {% endif %}
+                    "
+                >
+                    <span class="timeline-number">04</span>
+                    <div>
+                        <strong>Progress & Review</strong>
+                        <p>Update progress and review your partner.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- FOOTER ACTIONS -->
+        <div class="detail-footer-actions">
+            <a href="{{ url_for('sessions') }}" class="btn btn-secondary">
+                All Sessions
+            </a>
+
+            <a href="{{ url_for('connections') }}" class="btn btn-secondary">
+                My Connections
+            </a>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

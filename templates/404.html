@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Page Not Found — SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/404.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="error-page error-404-page">
+
+    <!-- Decorative background -->
+    <div class="error-bg" aria-hidden="true">
+
+        <span class="error-orb error-orb-one"></span>
+        <span class="error-orb error-orb-two"></span>
+        <span class="error-orb error-orb-three"></span>
+
+        <span class="error-sparkle sparkle-one">✦</span>
+        <span class="error-sparkle sparkle-two">✧</span>
+        <span class="error-sparkle sparkle-three">✦</span>
+        <span class="error-sparkle sparkle-four">·</span>
+        <span class="error-sparkle sparkle-five">✧</span>
+
+    </div>
+
+
+    <div class="error-container">
+
+        <!-- ERROR NUMBER -->
+        <div class="error-code-wrap">
+
+            <div class="error-code">
+                404
+            </div>
+
+            <div class="error-code-glow"></div>
+
+        </div>
+
+
+        <!-- ERROR CONTENT -->
+        <div class="error-content">
+
+            <span class="section-label">
+                Page Not Found
+            </span>
+
+            <h1>
+                Looks like this
+                <span>skill path is missing.</span>
+            </h1>
+
+            <p>
+                The page you're looking for doesn't exist,
+                may have been moved, or the link might be incorrect.
+            </p>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+        <div class="error-actions">
+
+            <a
+                href="{{ url_for('home') }}"
+                class="btn btn-primary"
+            >
+                <span>Back to Home</span>
+                <span class="btn-arrow">→</span>
+            </a>
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="btn btn-secondary"
+            >
+                <span>Go to Dashboard</span>
+                <span class="btn-arrow">→</span>
+            </a>
+
+        </div>
+
+
+        <!-- QUICK LINKS -->
+        <div class="error-quick-links">
+
+            <span class="quick-label">
+                Or explore
+            </span>
+
+            <a href="{{ url_for('skills') }}">
+                Skills
+            </a>
+
+            <span class="quick-dot">•</span>
+
+            <a href="{{ url_for('how_it_works') }}">
+                How It Works
+            </a>
+
+            <span class="quick-dot">•</span>
+
+            <a href="{{ url_for('matches') }}">
+                Matches
+            </a>
+
+        </div>
+
+
+        <!-- BOTTOM MESSAGE -->
+        <div class="error-note">
+
+            <span class="error-note-icon">
+                ✦
+            </span>
+
+            <span>
+                Every learning journey has a wrong turn.
+                Let's get you back on track.
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

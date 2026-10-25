@@ -1,0 +1,1094 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Choose Your Skills — SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/skills.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="skills-page">
+
+    <div class="skills-shell">
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <header class="skills-header">
+
+            <div class="header-kicker">
+                <span class="kicker-dot"></span>
+                SKILLSWAP · SKILL SETUP
+            </div>
+
+            <h1>
+                Choose how you want to
+                <span>learn & grow.</span>
+            </h1>
+
+            <p>
+                Learn independently through a structured roadmap,
+                exchange skills with another learner, or do both.
+            </p>
+
+        </header>
+
+
+        <!-- =====================================================
+             SETUP PROGRESS
+        ====================================================== -->
+
+        <div class="setup-progress">
+
+            <div class="progress-item completed">
+                <span>✓</span>
+                <p>Profile</p>
+            </div>
+
+            <div class="progress-connector active"></div>
+
+            <div class="progress-item active">
+                <span>2</span>
+                <p>Skills</p>
+            </div>
+
+            <div class="progress-connector"></div>
+
+            <div class="progress-item">
+                <span>3</span>
+                <p>Assessment</p>
+            </div>
+
+            <div class="progress-connector"></div>
+
+            <div class="progress-item">
+                <span>4</span>
+                <p>Match</p>
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             MAIN FORM
+        ====================================================== -->
+
+        <form
+            id="skillsForm"
+            class="skills-form"
+            action="{{ url_for('skills') }}"
+            method="POST"
+        >
+
+            <!-- =================================================
+                 PART 1 — LEARN WITH YOURSELF
+            ================================================== -->
+
+            <section class="path-card self-learning-card">
+
+                <div class="path-top">
+
+                    <div class="path-icon self-icon">
+                        ↗
+                    </div>
+
+                    <div class="path-heading">
+
+                        <div class="path-label">
+                            PART 01 · INDEPENDENT LEARNING
+                        </div>
+
+                        <h2>
+                            Learn With Yourself
+                        </h2>
+
+                        <p>
+                            Choose <strong>one skill</strong> and learn it
+                            step-by-step from its SkillSwap roadmap.
+                        </p>
+
+                    </div>
+
+                    <div class="selection-badge">
+                        1 SKILL
+                    </div>
+
+                </div>
+
+
+                <div class="selection-note">
+
+                    <div class="note-icon">
+                        ✦
+                    </div>
+
+                    <p>
+                        Select one skill. Your roadmap will guide you through
+                        Learn → Practice → Practical Task → Complete.
+                    </p>
+
+                </div>
+
+
+                <!-- =============================================
+                     ALL ACTIVE SKILLS
+                ============================================== -->
+
+                <div class="category-stack">
+
+                    {% for category, category_skills in skills|groupby('category') %}
+
+                    <div class="skill-category">
+
+                        <div class="category-header">
+
+                            <div>
+                                <span class="category-line"></span>
+
+                                <h3>
+                                    {{ category }}
+                                </h3>
+                            </div>
+
+                            <span class="category-count">
+                                {{ category_skills|length }}
+                                skills
+                            </span>
+
+                        </div>
+
+
+                        <div class="skill-grid">
+
+                            {% for skill in category_skills %}
+
+                            <label class="skill-box self-skill-box">
+
+                                <input
+                                    type="radio"
+                                    name="self_learn_skill"
+                                    value="{{ skill.slug }}"
+                                    data-self-skill="{{ skill.slug }}"
+                                >
+
+                                <span class="skill-check"></span>
+
+                                <span class="skill-box-content">
+
+                                    <strong>
+                                        {{ skill.name }}
+                                    </strong>
+
+                                    <small>
+                                        Learn independently
+                                    </small>
+
+                                </span>
+
+                                <span class="skill-arrow">
+                                    →
+                                </span>
+
+                            </label>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <div class="selected-preview self-preview">
+
+                    <div class="preview-left">
+
+                        <span class="preview-label">
+                            SELECTED SKILL
+                        </span>
+
+                        <strong id="selfSelectedText">
+                            No skill selected
+                        </strong>
+
+                    </div>
+
+                    <span class="preview-status" id="selfSelectedStatus">
+                        Choose 1 skill
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="inline-message"
+                    id="selfMessage"
+                    aria-live="polite"
+                ></div>
+
+
+                <div class="path-action">
+
+                    <button
+                        type="button"
+                        class="primary-action"
+                        id="startSelfLearning"
+                    >
+                        <span>Start Learning</span>
+                        <b>→</b>
+                    </button>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 PART 2 — SKILL EXCHANGE
+            ================================================== -->
+
+            <section class="path-card exchange-card">
+
+                <div class="path-top">
+
+                    <div class="path-icon exchange-icon">
+                        ⇄
+                    </div>
+
+                    <div class="path-heading">
+
+                        <div class="path-label">
+                            PART 02 · PEER-TO-PEER EXCHANGE
+                        </div>
+
+                        <h2>
+                            Learn With Teacher
+                        </h2>
+
+                        <p>
+                            Teach what you know, learn what you don't,
+                            and exchange skills with another person.
+                        </p>
+
+                    </div>
+
+                    <div class="exchange-pill">
+                        REAL SKILL EXCHANGE
+                    </div>
+
+                </div>
+
+
+                <!-- =============================================
+                     I CAN TEACH
+                ============================================== -->
+
+                <div class="exchange-block">
+
+                    <div class="exchange-heading">
+
+                        <div class="exchange-heading-icon teach-heading-icon">
+                            ↑
+                        </div>
+
+                        <div>
+
+                            <span>
+                                STEP 01
+                            </span>
+
+                            <h3>
+                                I Can Teach
+                            </h3>
+
+                            <p>
+                                Select the skill you can teach.
+                                You will take an assessment for this skill.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="category-stack">
+
+                        {% for category, category_skills in skills|groupby('category') %}
+
+                        <div class="skill-category compact-category">
+
+                            <div class="category-header">
+
+                                <div>
+                                    <span class="category-line"></span>
+
+                                    <h3>
+                                        {{ category }}
+                                    </h3>
+                                </div>
+
+                                <span class="category-count">
+                                    {{ category_skills|length }}
+                                </span>
+
+                            </div>
+
+
+                            <div class="skill-grid">
+
+                                {% for skill in category_skills %}
+
+                                <label class="skill-box exchange-teach-box">
+
+                                    <input
+                                        type="radio"
+                                        name="exchange_teach_skill"
+                                        value="{{ skill.slug }}"
+                                        data-teach-skill="{{ skill.slug }}"
+                                        {% if skill.slug in teach_skills %}
+                                            checked
+                                        {% endif %}
+                                    >
+
+                                    <span class="skill-check"></span>
+
+                                    <span class="skill-box-content">
+
+                                        <strong>
+                                            {{ skill.name }}
+                                        </strong>
+
+                                        <small>
+                                            Teaching skill
+                                        </small>
+
+                                    </span>
+
+                                    <span class="skill-arrow">
+                                        →
+                                    </span>
+
+                                </label>
+
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div class="selected-preview teach-preview">
+
+                        <div class="preview-left">
+
+                            <span class="preview-label">
+                                TEACHING SKILL
+                            </span>
+
+                            <strong id="teachSelectedText">
+                                {% if teach_skills %}
+                                    {{ teach_skills[0]|replace('_', ' ')|title }}
+                                {% else %}
+                                    No teaching skill selected
+                                {% endif %}
+                            </strong>
+
+                        </div>
+
+                        <span class="assessment-required">
+                            Assessment required
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =============================================
+                     I WANT TO LEARN
+                ============================================== -->
+
+                <div class="exchange-block learning-side-block">
+
+                    <div class="exchange-heading">
+
+                        <div class="exchange-heading-icon learn-heading-icon">
+                            ↓
+                        </div>
+
+                        <div>
+
+                            <span>
+                                STEP 02
+                            </span>
+
+                            <h3>
+                                I Want To Learn
+                            </h3>
+
+                            <p>
+                                Select the skills you want to learn
+                                from another SkillSwap member.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="category-stack">
+
+                        {% for category, category_skills in skills|groupby('category') %}
+
+                        <div class="skill-category compact-category">
+
+                            <div class="category-header">
+
+                                <div>
+                                    <span class="category-line"></span>
+
+                                    <h3>
+                                        {{ category }}
+                                    </h3>
+                                </div>
+
+                                <span class="category-count">
+                                    {{ category_skills|length }}
+                                </span>
+
+                            </div>
+
+
+                            <div class="skill-grid">
+
+                                {% for skill in category_skills %}
+
+                                <label class="skill-box exchange-learn-box">
+
+                                    <input
+                                        type="checkbox"
+                                        name="exchange_learn_skills"
+                                        value="{{ skill.slug }}"
+                                        data-learn-skill="{{ skill.slug }}"
+                                        {% if skill.slug in learn_skills %}
+                                            checked
+                                        {% endif %}
+                                    >
+
+                                    <span class="skill-check"></span>
+
+                                    <span class="skill-box-content">
+
+                                        <strong>
+                                            {{ skill.name }}
+                                        </strong>
+
+                                        <small>
+                                            Learning goal
+                                        </small>
+
+                                    </span>
+
+                                    <span class="skill-arrow">
+                                        +
+                                    </span>
+
+                                </label>
+
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div class="selected-preview learn-preview">
+
+                        <div class="preview-left">
+
+                            <span class="preview-label">
+                                LEARNING GOALS
+                            </span>
+
+                            <strong id="learnSelectedText">
+                                No skill selected
+                            </strong>
+
+                        </div>
+
+                        <span
+                            class="preview-status"
+                            id="learnCount"
+                        >
+                            0 selected
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =============================================
+                     EXCHANGE FLOW
+                ============================================== -->
+
+                <div class="exchange-flow">
+
+                    <div class="flow-item">
+
+                        <span class="flow-number">
+                            01
+                        </span>
+
+                        <div>
+                            <strong>Select</strong>
+                            <small>Teach + Learn</small>
+                        </div>
+
+                    </div>
+
+                    <span class="flow-arrow">→</span>
+
+                    <div class="flow-item">
+
+                        <span class="flow-number">
+                            02
+                        </span>
+
+                        <div>
+                            <strong>Assessment</strong>
+                            <small>Earn your level</small>
+                        </div>
+
+                    </div>
+
+                    <span class="flow-arrow">→</span>
+
+                    <div class="flow-item">
+
+                        <span class="flow-number">
+                            03
+                        </span>
+
+                        <div>
+                            <strong>Match</strong>
+                            <small>Find your partner</small>
+                        </div>
+
+                    </div>
+
+                    <span class="flow-arrow">→</span>
+
+                    <div class="flow-item">
+
+                        <span class="flow-number">
+                            04
+                        </span>
+
+                        <div>
+                            <strong>Exchange</strong>
+                            <small>Learn together</small>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="inline-message exchange-message"
+                    id="exchangeMessage"
+                    aria-live="polite"
+                ></div>
+
+
+                <!-- =============================================
+                     ASSESSMENT BUTTON
+                ============================================== -->
+
+                <div class="path-action exchange-action">
+
+                    <button
+                        type="button"
+                        class="primary-action assessment-button"
+                        id="assessmentButton"
+                    >
+                        <span>Take Assessment</span>
+                        <b>→</b>
+                    </button>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 INFO
+            ================================================== -->
+
+            <div class="skills-info-card">
+
+                <div class="info-symbol">
+                    ✦
+                </div>
+
+                <div>
+
+                    <strong>
+                        Your skill level is earned, not self-declared.
+                    </strong>
+
+                    <p>
+                        SkillSwap does not ask you to choose Beginner,
+                        Intermediate, or Pro. Your teaching level is
+                        determined through assessment and your actual progress.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 BACK
+            ================================================== -->
+
+            <div class="bottom-navigation">
+
+                <a
+                    href="{{ url_for('profile_setup') }}"
+                    class="back-button"
+                >
+                    <span>←</span>
+                    Back to Profile
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     SMALL PAGE JS
+========================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* ---------------------------------------------------------
+       PART 1 — LEARN YOURSELF
+       Exactly ONE radio can be selected.
+    --------------------------------------------------------- */
+
+    const selfInputs = document.querySelectorAll(
+        'input[name="self_learn_skill"]'
+    );
+
+    const selfSelectedText = document.getElementById(
+        "selfSelectedText"
+    );
+
+    const selfSelectedStatus = document.getElementById(
+        "selfSelectedStatus"
+    );
+
+    const selfMessage = document.getElementById(
+        "selfMessage"
+    );
+
+    const startSelfLearning = document.getElementById(
+        "startSelfLearning"
+    );
+
+
+    selfInputs.forEach(function (input) {
+
+        input.addEventListener("change", function () {
+
+            const selected = document.querySelector(
+                'input[name="self_learn_skill"]:checked'
+            );
+
+            if (!selected) {
+                return;
+            }
+
+            const box = selected.closest(".skill-box");
+
+            const skillName = box
+                .querySelector(".skill-box-content strong")
+                .textContent
+                .trim();
+
+            selfSelectedText.textContent = skillName;
+            selfSelectedStatus.textContent = "Ready to learn";
+
+            selfMessage.textContent = "";
+
+        });
+
+    });
+
+
+    startSelfLearning.addEventListener(
+        "click",
+        function () {
+
+            const selected = document.querySelector(
+                'input[name="self_learn_skill"]:checked'
+            );
+
+            if (!selected) {
+
+                selfMessage.textContent =
+                    "Please choose one skill first.";
+
+                selfMessage.classList.add("show", "error");
+
+                return;
+            }
+
+            const skillSlug = selected.value;
+
+            selfMessage.textContent =
+                "Opening your learning roadmap…";
+
+            selfMessage.classList.remove("error");
+            selfMessage.classList.add("show");
+
+            const roadmapBase =
+                "{{ url_for('roadmap') }}".replace(/\/$/, "");
+
+            window.location.href =
+                roadmapBase +
+                "/" +
+                encodeURIComponent(skillSlug);
+
+        }
+    );
+
+
+
+    /* ---------------------------------------------------------
+       PART 2 — TEACH
+       Exactly ONE teaching skill.
+    --------------------------------------------------------- */
+
+    const teachInputs = document.querySelectorAll(
+        'input[name="exchange_teach_skill"]'
+    );
+
+    const teachSelectedText = document.getElementById(
+        "teachSelectedText"
+    );
+
+
+    function syncTeachSelection() {
+
+        const selectedTeach = document.querySelector(
+            'input[name="exchange_teach_skill"]:checked'
+        );
+
+        const allLearnInputs = document.querySelectorAll(
+            'input[name="exchange_learn_skills"]'
+        );
+
+
+        allLearnInputs.forEach(function (learnInput) {
+
+            if (
+                selectedTeach &&
+                learnInput.value === selectedTeach.value
+            ) {
+
+                learnInput.checked = false;
+                learnInput.disabled = true;
+
+                const parent =
+                    learnInput.closest(".skill-box");
+
+                parent.classList.add("disabled-skill");
+
+            } else {
+
+                learnInput.disabled = false;
+
+                const parent =
+                    learnInput.closest(".skill-box");
+
+                parent.classList.remove("disabled-skill");
+            }
+
+        });
+    }
+
+
+    teachInputs.forEach(function (input) {
+
+        input.addEventListener("change", function () {
+
+            const box = input.closest(".skill-box");
+
+            const skillName = box
+                .querySelector(".skill-box-content strong")
+                .textContent
+                .trim();
+
+            teachSelectedText.textContent =
+                skillName;
+
+            syncTeachSelection();
+
+        });
+
+    });
+
+
+    syncTeachSelection();
+
+
+
+    /* ---------------------------------------------------------
+       PART 2 — I WANT TO LEARN
+    --------------------------------------------------------- */
+
+    const learnInputs = document.querySelectorAll(
+        'input[name="exchange_learn_skills"]'
+    );
+
+    const learnSelectedText = document.getElementById(
+        "learnSelectedText"
+    );
+
+    const learnCount = document.getElementById(
+        "learnCount"
+    );
+
+
+    function updateLearningPreview() {
+
+        const selectedLearn = document.querySelectorAll(
+            'input[name="exchange_learn_skills"]:checked'
+        );
+
+        const names = [];
+
+
+        selectedLearn.forEach(function (input) {
+
+            const box =
+                input.closest(".skill-box");
+
+            const name =
+                box
+                    .querySelector(".skill-box-content strong")
+                    .textContent
+                    .trim();
+
+            names.push(name);
+
+        });
+
+
+        if (names.length === 0) {
+
+            learnSelectedText.textContent =
+                "No skill selected";
+
+        } else if (names.length === 1) {
+
+            learnSelectedText.textContent =
+                names[0];
+
+        } else {
+
+            learnSelectedText.textContent =
+                names[0] +
+                " +" +
+                (names.length - 1) +
+                " more";
+
+        }
+
+
+        learnCount.textContent =
+            names.length +
+            (names.length === 1
+                ? " selected"
+                : " selected");
+
+    }
+
+
+    learnInputs.forEach(function (input) {
+
+        input.addEventListener(
+            "change",
+            updateLearningPreview
+        );
+
+    });
+
+
+    updateLearningPreview();
+
+
+
+    /* ---------------------------------------------------------
+       EXCHANGE → ASSESSMENT
+       Visible exchange inputs use independent names.
+       Hidden bridge fields use the current Flask route's
+       expected teach_skills / learn_skills names.
+    --------------------------------------------------------- */
+
+    const assessmentButton =
+        document.getElementById("assessmentButton");
+
+    const skillsForm =
+        document.getElementById("skillsForm");
+
+    const exchangeMessage =
+        document.getElementById("exchangeMessage");
+
+
+    assessmentButton.addEventListener(
+        "click",
+        function () {
+
+            const selectedTeach =
+                document.querySelector(
+                    'input[name="exchange_teach_skill"]:checked'
+                );
+
+            const selectedLearn =
+                document.querySelectorAll(
+                    'input[name="exchange_learn_skills"]:checked'
+                );
+
+
+            if (!selectedTeach) {
+
+                exchangeMessage.textContent =
+                    "Please choose one skill you can teach.";
+
+                exchangeMessage.classList.add(
+                    "show",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (selectedLearn.length === 0) {
+
+                exchangeMessage.textContent =
+                    "Please choose at least one skill you want to learn.";
+
+                exchangeMessage.classList.add(
+                    "show",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            /* Remove previous bridge fields. */
+
+            skillsForm
+                .querySelectorAll(".backend-bridge")
+                .forEach(function (field) {
+                    field.remove();
+                });
+
+
+            /* Teaching skill */
+
+            const teachHidden =
+                document.createElement("input");
+
+            teachHidden.type = "hidden";
+            teachHidden.name = "teach_skills";
+            teachHidden.value = selectedTeach.value;
+            teachHidden.className = "backend-bridge";
+
+            skillsForm.appendChild(
+                teachHidden
+            );
+
+
+            /* Learning skills */
+
+            selectedLearn.forEach(
+                function (input) {
+
+                    const learnHidden =
+                        document.createElement("input");
+
+                    learnHidden.type = "hidden";
+                    learnHidden.name = "learn_skills";
+                    learnHidden.value = input.value;
+                    learnHidden.className =
+                        "backend-bridge";
+
+                    skillsForm.appendChild(
+                        learnHidden
+                    );
+
+                }
+            );
+
+
+            exchangeMessage.textContent =
+                "Saving your exchange skills and opening the assessment…";
+
+            exchangeMessage.classList.remove(
+                "error"
+            );
+
+            exchangeMessage.classList.add(
+                "show"
+            );
+
+
+            HTMLFormElement.prototype.submit.call(
+                skillsForm
+            );
+
+        }
+    );
+
+});
+
+</script>
+
+{% endblock %}

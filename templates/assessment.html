@@ -1,0 +1,1229 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Skill Assessment — SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/assessment.css') }}"
+>
+
+<style>
+    /* ================================
+       CAMERA SECTION
+    ================================= */
+
+    .camera-section {
+        margin: 24px 0;
+        padding: 20px;
+        border: 1px solid rgba(245, 183, 189, 0.55);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.82);
+        box-shadow: 0 14px 40px rgba(99, 6, 37, 0.08);
+    }
+
+    .camera-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .camera-title {
+        margin: 0;
+        color: #630625;
+        font-size: 18px;
+        font-weight: 800;
+    }
+
+    .camera-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: #fff1f3;
+        color: #b4234b;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .camera-status.active {
+        background: #eefbf3;
+        color: #16834b;
+    }
+
+    .camera-status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    .camera-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 430px;
+        margin: 0 auto;
+        aspect-ratio: 16 / 10;
+        overflow: hidden;
+        border-radius: 18px;
+        background: #191919;
+        border: 2px solid rgba(245, 183, 189, 0.7);
+    }
+
+    #cameraPreview {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        transform: scaleX(-1);
+    }
+
+    .camera-overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        border-radius: 18px;
+        box-shadow: inset 0 0 0 2px rgba(255,255,255,0.12);
+    }
+
+    .camera-live {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        display: none;
+        align-items: center;
+        gap: 7px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(0,0,0,0.58);
+        color: white;
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+    .camera-live-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #ff4d6d;
+        animation: cameraPulse 1s infinite;
+    }
+
+    @keyframes cameraPulse {
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        50% {
+            opacity: .35;
+            transform: scale(.75);
+        }
+    }
+
+    .camera-message {
+        margin: 12px 0 0;
+        text-align: center;
+        color: #777;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .camera-error {
+        display: none;
+        margin-top: 12px;
+        padding: 12px 15px;
+        border-radius: 12px;
+        background: #fff0f2;
+        color: #a51d45;
+        font-size: 13px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .camera-error.show {
+        display: block;
+    }
+
+
+    /* ================================
+       CAMERA START SCREEN
+    ================================= */
+
+    .camera-permission {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 20px;
+
+        background: rgba(35, 12, 20, 0.48);
+        backdrop-filter: blur(12px);
+    }
+
+    .camera-permission-card {
+        width: min(460px, 100%);
+        padding: 34px;
+        border-radius: 28px;
+
+        background: rgba(255,255,255,.97);
+        border: 1px solid rgba(245,183,189,.7);
+
+        box-shadow:
+            0 30px 80px rgba(99,6,37,.25);
+
+        text-align: center;
+    }
+
+    .camera-icon {
+        width: 70px;
+        height: 70px;
+
+        margin: 0 auto 18px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 22px;
+
+        background: #fff0f3;
+        color: #630625;
+
+        font-size: 30px;
+    }
+
+    .camera-permission-card h2 {
+        margin: 0 0 10px;
+        color: #630625;
+        font-size: 26px;
+    }
+
+    .camera-permission-card p {
+        margin: 0 auto 22px;
+        max-width: 360px;
+
+        color: #6f6266;
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .camera-rules {
+        margin: 0 0 24px;
+        padding: 0;
+
+        list-style: none;
+        text-align: left;
+    }
+
+    .camera-rules li {
+        margin: 9px 0;
+
+        color: #4e4447;
+        font-size: 13px;
+    }
+
+    .camera-rules li::before {
+        content: "✓";
+        margin-right: 9px;
+
+        color: #c94d70;
+        font-weight: 900;
+    }
+
+    .camera-start-btn {
+        width: 100%;
+        padding: 14px 20px;
+
+        border: 0;
+        border-radius: 14px;
+
+        background: linear-gradient(
+            135deg,
+            #630625,
+            #a7355c
+        );
+
+        color: white;
+
+        font-size: 14px;
+        font-weight: 800;
+
+        cursor: pointer;
+
+        transition: .25s ease;
+
+        box-shadow:
+            0 12px 28px rgba(99,6,37,.22);
+    }
+
+    .camera-start-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .camera-permission-note {
+        margin: 14px 0 0 !important;
+        font-size: 11px !important;
+        color: #918589 !important;
+    }
+
+
+    /* ================================
+       ASSESSMENT LOCK
+    ================================= */
+
+    body.camera-not-ready .assessment-container {
+        pointer-events: none;
+        user-select: none;
+    }
+
+
+    /* ================================
+       DISCONNECTED CAMERA
+    ================================= */
+
+    .camera-disconnected {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+
+        display: none;
+        align-items: center;
+        justify-content: center;
+
+        padding: 20px;
+
+        background: rgba(35,12,20,.55);
+        backdrop-filter: blur(10px);
+    }
+
+    .camera-disconnected.show {
+        display: flex;
+    }
+
+    .camera-disconnected-card {
+        width: min(430px,100%);
+        padding: 32px;
+
+        border-radius: 26px;
+
+        background: white;
+
+        text-align: center;
+
+        box-shadow:
+            0 30px 80px rgba(99,6,37,.25);
+    }
+
+    .camera-warning-icon {
+        width: 62px;
+        height: 62px;
+
+        margin: 0 auto 16px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background: #fff0f2;
+        color: #c92f59;
+
+        font-size: 28px;
+    }
+
+    .camera-disconnected-card h2 {
+        margin: 0 0 10px;
+        color: #630625;
+    }
+
+    .camera-disconnected-card p {
+        margin: 0 0 20px;
+
+        color: #756a6e;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .camera-retry-btn {
+        padding: 12px 22px;
+
+        border: 0;
+        border-radius: 12px;
+
+        background: #630625;
+        color: white;
+
+        font-weight: 800;
+        cursor: pointer;
+    }
+
+
+    /* ================================
+       AJAX LOADING
+    ================================= */
+    .assessment-loading {
+        opacity: .55;
+        pointer-events: none;
+        transition: opacity .2s ease;
+    }
+
+    .submit-spinner {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        margin-right: 8px;
+        vertical-align: -2px;
+        border: 2px solid rgba(255,255,255,.4);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: submitSpin .7s linear infinite;
+    }
+
+    @keyframes submitSpin {
+        to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 600px) {
+
+        .camera-section {
+            padding: 15px;
+        }
+
+        .camera-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .camera-permission-card {
+            padding: 25px 20px;
+        }
+
+        .camera-permission-card h2 {
+            font-size: 22px;
+        }
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<section class="assessment-page">
+
+    <div class="assessment-container">
+
+
+        <!-- =====================================
+             HEADER
+        ====================================== -->
+
+        <div class="assessment-header">
+
+            <span class="auth-label">
+                Skill Assessment
+            </span>
+
+            <h1>
+                Let's measure your
+                <span>{{ skill.name }}</span>
+                skills.
+            </h1>
+
+            <p>
+                Answer each question based on what you actually know.
+                Your teaching level will be earned from your assessment result.
+            </p>
+
+        </div>
+
+
+        <!-- =====================================
+             SETUP PROGRESS
+        ====================================== -->
+
+        <div class="setup-progress">
+
+            <div class="progress-step completed">
+                <span>✓</span>
+                <p>Profile</p>
+            </div>
+
+            <div class="progress-line completed"></div>
+
+            <div class="progress-step completed">
+                <span>✓</span>
+                <p>Skills</p>
+            </div>
+
+            <div class="progress-line active"></div>
+
+            <div class="progress-step active">
+                <span>3</span>
+                <p>Assessment</p>
+            </div>
+
+            <div class="progress-line"></div>
+
+            <div class="progress-step">
+                <span>4</span>
+                <p>Match</p>
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             ASSESSMENT INFO
+        ====================================== -->
+
+        <div class="assessment-info-card">
+
+            <div class="assessment-info-item">
+
+                <span class="info-label">
+                    Skill
+                </span>
+
+                <strong>
+                    {{ skill.name }}
+                </strong>
+
+            </div>
+
+
+            <div class="assessment-info-item">
+
+                <span class="info-label">
+                    Questions
+                </span>
+
+                <strong>
+                    {{ total_questions }}
+                </strong>
+
+            </div>
+
+
+            <div class="assessment-info-item">
+
+                <span class="info-label">
+                    Minimum Required
+                </span>
+
+                <strong>
+                    {{ minimum_required }} Questions
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             CAMERA
+        ====================================== -->
+
+        <div class="camera-section">
+
+            <div class="camera-header">
+
+                <h3 class="camera-title">
+                    Assessment Camera
+                </h3>
+
+                <span
+                    id="cameraStatus"
+                    class="camera-status"
+                >
+                    <span class="camera-status-dot"></span>
+                    Camera not started
+                </span>
+
+            </div>
+
+
+            <div class="camera-wrapper">
+
+                <video
+                    id="cameraPreview"
+                    autoplay
+                    muted
+                    playsinline
+                ></video>
+
+                <div class="camera-overlay"></div>
+
+                <div
+                    id="cameraLive"
+                    class="camera-live"
+                >
+                    <span class="camera-live-dot"></span>
+                    CAMERA LIVE
+                </div>
+
+            </div>
+
+
+            <p
+                id="cameraMessage"
+                class="camera-message"
+            >
+                Start the camera to begin your assessment.
+            </p>
+
+
+            <div
+                id="cameraError"
+                class="camera-error"
+            ></div>
+
+        </div>
+
+
+        <!-- =====================================
+             DYNAMIC ASSESSMENT AREA
+             ONLY THIS AREA IS REPLACED AFTER
+             A CORRECT ANSWER.
+        ====================================== -->
+
+        <div id="assessmentDynamic">
+
+            <!-- QUESTION PROGRESS -->
+            <div class="question-progress">
+                <div class="question-progress-top">
+                    <span>
+                        Question {{ current_question_number }}
+                        of {{ total_questions }}
+                    </span>
+                    <span>
+                        {{ completed_count }} completed
+                    </span>
+                </div>
+
+                <div class="question-progress-bar">
+                    <progress
+                        class="question-progress-fill"
+                        value="{{ current_question_number }}"
+                        max="{{ total_questions }}"
+                    ></progress>
+                </div>
+            </div>
+
+            <!-- QUESTION FORM -->
+            <form
+                action="{{ url_for('submit_assessment', skill_id=skill.id) }}"
+                method="POST"
+                class="assessment-form"
+                novalidate
+            >
+                <div class="question-card">
+
+                    <div class="question-top">
+                        <span class="question-number">
+                            Question {{ current_question_number }}
+                        </span>
+
+                        {% if question.difficulty %}
+                            <span
+                                class="question-difficulty difficulty-{{ question.difficulty|lower }}"
+                            >
+                                {{ question.difficulty }}
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <div class="question-content">
+                        <div class="question-heading">
+                            <span class="question-label">
+                                Question
+                            </span>
+
+                            {% if question.question_type == "code" %}
+                                <div class="question-code">
+                                    <pre><code>{{ question.question }}</code></pre>
+                                </div>
+                            {% else %}
+                                <h2>{{ question.question }}</h2>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="question-answer">
+                        <label
+                            for="question_{{ question.id }}"
+                            class="answer-label"
+                        >
+                            Your Answer
+                        </label>
+
+                        {% if question.question_type == "code" %}
+                            <textarea
+                                id="question_{{ question.id }}"
+                                name="question_{{ question.id }}"
+                                class="answer-input code-answer"
+                                placeholder="Write your code here..."
+                                rows="5"
+                                required
+                                autocomplete="off"
+                                spellcheck="false"
+                            ></textarea>
+                        {% elif question.question_type == "output" %}
+                            <textarea
+                                id="question_{{ question.id }}"
+                                name="question_{{ question.id }}"
+                                class="answer-input output-answer"
+                                placeholder="Type the expected output here..."
+                                rows="3"
+                                required
+                                autocomplete="off"
+                            ></textarea>
+                        {% else %}
+                            <textarea
+                                id="question_{{ question.id }}"
+                                name="question_{{ question.id }}"
+                                class="answer-input"
+                                placeholder="Type your answer here..."
+                                rows="3"
+                                required
+                                autocomplete="off"
+                            ></textarea>
+                        {% endif %}
+
+                        <p class="answer-hint">
+                            {% if question.question_type == "code" %}
+                                Write the code required to solve this question.
+                            {% elif question.question_type == "output" %}
+                                Enter the exact output produced by the code.
+                            {% else %}
+                                Answer based on your actual knowledge.
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                {% if errors and errors.get('assessment') %}
+                    <div class="form-error assessment-error">
+                        {{ errors.get('assessment') }}
+                    </div>
+                {% endif %}
+
+                <div class="assessment-actions">
+                    <a
+                        href="{{ url_for('skills') }}"
+                        class="btn btn-secondary"
+                        id="exitAssessmentBtn"
+                    >
+                        Exit Assessment
+                    </a>
+
+                    <button
+                        id="submitAssessmentBtn"
+                        type="submit"
+                        class="btn btn-primary"
+                        disabled
+                    >
+                        {% if current_question_number < total_questions %}
+                            Submit &amp; Continue →
+                        {% else %}
+                            Finish Assessment ✓
+                        {% endif %}
+                    </button>
+                </div>
+            </form>
+
+            <div class="assessment-notice">
+                <span>✓</span>
+                <p>
+                    You must complete at least
+                    <strong>{{ minimum_required }}</strong>
+                    questions to earn a level.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- =========================================
+     CAMERA PERMISSION SCREEN
+========================================== -->
+
+<div
+    id="cameraPermission"
+    class="camera-permission"
+>
+
+    <div class="camera-permission-card">
+
+        <div class="camera-icon">
+            📷
+        </div>
+
+
+        <h2>
+            Camera Required
+        </h2>
+
+
+        <p>
+            Your camera must remain active while you complete this assessment.
+        </p>
+
+
+        <ul class="camera-rules">
+
+            <li>
+                Camera access is required to start.
+            </li>
+
+            <li>
+                Keep your camera connected during the assessment.
+            </li>
+
+            <li>
+                The camera is used for assessment monitoring.
+            </li>
+
+            <li>
+                Your video is not recorded or stored by this page.
+            </li>
+
+        </ul>
+
+
+        <button
+            id="startCameraBtn"
+            type="button"
+            class="camera-start-btn"
+        >
+            Start Assessment
+        </button>
+
+
+        <p class="camera-permission-note">
+            Your browser will ask for camera permission once.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     CAMERA DISCONNECTED
+========================================== -->
+
+<div
+    id="cameraDisconnected"
+    class="camera-disconnected"
+>
+
+    <div class="camera-disconnected-card">
+
+        <div class="camera-warning-icon">
+            ⚠
+        </div>
+
+
+        <h2>
+            Camera Disconnected
+        </h2>
+
+
+        <p>
+            Camera access was interrupted. Your assessment cannot continue
+            without an active camera.
+        </p>
+
+
+        <button
+            id="retryCameraBtn"
+            type="button"
+            class="camera-retry-btn"
+        >
+            Reconnect Camera
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+(function () {
+    "use strict";
+
+    /* =====================================
+       CAMERA ELEMENTS
+    ====================================== */
+    const video = document.getElementById("cameraPreview");
+    const startCameraBtn = document.getElementById("startCameraBtn");
+    const retryCameraBtn = document.getElementById("retryCameraBtn");
+    const cameraStatus = document.getElementById("cameraStatus");
+    const cameraMessage = document.getElementById("cameraMessage");
+    const cameraError = document.getElementById("cameraError");
+    const cameraLive = document.getElementById("cameraLive");
+    const cameraPermission = document.getElementById("cameraPermission");
+    const cameraDisconnected = document.getElementById("cameraDisconnected");
+
+    /*
+     * IMPORTANT:
+     * This is LET, not CONST, because only the dynamic
+     * question area is replaced after a correct answer.
+     */
+    let assessmentDynamic = document.getElementById("assessmentDynamic");
+
+    /* =====================================
+       STATE
+    ====================================== */
+    let cameraStream = null;
+    let cameraStarted = false;
+    let cameraStarting = false;
+    let assessmentSubmitting = false;
+    let ajaxSubmitting = false;
+    let assessmentFinished = false;
+
+    /* =====================================
+       CAMERA STATUS / ERROR
+    ====================================== */
+    function setCameraStatus(active, text) {
+        if (!cameraStatus) return;
+        cameraStatus.classList.toggle("active", active);
+        cameraStatus.innerHTML = `
+            <span class="camera-status-dot"></span>
+            ${text}
+        `;
+    }
+
+    function showCameraError(message) {
+        if (!cameraError) return;
+        cameraError.textContent = message;
+        cameraError.classList.add("show");
+    }
+
+    function hideCameraError() {
+        if (!cameraError) return;
+        cameraError.textContent = "";
+        cameraError.classList.remove("show");
+    }
+
+    /* =====================================
+       ASSESSMENT LOCK
+    ====================================== */
+    function enableAssessment() {
+        document.body.classList.remove("camera-not-ready");
+        const button = document.getElementById("submitAssessmentBtn");
+        if (button) button.disabled = false;
+    }
+
+    function disableAssessment() {
+        document.body.classList.add("camera-not-ready");
+        const button = document.getElementById("submitAssessmentBtn");
+        if (button) button.disabled = true;
+    }
+
+    /* =====================================
+       CAMERA CHECK
+    ====================================== */
+    function isCameraLive() {
+        if (!cameraStream) return false;
+        const tracks = cameraStream.getVideoTracks();
+        return tracks.length > 0 && tracks.some(track => track.readyState === "live");
+    }
+
+    /* =====================================
+       STOP CAMERA
+    ====================================== */
+    function stopCamera() {
+        if (cameraStream) {
+            cameraStream.getTracks().forEach(track => track.stop());
+        }
+        cameraStream = null;
+        cameraStarted = false;
+        cameraStarting = false;
+
+        if (video) video.srcObject = null;
+        if (cameraLive) cameraLive.style.display = "none";
+    }
+
+    /* =====================================
+       CAMERA DISCONNECTED
+    ====================================== */
+    function handleCameraDisconnected() {
+        if (assessmentSubmitting || assessmentFinished) return;
+        if (!cameraStarted) return;
+
+        cameraStarted = false;
+        cameraLive.style.display = "none";
+        setCameraStatus(false, "Camera disconnected");
+        cameraMessage.textContent = "Camera access was interrupted.";
+        disableAssessment();
+        cameraDisconnected.classList.add("show");
+    }
+
+    /* =====================================
+       START CAMERA
+
+       getUserMedia() is intentionally called ONLY here.
+       It is NOT called when Q1 becomes Q2, Q2 becomes Q3, etc.
+    ====================================== */
+    async function startCamera() {
+        if (cameraStarted && isCameraLive()) return true;
+        if (cameraStarting) return false;
+
+        cameraStarting = true;
+        hideCameraError();
+
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            cameraStarting = false;
+            showCameraError("Your browser does not support camera access.");
+            return false;
+        }
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: "user",
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                },
+                audio: false
+            });
+
+            cameraStream = stream;
+            video.srcObject = cameraStream;
+            await video.play();
+
+            cameraStarted = true;
+            cameraStarting = false;
+            cameraPermission.style.display = "none";
+            cameraDisconnected.classList.remove("show");
+            cameraLive.style.display = "flex";
+            setCameraStatus(true, "Camera active");
+            cameraMessage.textContent = "Camera is active. Keep it connected during the assessment.";
+            enableAssessment();
+
+            cameraStream.getVideoTracks().forEach(track => {
+                track.addEventListener("ended", handleCameraDisconnected, { once: true });
+            });
+
+            return true;
+        } catch (error) {
+            cameraStarting = false;
+            cameraStarted = false;
+            cameraStream = null;
+            disableAssessment();
+            setCameraStatus(false, "Camera unavailable");
+
+            if (error && error.name === "NotAllowedError") {
+                showCameraError("Camera permission was denied. Please allow camera access and try again.");
+            } else if (error && error.name === "NotFoundError") {
+                showCameraError("No camera was found. Please connect a camera and try again.");
+            } else if (error && error.name === "NotReadableError") {
+                showCameraError("Your camera is currently being used by another application.");
+            } else {
+                showCameraError("Unable to start the camera. Please try again.");
+            }
+
+            return false;
+        }
+    }
+
+    /* =====================================
+       RETRY CAMERA
+    ====================================== */
+    async function retryCamera() {
+        cameraDisconnected.classList.remove("show");
+        await startCamera();
+    }
+
+    /* =====================================
+       FORM BINDING
+
+       The form is replaced after a correct answer,
+       so it must be rebound. The camera is NOT rebound
+       and getUserMedia() is NOT called here.
+    ====================================== */
+    function bindAssessmentForm() {
+        const form = document.querySelector("#assessmentDynamic .assessment-form");
+        if (!form || form.dataset.ajaxBound === "true") return;
+
+        form.dataset.ajaxBound = "true";
+
+        form.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            if (!cameraStarted || !cameraStream || !isCameraLive()) {
+                showCameraError("Camera must be active before submitting your answer.");
+                return;
+            }
+
+            if (ajaxSubmitting) return;
+
+            ajaxSubmitting = true;
+            assessmentSubmitting = true;
+
+            const submitButton = document.getElementById("submitAssessmentBtn");
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.innerHTML = `<span class="submit-spinner"></span> Checking answer...`;
+            }
+
+            assessmentDynamic = document.getElementById("assessmentDynamic");
+            if (assessmentDynamic) assessmentDynamic.classList.add("assessment-loading");
+
+            try {
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    body: new FormData(form),
+                    credentials: "same-origin",
+                    headers: {
+                        "X-Assessment-Ajax": "1"
+                    },
+                    redirect: "follow"
+                });
+
+                const finalUrl = response.url;
+                const html = await response.text();
+                const parser = new DOMParser();
+                const returnedDocument = parser.parseFromString(html, "text/html");
+
+                const currentUrl = new URL(window.location.href);
+                const returnedUrl = new URL(finalUrl, window.location.origin);
+
+                /*
+                 * Wrong answer / final answer / any other redirect:
+                 * leave the assessment and stop the camera.
+                 */
+                if (returnedUrl.pathname !== currentUrl.pathname) {
+                    assessmentFinished = true;
+                    stopCamera();
+                    window.location.href = returnedUrl.href;
+                    return;
+                }
+
+                /*
+                 * Same assessment URL = next question or validation response.
+                 * Replace ONLY #assessmentDynamic.
+                 */
+                const returnedDynamic = returnedDocument.getElementById("assessmentDynamic");
+
+                if (!returnedDynamic) {
+                    assessmentFinished = true;
+                    stopCamera();
+                    window.location.href = finalUrl;
+                    return;
+                }
+
+                if (!assessmentDynamic) {
+                    assessmentDynamic = document.getElementById("assessmentDynamic");
+                }
+
+                if (!assessmentDynamic) {
+                    assessmentFinished = true;
+                    stopCamera();
+                    window.location.href = finalUrl;
+                    return;
+                }
+
+                assessmentDynamic.replaceWith(returnedDynamic);
+                assessmentDynamic = document.getElementById("assessmentDynamic");
+
+                /*
+                 * IMPORTANT:
+                 * No startCamera() here.
+                 * The SAME cameraStream continues running.
+                 */
+                assessmentSubmitting = false;
+                ajaxSubmitting = false;
+
+                if (assessmentDynamic) {
+                    assessmentDynamic.classList.remove("assessment-loading");
+                }
+
+                bindAssessmentForm();
+
+                // The new question HTML contains a disabled submit button.
+                // The camera stream is still the SAME live stream, so unlock the new button.
+                if (isCameraLive()) {
+                    enableAssessment();
+                }
+
+                const newAnswer = document.querySelector("#assessmentDynamic .answer-input");
+                if (newAnswer) {
+                    setTimeout(() => newAnswer.focus(), 50);
+                }
+            } catch (error) {
+                console.error("Assessment submission error:", error);
+
+                assessmentSubmitting = false;
+                ajaxSubmitting = false;
+
+                if (assessmentDynamic) {
+                    assessmentDynamic.classList.remove("assessment-loading");
+                }
+
+                const currentButton = document.getElementById("submitAssessmentBtn");
+                if (currentButton) {
+                    currentButton.disabled = false;
+                    currentButton.textContent = "Submit & Continue →";
+                }
+
+                showCameraError("Something went wrong while submitting your answer. Please try again.");
+            }
+        });
+    }
+
+    /* =====================================
+       EXIT ASSESSMENT
+    ====================================== */
+    const exitAssessmentBtn = document.getElementById("exitAssessmentBtn");
+    if (exitAssessmentBtn) {
+        exitAssessmentBtn.addEventListener("click", function () {
+            assessmentFinished = true;
+            stopCamera();
+        });
+    }
+
+    /* =====================================
+       START / RETRY BUTTONS
+    ====================================== */
+    if (startCameraBtn) {
+        startCameraBtn.addEventListener("click", async function () {
+            const started = await startCamera();
+            if (started) bindAssessmentForm();
+        });
+    }
+
+    if (retryCameraBtn) {
+        retryCameraBtn.addEventListener("click", retryCamera);
+    }
+
+    /* =====================================
+       LEAVING THE PAGE
+    ====================================== */
+    window.addEventListener("pagehide", function () {
+        stopCamera();
+    });
+
+    /* =====================================
+       INITIAL STATE
+    ====================================== */
+    disableAssessment();
+    bindAssessmentForm();
+})();
+</script>
+
+{% endblock %}

@@ -1,0 +1,640 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ skill_name }} Roadmap — SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/roadmap.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+{% set roadmap_progress = roadmap_percentage|default(progress_percentage|default(0)) %}
+
+<div class="roadmap-page">
+
+    <!-- ================= BACKGROUND ================= -->
+
+    <div class="roadmap-background">
+        <span class="roadmap-orb orb-1"></span>
+        <span class="roadmap-orb orb-2"></span>
+        <span class="roadmap-orb orb-3"></span>
+
+        <span class="roadmap-spark spark-1">✦</span>
+        <span class="roadmap-spark spark-2">✧</span>
+        <span class="roadmap-spark spark-3">✦</span>
+    </div>
+
+
+    <!-- ================= MAIN CONTAINER ================= -->
+
+    <div class="roadmap-container">
+
+
+        <!-- ================= HEADER ================= -->
+
+        <header class="roadmap-header">
+
+            <div class="roadmap-header-left">
+
+                <a
+                    href="{{ url_for('dashboard') }}"
+                    class="roadmap-back"
+                >
+                    <span>←</span>
+                    Dashboard
+                </a>
+
+                <div class="roadmap-label">
+                    <span></span>
+                    STRUCTURED LEARNING PATH
+                </div>
+
+                <h1>
+                    {{ skill_name }}
+                    <span>Roadmap</span>
+                </h1>
+
+                <p>
+                    Learn step by step, practice every concept,
+                    and complete practical challenges to unlock
+                    your next topic.
+                </p>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ================= PROGRESS OVERVIEW ================= -->
+
+        <section class="roadmap-overview">
+
+            <div class="progress-card">
+
+                <div class="progress-card-top">
+
+                    <div>
+                        <span class="small-label">
+                            YOUR PROGRESS
+                        </span>
+
+                        <h2>
+                            Keep building your {{ skill_name }} skills
+                        </h2>
+
+                        <p>
+                            Complete each topic to continue your learning journey.
+                        </p>
+                    </div>
+
+                    <div class="progress-percent">
+                        {{ roadmap_progress }}%
+                    </div>
+
+                </div>
+
+
+                <div class="progress-track">
+
+                    <div
+                        class="progress-fill"
+                        data-progress="{{ roadmap_progress }}"
+                    ></div>
+
+                </div>
+
+
+                <div class="progress-info">
+
+                    <span>
+                        <strong>{{ completed_topics|default(0) }}</strong>
+                        of
+                        <strong>{{ total_topics|default(0) }}</strong>
+                        topics completed
+                    </span>
+
+                    <span>
+                        {{ remaining_topics|default(0) }} remaining
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- EARNED LEVEL -->
+
+            <div class="level-card">
+
+                <div class="level-icon">
+                    ✦
+                </div>
+
+                <div>
+                    <span class="small-label">
+                        EARNED LEVEL
+                    </span>
+
+                    <h3>
+                        {{ earned_level|default('Beginner') }}
+                    </h3>
+
+                    <p>
+                        Your level grows as you complete
+                        practical challenges.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= LEARNING PATH ================= -->
+
+        <section class="learning-path">
+
+            <div class="path-heading">
+
+                <div>
+                    <span class="small-label">
+                        YOUR LEARNING PATH
+                    </span>
+
+                    <h2>
+                        {{ skill_name }} Journey
+                    </h2>
+
+                    <p>
+                        Follow the topics in order.
+                        Complete each challenge to unlock the next one.
+                    </p>
+                </div>
+
+                <div class="topic-total">
+                    {{ total_topics|default(0) }}
+                    <span>Topics</span>
+                </div>
+
+            </div>
+
+
+
+            {% if roadmap_sections %}
+
+            <div class="roadmap-stages">
+
+                {% for section in roadmap_sections %}
+
+                <section class="stage-card">
+
+                    <!-- STAGE HEADER -->
+
+                    <div class="stage-header">
+
+                        <div class="stage-number">
+                            {{ loop.index }}
+                        </div>
+
+                        <div class="stage-info">
+
+                            <span>
+                                STAGE {{ loop.index }}
+                            </span>
+
+                            <h3>
+                                {{ section.title }}
+                            </h3>
+
+                            {% if section.description %}
+                            <p>
+                                {{ section.description }}
+                            </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- TOPICS -->
+
+                    {% if section.topics %}
+
+                    <div class="topics-list">
+
+                        {% for topic in section.topics %}
+
+                        <article
+                            class="topic-card
+                            {% if topic.completed %}
+                                is-completed
+                            {% elif topic.unlocked %}
+                                is-unlocked
+                            {% else %}
+                                is-locked
+                            {% endif %}"
+                        >
+
+                            <!-- NUMBER -->
+
+                            <div class="topic-number">
+
+                                {% if topic.completed %}
+
+                                    <span class="check-mark">
+                                        ✓
+                                    </span>
+
+                                {% elif topic.unlocked %}
+
+                                    {{ "%02d"|format(topic.order_index) }}
+
+                                {% else %}
+
+                                    <span class="lock-mark">
+                                        🔒
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+
+                            <!-- TOPIC BODY -->
+
+                            <div class="topic-body">
+
+                                <div class="topic-header">
+
+                                    <div>
+
+                                        <span class="topic-label">
+                                            TOPIC {{ "%02d"|format(topic.order_index) }}
+                                        </span>
+
+                                        <h4>
+                                            {{ topic.title }}
+                                        </h4>
+
+                                    </div>
+
+
+                                    {% if topic.completed %}
+
+                                        <span class="status completed">
+                                            Completed
+                                        </span>
+
+                                    {% elif topic.unlocked %}
+
+                                        <span class="status unlocked">
+                                            Available
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="status locked">
+                                            Locked
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+
+
+                                <!-- SHORT DESCRIPTION -->
+
+                                {% if topic.description %}
+
+                                <p class="topic-description">
+                                    {{ topic.description }}
+                                </p>
+
+                                {% else %}
+
+                                <p class="topic-description muted">
+                                    Learn this concept, practice it,
+                                    and complete the practical challenge.
+                                </p>
+
+                                {% endif %}
+
+
+
+                                <!-- TOPIC FOOTER -->
+
+                                <div class="topic-footer">
+
+                                    {% if topic.completed %}
+
+                                        <span class="topic-message completed-message">
+                                            ✓ Practical challenge completed
+                                        </span>
+
+                                        <a
+                                            href="{{ url_for(
+                                                'topic_learning',
+                                                topic_id=topic.id
+                                            ) }}"
+                                            class="topic-action review"
+                                        >
+                                            Review
+                                            <span>→</span>
+                                        </a>
+
+
+                                    {% elif topic.unlocked %}
+
+                                        <span class="topic-message">
+                                            Learn → Practice → Complete
+                                        </span>
+
+                                        <a
+                                            href="{{ url_for(
+                                                'topic_learning',
+                                                topic_id=topic.id
+                                            ) }}"
+                                            class="topic-action start"
+                                        >
+                                            Start Learning
+                                            <span>→</span>
+                                        </a>
+
+
+                                    {% else %}
+
+                                        <span class="topic-message locked-message">
+                                            Complete the previous topic to unlock
+                                        </span>
+
+                                        <span class="topic-action disabled">
+                                            🔒 Locked
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                        {% endfor %}
+
+                    </div>
+
+                    {% else %}
+
+                    <div class="empty-stage">
+
+                        <span>✦</span>
+
+                        <h4>
+                            Topics coming soon
+                        </h4>
+
+                        <p>
+                            Learning content for this stage
+                            is being prepared.
+                        </p>
+
+                    </div>
+
+                    {% endif %}
+
+                </section>
+
+                {% endfor %}
+
+            </div>
+
+
+            {% else %}
+
+            <!-- EMPTY ROADMAP -->
+
+            <div class="empty-roadmap">
+
+                <div class="empty-roadmap-icon">
+                    ✦
+                </div>
+
+                <h3>
+                    Your roadmap is being prepared
+                </h3>
+
+                <p>
+                    Structured learning topics for
+                    <strong>{{ skill_name }}</strong>
+                    will appear here soon.
+                </p>
+
+                <a
+                    href="{{ url_for('skills') }}"
+                    class="empty-roadmap-button"
+                >
+                    Explore Skills
+                    <span>→</span>
+                </a>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+
+
+        <!-- ================= HOW IT WORKS ================= -->
+
+        <section class="learning-rules">
+
+            <div class="rules-heading">
+
+                <span class="small-label">
+                    HOW SKILLSWAP WORKS
+                </span>
+
+                <h2>
+                    Learn by actually doing.
+                </h2>
+
+                <p>
+                    Reading is only the beginning.
+                    Every topic ends with practical application.
+                </p>
+
+            </div>
+
+
+            <div class="rules-grid">
+
+                <article class="rule-card">
+
+                    <div class="rule-number">
+                        01
+                    </div>
+
+                    <h3>
+                        Understand
+                    </h3>
+
+                    <p>
+                        Learn the concept through
+                        a detailed explanation and examples.
+                    </p>
+
+                </article>
+
+
+                <article class="rule-card">
+
+                    <div class="rule-number">
+                        02
+                    </div>
+
+                    <h3>
+                        Practice
+                    </h3>
+
+                    <p>
+                        Experiment with the concept
+                        and create your own example.
+                    </p>
+
+                </article>
+
+
+                <article class="rule-card">
+
+                    <div class="rule-number">
+                        03
+                    </div>
+
+                    <h3>
+                        Prove Your Skill
+                    </h3>
+
+                    <p>
+                        Complete the practical challenge
+                        and submit your solution.
+                    </p>
+
+                </article>
+
+
+                <article class="rule-card">
+
+                    <div class="rule-number">
+                        04
+                    </div>
+
+                    <h3>
+                        Unlock
+                    </h3>
+
+                    <p>
+                        Pass the challenge to unlock
+                        the next topic.
+                    </p>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= BOTTOM ================= -->
+
+        <section class="roadmap-bottom">
+
+            <div>
+
+                <span class="small-label">
+                    KEEP GOING
+                </span>
+
+                <h2>
+                    One topic at a time.
+                </h2>
+
+                <p>
+                    Complete practical challenges and
+                    build real {{ skill_name }} skills.
+                </p>
+
+            </div>
+
+
+            <div class="bottom-actions">
+
+                <a
+                    href="{{ url_for('dashboard') }}"
+                    class="bottom-button secondary"
+                >
+                    Dashboard
+                </a>
+
+                <a
+                    href="{{ url_for('skills') }}"
+                    class="bottom-button primary"
+                >
+                    Explore Skills
+                    <span>→</span>
+                </a>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+
+
+<!-- ================= PROGRESS SCRIPT ================= -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    document
+        .querySelectorAll(".progress-fill")
+        .forEach(function (bar) {
+
+            const value = Number(
+                bar.getAttribute("data-progress") || 0
+            );
+
+            const safeValue = Math.min(
+                100,
+                Math.max(
+                    0,
+                    Number.isFinite(value) ? value : 0
+                )
+            );
+
+            requestAnimationFrame(function () {
+                bar.style.width = safeValue + "%";
+            });
+
+        });
+
+});
+</script>
+
+{% endblock %}

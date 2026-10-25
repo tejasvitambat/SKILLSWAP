@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Something Went Wrong — SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/500.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="error-page error-500-page">
+
+    <!-- Decorative background -->
+    <div class="error-bg" aria-hidden="true">
+
+        <span class="error-orb error-orb-one"></span>
+        <span class="error-orb error-orb-two"></span>
+        <span class="error-orb error-orb-three"></span>
+
+        <span class="error-sparkle sparkle-one">✦</span>
+        <span class="error-sparkle sparkle-two">✧</span>
+        <span class="error-sparkle sparkle-three">✦</span>
+        <span class="error-sparkle sparkle-four">·</span>
+        <span class="error-sparkle sparkle-five">✧</span>
+
+    </div>
+
+
+    <div class="error-container">
+
+        <!-- ERROR VISUAL -->
+        <div class="error-visual">
+
+            <div class="error-ring ring-one"></div>
+            <div class="error-ring ring-two"></div>
+
+            <div class="error-icon">
+                <span>!</span>
+            </div>
+
+        </div>
+
+
+        <!-- ERROR NUMBER -->
+        <div class="error-code">
+            500
+        </div>
+
+
+        <!-- ERROR CONTENT -->
+        <div class="error-content">
+
+            <span class="section-label">
+                Something Went Wrong
+            </span>
+
+            <h1>
+                Our learning path
+                <span>hit a little bump.</span>
+            </h1>
+
+            <p>
+                Something unexpected happened on our side.
+                Your account and learning journey are still safe.
+                Please try again in a moment.
+            </p>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+        <div class="error-actions">
+
+            <a
+                href="{{ url_for('home') }}"
+                class="btn btn-primary"
+            >
+                <span>Back to Home</span>
+                <span class="btn-arrow">→</span>
+            </a>
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="btn btn-secondary"
+            >
+                <span>Open Dashboard</span>
+                <span class="btn-arrow">→</span>
+            </a>
+
+        </div>
+
+
+        <!-- QUICK LINKS -->
+        <div class="error-quick-links">
+
+            <span class="quick-label">
+                Or continue exploring
+            </span>
+
+            <a href="{{ url_for('skills') }}">
+                Skills
+            </a>
+
+            <span class="quick-dot">•</span>
+
+            <a href="{{ url_for('matches') }}">
+                Matches
+            </a>
+
+            <span class="quick-dot">•</span>
+
+            <a href="{{ url_for('how_it_works') }}">
+                How It Works
+            </a>
+
+        </div>
+
+
+        <!-- STATUS NOTE -->
+        <div class="error-note">
+
+            <span class="error-note-icon">
+                ✦
+            </span>
+
+            <div>
+                <strong>
+                    Don't worry.
+                </strong>
+
+                <span>
+                    You can safely return and continue learning.
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

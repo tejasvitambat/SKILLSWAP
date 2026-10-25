@@ -1,0 +1,762 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Reviews — SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/reviews.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="reviews-page">
+
+    <!-- Background -->
+    <div class="reviews-bg" aria-hidden="true">
+        <div class="reviews-orb orb-one"></div>
+        <div class="reviews-orb orb-two"></div>
+        <div class="reviews-orb orb-three"></div>
+
+        <span class="reviews-sparkle sparkle-one">✦</span>
+        <span class="reviews-sparkle sparkle-two">✧</span>
+        <span class="reviews-sparkle sparkle-three">✦</span>
+        <span class="reviews-sparkle sparkle-four">✧</span>
+    </div>
+
+
+    <div class="reviews-container">
+
+        <!-- =========================
+             HEADER
+        ========================== -->
+
+        <div class="reviews-header">
+
+            <div class="reviews-header-content">
+
+                <span class="section-label">
+                    Learning Experience
+                </span>
+
+                <h1>
+                    Reviews & Ratings
+                </h1>
+
+                <p>
+                    Share honest feedback about your SkillSwap
+                    learning experience and help build trust in
+                    the community.
+                </p>
+
+            </div>
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="btn btn-secondary"
+            >
+                <span>←</span>
+                Dashboard
+            </a>
+
+        </div>
+
+
+        <!-- =========================
+             PENDING REVIEWS
+        ========================== -->
+
+        <section class="reviews-section">
+
+            <div class="reviews-section-heading">
+
+                <div>
+                    <span class="section-label">
+                        Action Required
+                    </span>
+
+                    <h2>
+                        Sessions Waiting for Your Review
+                    </h2>
+                </div>
+
+            </div>
+
+
+            {% if pending_reviews %}
+
+                <div class="pending-review-list">
+
+                    {% for session in pending_reviews %}
+
+                        <article class="pending-review-card">
+
+                            <!-- Partner -->
+
+                            <div class="review-partner">
+
+                                {% if session.partner.profile_photo %}
+
+                                    <img
+                                        src="{{ url_for(
+                                            'uploaded_file',
+                                            filename=session.partner.profile_photo
+                                        ) }}"
+                                        alt="{{ session.partner.full_name }}"
+                                        class="review-partner-avatar"
+                                    >
+
+                                {% else %}
+
+                                    <div class="review-partner-avatar avatar-placeholder">
+                                        {{ session.partner.full_name[:1]|upper }}
+                                    </div>
+
+                                {% endif %}
+
+
+                                <div class="review-partner-info">
+
+                                    <span class="section-label">
+                                        Completed Session
+                                    </span>
+
+                                    <h3>
+                                        {{ session.partner.full_name }}
+                                    </h3>
+
+                                    <p>
+                                        {{ session.title }}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Session info -->
+
+                            <div class="review-session-info">
+
+                                {% if session.skill %}
+
+                                    <span>
+                                        Skill:
+                                        <strong>
+                                            {{ session.skill }}
+                                        </strong>
+                                    </span>
+
+                                {% endif %}
+
+
+                                {% if session.completed_at %}
+
+                                    <span>
+                                        Completed:
+                                        <strong>
+                                            {{ session.completed_at.strftime(
+                                                '%d %B %Y'
+                                            ) }}
+                                        </strong>
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- Action -->
+
+                            <div class="review-card-action">
+
+                                <a
+                                    href="{{ url_for(
+                                        'create_review',
+                                        session_id=session.id
+                                    ) }}"
+                                    class="btn btn-primary"
+                                >
+                                    Write a Review
+                                    <span>→</span>
+                                </a>
+
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="reviews-empty-state">
+
+                    <div class="empty-icon">
+                        ★
+                    </div>
+
+                    <h3>
+                        No pending reviews
+                    </h3>
+
+                    <p>
+                        Once you complete a session, you'll be able
+                        to share your experience with your partner.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- =========================
+             YOUR REVIEWS
+        ========================== -->
+
+        <section class="reviews-section">
+
+            <div class="reviews-section-heading">
+
+                <div>
+                    <span class="section-label">
+                        Your Feedback
+                    </span>
+
+                    <h2>
+                        Reviews You've Given
+                    </h2>
+                </div>
+
+            </div>
+
+
+            {% if given_reviews %}
+
+                <div class="review-list">
+
+                    {% for review in given_reviews %}
+
+                        <article class="review-card">
+
+                            <div class="review-card-header">
+
+                                <!-- Reviewee -->
+
+                                <div class="review-user">
+
+                                    {% if review.reviewee.profile_photo %}
+
+                                        <img
+                                            src="{{ url_for(
+                                                'uploaded_file',
+                                                filename=review.reviewee.profile_photo
+                                            ) }}"
+                                            alt="{{ review.reviewee.full_name }}"
+                                            class="review-avatar"
+                                        >
+
+                                    {% else %}
+
+                                        <div class="review-avatar avatar-placeholder">
+                                            {{ review.reviewee.full_name[:1]|upper }}
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <div class="review-user-info">
+
+                                        <strong>
+                                            {{ review.reviewee.full_name }}
+                                        </strong>
+
+                                        <small>
+
+                                            {% if review.created_at %}
+                                                {{ review.created_at.strftime(
+                                                    '%d %B %Y'
+                                                ) }}
+                                            {% endif %}
+
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Rating -->
+
+                                <div class="review-rating">
+
+                                    {% for number in range(1, 6) %}
+
+                                        {% if number <= review.rating %}
+
+                                            <span class="star-filled">
+                                                ★
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="star-empty">
+                                                ☆
+                                            </span>
+
+                                        {% endif %}
+
+                                    {% endfor %}
+
+                                    <strong>
+                                        {{ review.rating }}/5
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            {% if review.skill %}
+
+                                <span class="review-skill">
+                                    {{ review.skill }}
+                                </span>
+
+                            {% endif %}
+
+
+                            <div class="review-comment">
+
+                                {% if review.comment %}
+
+                                    <p>
+                                        "{{ review.comment }}"
+                                    </p>
+
+                                {% else %}
+
+                                    <p>
+                                        No written comment.
+                                    </p>
+
+                                {% endif %}
+
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="reviews-empty-state">
+
+                    <div class="empty-icon soft">
+                        ♡
+                    </div>
+
+                    <h3>
+                        No reviews yet
+                    </h3>
+
+                    <p>
+                        You haven't given any reviews yet.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- =========================
+             REVIEWS RECEIVED
+        ========================== -->
+
+        <section class="reviews-section">
+
+            <div class="reviews-section-heading">
+
+                <div>
+                    <span class="section-label">
+                        Community Trust
+                    </span>
+
+                    <h2>
+                        Reviews You've Received
+                    </h2>
+                </div>
+
+            </div>
+
+
+            {% if received_reviews %}
+
+                <!-- Rating summary -->
+
+                <div class="received-reviews-summary">
+
+                    <!-- Average -->
+
+                    <div class="average-rating-card">
+
+                        <div class="rating-card-glow"></div>
+
+                        <span class="section-label">
+                            Average Rating
+                        </span>
+
+                        <strong class="average-rating-number">
+                            {{ average_rating|default(0) }}
+                        </strong>
+
+
+                        <div class="average-stars">
+
+                            {% set average_score =
+                                average_rating|default(0)|round(0, 'floor')|int
+                            %}
+
+                            {% for number in range(1, 6) %}
+
+                                {% if number <= average_score %}
+
+                                    <span class="star-filled">
+                                        ★
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="star-empty">
+                                        ☆
+                                    </span>
+
+                                {% endif %}
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <small>
+                            Based on
+                            {{ received_reviews|length }}
+                            review{% if received_reviews|length != 1 %}s{% endif %}
+                        </small>
+
+                    </div>
+
+
+                    <!-- Rating breakdown -->
+
+                    <div class="rating-breakdown">
+
+                        {% for rating_number in [5, 4, 3, 2, 1] %}
+
+                            {% set rating_percentage =
+                                rating_distribution[rating_number]|default(0)|int
+                            %}
+
+                            {% set rating_count =
+                                rating_distribution_count[rating_number]|default(0)|int
+                            %}
+
+
+                            <div class="rating-breakdown-row">
+
+                                <span class="rating-label">
+                                    {{ rating_number }} ★
+                                </span>
+
+                                <div class="rating-bar">
+
+                                    <div
+                                        class="rating-bar-fill"
+                                        data-progress="{{ rating_percentage }}"
+                                    ></div>
+
+                                </div>
+
+                                <small>
+                                    {{ rating_count }}
+                                </small>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Received review list -->
+
+                <div class="review-list received-review-list">
+
+                    {% for review in received_reviews %}
+
+                        <article class="review-card">
+
+                            <div class="review-card-header">
+
+                                <!-- Reviewer -->
+
+                                <div class="review-user">
+
+                                    {% if review.reviewer.profile_photo %}
+
+                                        <img
+                                            src="{{ url_for(
+                                                'uploaded_file',
+                                                filename=review.reviewer.profile_photo
+                                            ) }}"
+                                            alt="{{ review.reviewer.full_name }}"
+                                            class="review-avatar"
+                                        >
+
+                                    {% else %}
+
+                                        <div class="review-avatar avatar-placeholder">
+                                            {{ review.reviewer.full_name[:1]|upper }}
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <div class="review-user-info">
+
+                                        <strong>
+                                            {{ review.reviewer.full_name }}
+                                        </strong>
+
+                                        <small>
+
+                                            {% if review.created_at %}
+                                                {{ review.created_at.strftime(
+                                                    '%d %B %Y'
+                                                ) }}
+                                            {% endif %}
+
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Rating -->
+
+                                <div class="review-rating">
+
+                                    {% for number in range(1, 6) %}
+
+                                        {% if number <= review.rating %}
+
+                                            <span class="star-filled">
+                                                ★
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="star-empty">
+                                                ☆
+                                            </span>
+
+                                        {% endif %}
+
+                                    {% endfor %}
+
+                                    <strong>
+                                        {{ review.rating }}/5
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            {% if review.skill %}
+
+                                <span class="review-skill">
+                                    {{ review.skill }}
+                                </span>
+
+                            {% endif %}
+
+
+                            {% if review.comment %}
+
+                                <div class="review-comment">
+
+                                    <p>
+                                        "{{ review.comment }}"
+                                    </p>
+
+                                </div>
+
+                            {% endif %}
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="reviews-empty-state">
+
+                    <div class="empty-icon">
+                        ♡
+                    </div>
+
+                    <h3>
+                        No reviews yet
+                    </h3>
+
+                    <p>
+                        Complete sessions and help your learning
+                        partners by sharing your experience.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- =========================
+             GUIDELINES
+        ========================== -->
+
+        <section class="review-guidelines">
+
+            <div class="review-guidelines-content">
+
+                <span class="section-label">
+                    Community Guidelines
+                </span>
+
+                <h2>
+                    Keep reviews useful and genuine.
+                </h2>
+
+                <p>
+                    Reviews help SkillSwap members understand who
+                    they can learn from and teach with. Give feedback
+                    based on your actual session experience.
+                </p>
+
+            </div>
+
+
+            <div class="review-guideline-list">
+
+                <!-- Honest -->
+
+                <div class="review-guideline-item">
+
+                    <span class="guideline-icon">
+                        ✓
+                    </span>
+
+                    <div>
+                        <strong>
+                            Be honest
+                        </strong>
+
+                        <p>
+                            Rate the actual learning experience.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <!-- Respectful -->
+
+                <div class="review-guideline-item">
+
+                    <span class="guideline-icon">
+                        ✓
+                    </span>
+
+                    <div>
+                        <strong>
+                            Be respectful
+                        </strong>
+
+                        <p>
+                            Keep feedback constructive and professional.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <!-- Specific -->
+
+                <div class="review-guideline-item">
+
+                    <span class="guideline-icon">
+                        ✓
+                    </span>
+
+                    <div>
+                        <strong>
+                            Be specific
+                        </strong>
+
+                        <p>
+                            Mention what worked well and what could
+                            be improved.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             BOTTOM ACTIONS
+        ========================== -->
+
+        <div class="reviews-bottom-actions">
+
+            <a
+                href="{{ url_for('sessions') }}"
+                class="btn btn-secondary"
+            >
+                View Sessions
+            </a>
+
+            <a
+                href="{{ url_for('matches') }}"
+                class="btn btn-primary"
+            >
+                Find More Partners
+                <span>→</span>
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

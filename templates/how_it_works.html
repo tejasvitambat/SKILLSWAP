@@ -1,0 +1,958 @@
+{% extends "base.html" %}
+
+{% block title %}
+    How It Works — SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/how_it_works.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="how-page">
+
+    <!-- =====================================================
+         BACKGROUND DECORATION
+    ====================================================== -->
+
+    <div class="how-background" aria-hidden="true">
+        <span class="how-orb orb-one"></span>
+        <span class="how-orb orb-two"></span>
+        <span class="how-orb orb-three"></span>
+
+        <span class="how-spark sparkle-one">✦</span>
+        <span class="how-spark sparkle-two">✧</span>
+        <span class="how-spark sparkle-three">·</span>
+        <span class="how-spark sparkle-four">✦</span>
+        <span class="how-spark sparkle-five">✧</span>
+    </div>
+
+
+    <div class="how-container">
+
+
+        <!-- =================================================
+             HERO
+        ================================================== -->
+
+        <header class="how-hero">
+
+            <span class="section-label">
+                HOW SKILLSWAP WORKS
+            </span>
+
+            <h1>
+                Learn by sharing.
+                <span>Grow together.</span>
+            </h1>
+
+            <p>
+                SkillSwap connects people who can teach what you
+                want to learn with people who want to learn what
+                you already know.
+            </p>
+
+            <div class="hero-actions">
+
+                <a
+                    href="{{ url_for('signup') }}"
+                    class="how-btn how-btn-primary"
+                >
+                    Start Skill Swapping
+                    <span>→</span>
+                </a>
+
+                <a
+                    href="{{ url_for('skills') }}"
+                    class="how-btn how-btn-light"
+                >
+                    Explore Skills
+                </a>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================================
+             CORE IDEA
+        ================================================== -->
+
+        <section class="exchange-card">
+
+            <div class="exchange-column">
+
+                <span class="mini-label">
+                    YOU CAN TEACH
+                </span>
+
+                <h2>
+                    Share what
+                    <span>you know.</span>
+                </h2>
+
+                <p>
+                    Select the skill you can teach. Your actual
+                    skill level is earned through assessment.
+                </p>
+
+            </div>
+
+
+            <div class="exchange-middle">
+
+                <div class="exchange-circle">
+                    ⇄
+                </div>
+
+                <span>
+                    SKILL EXCHANGE
+                </span>
+
+            </div>
+
+
+            <div class="exchange-column">
+
+                <span class="mini-label">
+                    YOU WANT TO LEARN
+                </span>
+
+                <h2>
+                    Learn what
+                    <span>you need.</span>
+                </h2>
+
+                <p>
+                    Choose the skills you want to learn and
+                    connect with people who can teach them.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             JOURNEY HEADER
+        ================================================== -->
+
+        <section class="section-heading">
+
+            <span class="section-label">
+                YOUR JOURNEY
+            </span>
+
+            <h2>
+                From profile
+                <span>to real progress.</span>
+            </h2>
+
+            <p>
+                SkillSwap is built around actual learning,
+                practice and meaningful skill exchange.
+            </p>
+
+        </section>
+
+
+
+        <!-- =================================================
+             JOURNEY STEPS
+        ================================================== -->
+
+        <section class="steps-grid">
+
+
+            <!-- STEP 01 -->
+            <article class="step-card">
+
+                <span class="step-number">
+                    01
+                </span>
+
+                <div class="step-icon">
+                    ◎
+                </div>
+
+                <span class="step-label">
+                    CREATE
+                </span>
+
+                <h3>
+                    Create your profile
+                </h3>
+
+                <p>
+                    Sign up and add your basic information,
+                    learning goals, availability and preferences.
+                </p>
+
+                <a
+                    href="{{ url_for('signup') }}"
+                    class="card-link"
+                >
+                    Create profile
+                    <span>→</span>
+                </a>
+
+            </article>
+
+
+            <!-- STEP 02 -->
+            <article class="step-card">
+
+                <span class="step-number">
+                    02
+                </span>
+
+                <div class="step-icon">
+                    ◇
+                </div>
+
+                <span class="step-label">
+                    SKILLS
+                </span>
+
+                <h3>
+                    Choose teach & learn
+                </h3>
+
+                <p>
+                    Select the skill you can teach and the skill
+                    you want to learn through SkillSwap.
+                </p>
+
+                <a
+                    href="{{ url_for('skills') }}"
+                    class="card-link"
+                >
+                    Choose skills
+                    <span>→</span>
+                </a>
+
+            </article>
+
+
+            <!-- STEP 03 -->
+            <article class="step-card">
+
+                <span class="step-number">
+                    03
+                </span>
+
+                <div class="step-icon">
+                    ✓
+                </div>
+
+                <span class="step-label">
+                    ASSESSMENT
+                </span>
+
+                <h3>
+                    Earn your skill level
+                </h3>
+
+                <p>
+                    Take a skill-specific assessment and earn
+                    your level based on your demonstrated knowledge.
+                </p>
+
+                <div class="step-note">
+                    Level is earned, not manually selected.
+                </div>
+
+            </article>
+
+
+            <!-- STEP 04 -->
+            <article class="step-card">
+
+                <span class="step-number">
+                    04
+                </span>
+
+                <div class="step-icon">
+                    ⇄
+                </div>
+
+                <span class="step-label">
+                    MATCH
+                </span>
+
+                <h3>
+                    Find your skill partner
+                </h3>
+
+                <p>
+                    Discover people who can teach what you want
+                    to learn and want to learn what you can teach.
+                </p>
+
+                <a
+                    href="{{ url_for('matches') }}"
+                    class="card-link"
+                >
+                    View matches
+                    <span>→</span>
+                </a>
+
+            </article>
+
+
+            <!-- STEP 05 -->
+            <article class="step-card">
+
+                <span class="step-number">
+                    05
+                </span>
+
+                <div class="step-icon">
+                    +
+                </div>
+
+                <span class="step-label">
+                    CONNECT
+                </span>
+
+                <h3>
+                    Connect with a partner
+                </h3>
+
+                <p>
+                    Send a connection request, discuss your goals
+                    and start planning your learning exchange.
+                </p>
+
+                <a
+                    href="{{ url_for('connections') }}"
+                    class="card-link"
+                >
+                    Connections
+                    <span>→</span>
+                </a>
+
+            </article>
+
+
+            <!-- STEP 06 -->
+            <article class="step-card">
+
+                <span class="step-number">
+                    06
+                </span>
+
+                <div class="step-icon">
+                    ◷
+                </div>
+
+                <span class="step-label">
+                    SESSIONS
+                </span>
+
+                <h3>
+                    Schedule a real session
+                </h3>
+
+                <p>
+                    Choose the skill, topic, date, time and
+                    session format with your learning partner.
+                </p>
+
+                <a
+                    href="{{ url_for('sessions') }}"
+                    class="card-link"
+                >
+                    View sessions
+                    <span>→</span>
+                </a>
+
+            </article>
+
+
+            <!-- STEP 07 -->
+            <article class="step-card">
+
+                <span class="step-number">
+                    07
+                </span>
+
+                <div class="step-icon">
+                    ↗
+                </div>
+
+                <span class="step-label">
+                    PRACTICE
+                </span>
+
+                <h3>
+                    Learn through the roadmap
+                </h3>
+
+                <p>
+                    Understand the topic, practice it and complete
+                    the practical task before moving forward.
+                </p>
+
+                <a
+                    href="{{ url_for('progress') }}"
+                    class="card-link"
+                >
+                    Track progress
+                    <span>→</span>
+                </a>
+
+            </article>
+
+
+            <!-- STEP 08 -->
+            <article class="step-card">
+
+                <span class="step-number">
+                    08
+                </span>
+
+                <div class="step-icon">
+                    ★
+                </div>
+
+                <span class="step-label">
+                    COMPLETE
+                </span>
+
+                <h3>
+                    Earn progress & certificates
+                </h3>
+
+                <p>
+                    Complete your roadmap work and earn
+                    achievement records and certificates.
+                </p>
+
+                <a
+                    href="{{ url_for('certificates') }}"
+                    class="card-link"
+                >
+                    View certificates
+                    <span>→</span>
+                </a>
+
+            </article>
+
+        </section>
+
+
+
+        <!-- =================================================
+             REAL LEARNING
+        ================================================== -->
+
+        <section class="learning-card">
+
+            <div class="learning-content">
+
+                <span class="section-label">
+                    REAL LEARNING
+                </span>
+
+                <h2>
+                    Reading alone doesn't
+                    <span>complete a topic.</span>
+                </h2>
+
+                <p>
+                    SkillSwap focuses on practical progress.
+                    Understand the concept, practice it and
+                    complete the required practical task.
+                </p>
+
+            </div>
+
+
+            <div class="learning-flow">
+
+                <div class="flow-step">
+
+                    <span>
+                        01
+                    </span>
+
+                    <strong>
+                        Understand
+                    </strong>
+
+                    <small>
+                        Learn the concept
+                    </small>
+
+                </div>
+
+
+                <i>→</i>
+
+
+                <div class="flow-step">
+
+                    <span>
+                        02
+                    </span>
+
+                    <strong>
+                        Practice
+                    </strong>
+
+                    <small>
+                        Apply what you learned
+                    </small>
+
+                </div>
+
+
+                <i>→</i>
+
+
+                <div class="flow-step">
+
+                    <span>
+                        03
+                    </span>
+
+                    <strong>
+                        Complete
+                    </strong>
+
+                    <small>
+                        Finish the task
+                    </small>
+
+                </div>
+
+
+                <i>→</i>
+
+
+                <div class="flow-step">
+
+                    <span>
+                        04
+                    </span>
+
+                    <strong>
+                        Unlock
+                    </strong>
+
+                    <small>
+                        Continue the roadmap
+                    </small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             CATEGORY SECTION
+        ================================================== -->
+
+        <section class="category-area">
+
+            <div class="section-heading">
+
+                <span class="section-label">
+                    ONE SYSTEM · DIFFERENT SKILLS
+                </span>
+
+                <h2>
+                    Learning adapts to
+                    <span>the skill.</span>
+                </h2>
+
+                <p>
+                    Each category uses practical activities
+                    suited to the type of skill being learned.
+                </p>
+
+            </div>
+
+
+            <div class="category-grid">
+
+
+                <!-- CODING -->
+
+                <article class="category-card">
+
+                    <div class="category-icon">
+                        &lt;/&gt;
+                    </div>
+
+                    <span class="category-label">
+                        CODING
+                    </span>
+
+                    <h3>
+                        Build with code
+                    </h3>
+
+                    <p>
+                        Learn concepts, study examples and
+                        complete coding-based practical tasks.
+                    </p>
+
+                    <a
+                        href="{{ url_for('skills') }}"
+                        class="card-link"
+                    >
+                        Explore coding
+                        <span>→</span>
+                    </a>
+
+                </article>
+
+
+                <!-- LANGUAGES -->
+
+                <article class="category-card">
+
+                    <div class="category-icon">
+                        Aa
+                    </div>
+
+                    <span class="category-label">
+                        LANGUAGES
+                    </span>
+
+                    <h3>
+                        Practice communication
+                    </h3>
+
+                    <p>
+                        Improve through speaking, writing,
+                        listening and practical communication.
+                    </p>
+
+                    <a
+                        href="{{ url_for('skills') }}"
+                        class="card-link"
+                    >
+                        Explore languages
+                        <span>→</span>
+                    </a>
+
+                </article>
+
+
+                <!-- CREATIVE -->
+
+                <article class="category-card">
+
+                    <div class="category-icon">
+                        ✦
+                    </div>
+
+                    <span class="category-label">
+                        CREATIVE
+                    </span>
+
+                    <h3>
+                        Create something real
+                    </h3>
+
+                    <p>
+                        Learn creative concepts and demonstrate
+                        them through practical creative work.
+                    </p>
+
+                    <a
+                        href="{{ url_for('skills') }}"
+                        class="card-link"
+                    >
+                        Explore creative
+                        <span>→</span>
+                    </a>
+
+                </article>
+
+
+                <!-- MARKETING -->
+
+                <article class="category-card">
+
+                    <div class="category-icon">
+                        ↗
+                    </div>
+
+                    <span class="category-label">
+                        MARKETING
+                    </span>
+
+                    <h3>
+                        Learn by doing
+                    </h3>
+
+                    <p>
+                        Apply marketing concepts through
+                        exercises, strategies and scenarios.
+                    </p>
+
+                    <a
+                        href="{{ url_for('skills') }}"
+                        class="card-link"
+                    >
+                        Explore marketing
+                        <span>→</span>
+                    </a>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             LEARNER + TEACHER
+        ================================================== -->
+
+        <section class="roles-grid">
+
+
+            <!-- LEARNER -->
+
+            <article class="role-card">
+
+                <span class="section-label">
+                    LEARNER
+                </span>
+
+                <h2>
+                    Learn at your
+                    <span>own pace.</span>
+                </h2>
+
+                <ul>
+
+                    <li>
+                        Choose the skills you want to learn
+                    </li>
+
+                    <li>
+                        Follow structured roadmaps
+                    </li>
+
+                    <li>
+                        Practice through real tasks
+                    </li>
+
+                    <li>
+                        Learn independently or with a teacher
+                    </li>
+
+                    <li>
+                        Track your progress
+                    </li>
+
+                </ul>
+
+            </article>
+
+
+            <!-- TEACHER -->
+
+            <article class="role-card">
+
+                <span class="section-label">
+                    TEACHER
+                </span>
+
+                <h2>
+                    Share your
+                    <span>knowledge.</span>
+                </h2>
+
+                <ul>
+
+                    <li>
+                        Select the skill you can teach
+                    </li>
+
+                    <li>
+                        Complete the skill assessment
+                    </li>
+
+                    <li>
+                        Earn your teaching level
+                    </li>
+
+                    <li>
+                        Match with learners
+                    </li>
+
+                    <li>
+                        Guide learners through real sessions
+                    </li>
+
+                </ul>
+
+            </article>
+
+        </section>
+
+
+
+        <!-- =================================================
+             TRUST
+        ================================================== -->
+
+        <section class="trust-area">
+
+            <div class="section-heading">
+
+                <span class="section-label">
+                    BUILT AROUND TRUST
+                </span>
+
+                <h2>
+                    Your progress should
+                    <span>mean something.</span>
+                </h2>
+
+            </div>
+
+
+            <div class="trust-grid">
+
+                <article class="trust-card">
+
+                    <div class="trust-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Earned Skill Levels
+                        </h3>
+
+                        <p>
+                            Levels come from assessments
+                            rather than self-declaration.
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <article class="trust-card">
+
+                    <div class="trust-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Practical Completion
+                        </h3>
+
+                        <p>
+                            Topics require actual task
+                            completion before moving forward.
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <article class="trust-card">
+
+                    <div class="trust-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Community Reviews
+                        </h3>
+
+                        <p>
+                            Completed sessions can lead to
+                            genuine partner feedback.
+                        </p>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             FINAL CTA
+        ================================================== -->
+
+        <section class="final-cta">
+
+            <div class="final-copy">
+
+                <span class="cta-label">
+                    READY TO START?
+                </span>
+
+                <h2>
+                    Start your first
+                    <span>skill exchange.</span>
+                </h2>
+
+                <p>
+                    Teach something you know.
+                    Learn something new.
+                    Grow together.
+                </p>
+
+            </div>
+
+
+            <div class="final-actions">
+
+                <a
+                    href="{{ url_for('signup') }}"
+                    class="how-btn how-btn-white"
+                >
+                    Create Your Profile
+                    <span>→</span>
+                </a>
+
+                <a
+                    href="{{ url_for('login') }}"
+                    class="how-btn how-btn-outline"
+                >
+                    Already a member?
+                </a>
+
+            </div>
+
+        </section>
+
+
+    </div>
+
+</section>
+
+{% endblock %}

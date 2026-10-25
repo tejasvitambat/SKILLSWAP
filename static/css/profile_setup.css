@@ -1,0 +1,1051 @@
+/* =========================================================
+   SKILLSWAP — PROFILE SETUP
+   Premium White + Baby Pink + Rosy Pink + Burgundy
+   ========================================================= */
+
+:root {
+    --ps-white: #ffffff;
+    --ps-bg: #fffafb;
+
+    --ps-blush: #f3dce3;
+    --ps-blush-soft: #f8e8ed;
+    --ps-blush-light: #fdf6f8;
+
+    --ps-rose: #c95c78;
+    --ps-rose-dark: #b64c69;
+    --ps-rose-light: #dc8097;
+
+    --ps-burgundy: #4a2430;
+    --ps-burgundy-soft: #684650;
+
+    --ps-text: #59404a;
+    --ps-muted: #927d86;
+    --ps-light: #aa979f;
+
+    --ps-border: #eadde2;
+    --ps-border-light: #f2e8ec;
+
+    --ps-error: #b65f6c;
+    --ps-error-bg: #fff4f6;
+
+    --ps-shadow-sm:
+        0 8px 25px rgba(74, 36, 48, 0.055);
+
+    --ps-shadow-md:
+        0 18px 45px rgba(74, 36, 48, 0.08);
+
+    --ps-shadow-lg:
+        0 28px 70px rgba(74, 36, 48, 0.10);
+}
+
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+.profile-setup-page {
+    position: relative;
+
+    min-height: 100vh;
+
+    padding: 42px 0 85px;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 4% 8%,
+            rgba(243, 220, 227, 0.70),
+            transparent 23%
+        ),
+        radial-gradient(
+            circle at 96% 27%,
+            rgba(248, 232, 238, 0.68),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(201, 92, 120, 0.05),
+            transparent 25%
+        ),
+        #ffffff;
+}
+
+
+/* =========================================================
+   BACKGROUND DETAILS
+   ========================================================= */
+
+.profile-setup-page::before {
+    content: "";
+
+    position: absolute;
+
+    width: 250px;
+    height: 250px;
+
+    left: -150px;
+    top: 190px;
+
+    border-radius: 50%;
+
+    background: rgba(243, 220, 227, 0.58);
+
+    filter: blur(30px);
+
+    pointer-events: none;
+
+    animation: profileOrb 9s ease-in-out infinite;
+}
+
+.profile-setup-page::after {
+    content: "";
+
+    position: absolute;
+
+    width: 310px;
+    height: 310px;
+
+    right: -190px;
+    bottom: 100px;
+
+    border-radius: 50%;
+
+    background: rgba(201, 92, 120, 0.06);
+
+    filter: blur(35px);
+
+    pointer-events: none;
+
+    animation: profileOrb 10s ease-in-out infinite reverse;
+}
+
+@keyframes profileOrb {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-17px);
+    }
+}
+
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+
+.setup-container {
+    position: relative;
+
+    z-index: 2;
+
+    width: min(850px, calc(100% - 40px));
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.setup-header {
+    max-width: 760px;
+
+    margin: 0 auto 27px;
+
+    text-align: center;
+}
+
+.setup-header .auth-label {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-bottom: 10px;
+
+    color: var(--ps-rose);
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    letter-spacing: 0.14em;
+
+    text-transform: uppercase;
+}
+
+.setup-header .auth-label::before {
+    content: "";
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: var(--ps-rose);
+
+    box-shadow:
+        0 0 0 4px rgba(201, 92, 120, 0.10);
+}
+
+.setup-header h1 {
+    margin: 0;
+
+    color: var(--ps-burgundy);
+
+    font-family: "DM Serif Display", serif;
+
+    font-size: clamp(44px, 6vw, 64px);
+
+    font-weight: 400;
+
+    line-height: 0.98;
+
+    letter-spacing: -0.03em;
+}
+
+.setup-header h1 span {
+    color: var(--ps-rose);
+}
+
+.setup-header > p {
+    max-width: 650px;
+
+    margin: 13px auto 0;
+
+    color: var(--ps-muted);
+
+    font-size: 10px;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   PROGRESS STEPPER
+   ========================================================= */
+
+.setup-progress {
+    display: flex;
+
+    align-items: flex-start;
+
+    width: min(690px, 100%);
+
+    margin: 25px auto 0;
+}
+
+.progress-step {
+    position: relative;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    min-width: 75px;
+
+    flex-shrink: 0;
+}
+
+.progress-step span {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 34px;
+
+    border: 1px solid var(--ps-border);
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    color: var(--ps-light);
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    box-shadow:
+        0 4px 12px rgba(74, 36, 48, 0.035);
+
+    transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.progress-step p {
+    margin: 6px 0 0;
+
+    color: var(--ps-light);
+
+    font-size: 7px;
+
+    font-weight: 900;
+
+    letter-spacing: 0.02em;
+
+    text-transform: uppercase;
+}
+
+.progress-step.active span {
+    border-color: var(--ps-rose);
+
+    background: var(--ps-rose);
+
+    color: #ffffff;
+
+    box-shadow:
+        0 0 0 5px rgba(201, 92, 120, 0.10),
+        0 8px 18px rgba(201, 92, 120, 0.17);
+}
+
+.progress-step.active p {
+    color: var(--ps-rose);
+}
+
+.progress-line {
+    flex: 1;
+
+    height: 1px;
+
+    margin-top: 17px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ecd9df,
+            #eadde2
+        );
+}
+
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.setup-card {
+    position: relative;
+
+    padding: 30px;
+
+    border: 1px solid rgba(234, 221, 226, 0.95);
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.98),
+            rgba(255, 250, 252, 0.97)
+        );
+
+    box-shadow: var(--ps-shadow-lg);
+
+    backdrop-filter: blur(14px);
+}
+
+.setup-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 10%;
+
+    width: 80%;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(201, 92, 120, 0.27),
+            transparent
+        );
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.profile-form {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 21px;
+}
+
+
+/* =========================================================
+   PROFILE PHOTO
+   ========================================================= */
+
+.profile-photo-section {
+    display: flex;
+
+    align-items: center;
+
+    gap: 17px;
+
+    padding: 17px;
+
+    border: 1px solid var(--ps-border-light);
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #fff8fa
+        );
+}
+
+.profile-photo-preview {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 80px;
+    height: 80px;
+
+    flex-shrink: 0;
+
+    border: 1px dashed #dbaebb;
+
+    border-radius: 21px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #f9e8ed,
+            #f3dce3
+        );
+
+    color: var(--ps-rose);
+
+    font-size: 25px;
+
+    box-shadow:
+        inset 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.profile-photo-content {
+    min-width: 0;
+}
+
+.profile-photo-content label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--ps-burgundy);
+
+    font-size: 11px;
+
+    font-weight: 900;
+}
+
+.profile-photo-content p {
+    margin: 0 0 9px;
+
+    max-width: 470px;
+
+    color: var(--ps-muted);
+
+    font-size: 8px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   FILE INPUT
+   ========================================================= */
+
+.profile-photo-content input[type="file"] {
+    width: 100%;
+
+    padding: 7px;
+
+    border: 1px solid var(--ps-border);
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: var(--ps-muted);
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 8px;
+
+    cursor: pointer;
+}
+
+.profile-photo-content input[type="file"]::file-selector-button {
+    margin-right: 8px;
+
+    padding: 7px 10px;
+
+    border: 0;
+
+    border-radius: 7px;
+
+    background: var(--ps-blush-soft);
+
+    color: var(--ps-burgundy);
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 7px;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition: background 0.2s ease;
+}
+
+.profile-photo-content input[type="file"]::file-selector-button:hover {
+    background: var(--ps-blush);
+}
+
+
+/* =========================================================
+   FORM GROUP
+   ========================================================= */
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.form-group > label {
+    color: var(--ps-burgundy);
+
+    font-size: 9px;
+
+    font-weight: 900;
+}
+
+.form-group textarea,
+.form-group input[type="text"],
+.form-group select {
+    width: 100%;
+
+    min-height: 45px;
+
+    box-sizing: border-box;
+
+    padding: 0 13px;
+
+    border: 1px solid var(--ps-border);
+
+    border-radius: 11px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: var(--ps-burgundy);
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.form-group textarea {
+    min-height: 125px;
+
+    padding: 12px 13px;
+
+    line-height: 1.7;
+
+    resize: vertical;
+}
+
+.form-group textarea::placeholder,
+.form-group input::placeholder {
+    color: #b4a3aa;
+
+    font-weight: 500;
+}
+
+.form-group textarea:hover,
+.form-group input[type="text"]:hover,
+.form-group select:hover {
+    border-color: #dfc3cb;
+}
+
+.form-group textarea:focus,
+.form-group input[type="text"]:focus,
+.form-group select:focus {
+    border-color: var(--ps-rose);
+
+    background: #ffffff;
+
+    box-shadow:
+        0 0 0 4px rgba(201, 92, 120, 0.09);
+}
+
+
+/* =========================================================
+   SELECT
+   ========================================================= */
+
+.form-group select {
+    appearance: none;
+
+    padding-right: 38px;
+
+    background:
+        linear-gradient(
+            45deg,
+            transparent 50%,
+            var(--ps-rose) 50%
+        ) calc(100% - 18px) 19px / 5px 5px no-repeat,
+        linear-gradient(
+            135deg,
+            var(--ps-rose) 50%,
+            transparent 50%
+        ) calc(100% - 14px) 19px / 5px 5px no-repeat,
+        #ffffff;
+
+    cursor: pointer;
+}
+
+.form-group select option {
+    color: var(--ps-burgundy);
+
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   TWO COLUMN FORM
+   ========================================================= */
+
+.form-row {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 13px;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.form-error {
+    display: block;
+
+    margin-top: 1px;
+
+    padding: 7px 9px;
+
+    border: 1px solid #f0d5db;
+
+    border-radius: 8px;
+
+    background: var(--ps-error-bg);
+
+    color: var(--ps-error);
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.setup-actions {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-top: 2px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid var(--ps-border-light);
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.setup-actions .btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 43px;
+
+    padding: 0 16px;
+
+    border-radius: 10px;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.setup-actions .btn-primary {
+    border: 1px solid var(--ps-rose);
+
+    background: var(--ps-rose);
+
+    color: #ffffff;
+
+    box-shadow:
+        0 8px 18px rgba(201, 92, 120, 0.17);
+}
+
+.setup-actions .btn-primary:hover {
+    transform: translateY(-2px);
+
+    background: var(--ps-rose-dark);
+
+    box-shadow:
+        0 12px 25px rgba(201, 92, 120, 0.25);
+}
+
+.setup-actions .btn-secondary {
+    border: 1px solid var(--ps-border);
+
+    background: #ffffff;
+
+    color: var(--ps-burgundy);
+
+    box-shadow:
+        0 4px 12px rgba(74, 36, 48, 0.035);
+}
+
+.setup-actions .btn-secondary:hover {
+    transform: translateY(-2px);
+
+    border-color: #dcb9c4;
+
+    background: var(--ps-blush-light);
+}
+
+
+/* =========================================================
+   SOFT FLOATING HIGHLIGHT
+   ========================================================= */
+
+.setup-card {
+    animation: setupCardAppear 0.55s ease both;
+}
+
+@keyframes setupCardAppear {
+    from {
+        opacity: 0;
+
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 760px) {
+
+    .profile-setup-page {
+        padding: 32px 0 70px;
+    }
+
+    .setup-container {
+        width: min(100% - 28px, 850px);
+    }
+
+    .setup-card {
+        padding: 23px;
+    }
+
+    .setup-progress {
+        width: 100%;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .profile-setup-page {
+        padding: 25px 0 60px;
+    }
+
+    .setup-container {
+        width: min(100% - 22px, 850px);
+    }
+
+
+    /* HEADER */
+
+    .setup-header {
+        margin-bottom: 21px;
+    }
+
+    .setup-header h1 {
+        font-size: 42px;
+    }
+
+    .setup-header > p {
+        font-size: 9px;
+    }
+
+
+    /* PROGRESS */
+
+    .setup-progress {
+        width: 100%;
+    }
+
+    .progress-step {
+        min-width: 47px;
+    }
+
+    .progress-step span {
+        width: 30px;
+        height: 30px;
+    }
+
+    .progress-step p {
+        font-size: 6px;
+    }
+
+    .progress-line {
+        margin-top: 15px;
+    }
+
+
+    /* CARD */
+
+    .setup-card {
+        padding: 17px;
+
+        border-radius: 17px;
+    }
+
+
+    /* PHOTO */
+
+    .profile-photo-section {
+        align-items: flex-start;
+
+        padding: 13px;
+
+        gap: 12px;
+    }
+
+    .profile-photo-preview {
+        width: 67px;
+        height: 67px;
+
+        border-radius: 17px;
+
+        font-size: 21px;
+    }
+
+    .profile-photo-content label {
+        font-size: 10px;
+    }
+
+    .profile-photo-content p {
+        font-size: 7px;
+    }
+
+
+    /* FORM */
+
+    .profile-form {
+        gap: 17px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+
+        gap: 17px;
+    }
+
+    .form-group textarea,
+    .form-group input[type="text"],
+    .form-group select {
+        min-height: 43px;
+    }
+
+
+    /* ACTION */
+
+    .setup-actions {
+        display: grid;
+
+        grid-template-columns: 1fr 1.35fr;
+    }
+
+    .setup-actions .btn {
+        width: 100%;
+
+        min-height: 42px;
+
+        padding: 0 8px;
+
+        font-size: 7px;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 410px) {
+
+    .setup-header h1 {
+        font-size: 37px;
+    }
+
+    .setup-progress {
+        margin-top: 21px;
+    }
+
+    .progress-step {
+        min-width: 40px;
+    }
+
+    .progress-step p {
+        font-size: 5.5px;
+    }
+
+    .profile-photo-section {
+        flex-direction: column;
+
+        align-items: center;
+
+        text-align: center;
+    }
+
+    .profile-photo-content {
+        width: 100%;
+    }
+
+    .profile-photo-content p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .setup-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .setup-actions .btn {
+        width: 100%;
+    }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.profile-setup-page a:focus-visible,
+.profile-setup-page button:focus-visible,
+.profile-setup-page input:focus-visible,
+.profile-setup-page textarea:focus-visible,
+.profile-setup-page select:focus-visible {
+    outline: 2px solid var(--ps-rose);
+
+    outline-offset: 3px;
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .profile-setup-page::before,
+    .profile-setup-page::after,
+    .setup-card {
+        animation: none;
+    }
+
+    .setup-actions .btn,
+    .form-group textarea,
+    .form-group input,
+    .form-group select,
+    .progress-step span {
+        transition: none;
+    }
+
+}

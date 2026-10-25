@@ -1,0 +1,614 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Certificates — SkillSwap
+{% endblock %}
+
+{% block content %}
+
+<section class="certificates-page">
+
+    <div class="certificates-container">
+
+        <!-- ========================= -->
+        <!-- HEADER -->
+        <!-- ========================= -->
+
+        <div class="certificates-header">
+
+            <div>
+
+                <span class="section-label">
+                    Your Achievements
+                </span>
+
+                <h1>
+                    Certificates
+                </h1>
+
+                <p>
+                    View the skills you have successfully completed
+                    and the levels you have earned through SkillSwap.
+                </p>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="btn btn-secondary"
+            >
+                ← Dashboard
+            </a>
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- CERTIFICATE STATS -->
+        <!-- ========================= -->
+
+        <div class="certificate-stats">
+
+            <div class="certificate-stat-card">
+
+                <span class="certificate-stat-icon">
+                    ★
+                </span>
+
+                <div>
+
+                    <small>
+                        Certificates Earned
+                    </small>
+
+                    <strong>
+                        {{ certificates|length }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="certificate-stat-card">
+
+                <span class="certificate-stat-icon">
+                    ◆
+                </span>
+
+                <div>
+
+                    <small>
+                        Skills Completed
+                    </small>
+
+                    <strong>
+                        {{ skills_completed|default(0) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="certificate-stat-card">
+
+                <span class="certificate-stat-icon">
+                    ✓
+                </span>
+
+                <div>
+
+                    <small>
+                        Roadmaps Completed
+                    </small>
+
+                    <strong>
+                        {{ roadmaps_completed|default(0) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- EARNED CERTIFICATES -->
+        <!-- ========================= -->
+
+        <div class="certificate-section">
+
+            <div class="certificate-section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        Earned
+                    </span>
+
+                    <h2>
+                        Your Certificates
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            {% if certificates %}
+
+                <div class="certificate-grid">
+
+                    {% for certificate in certificates %}
+
+                        <article class="certificate-card">
+
+                            <!-- ========================= -->
+                            <!-- CERTIFICATE TOP -->
+                            <!-- ========================= -->
+
+                            <div class="certificate-card-top">
+
+                                <span class="certificate-mark">
+                                    ✦
+                                </span>
+
+                                <span class="certificate-issued">
+                                    Certificate of Completion
+                                </span>
+
+                            </div>
+
+
+                            <!-- ========================= -->
+                            <!-- CERTIFICATE CONTENT -->
+                            <!-- ========================= -->
+
+                            <div class="certificate-card-content">
+
+                                <span class="section-label">
+                                    SkillSwap Achievement
+                                </span>
+
+                                <h3>
+                                    {{ certificate.skill_name }}
+                                </h3>
+
+
+                                {% if certificate.earned_level %}
+
+                                    <div class="certificate-level">
+
+                                        <small>
+                                            Earned Level
+                                        </small>
+
+                                        <strong>
+                                            {{ certificate.earned_level }}
+                                        </strong>
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                <p>
+                                    This certificate recognizes the
+                                    successful completion of the
+                                    {{ certificate.skill_name }}
+                                    learning roadmap.
+                                </p>
+
+                            </div>
+
+
+                            <!-- ========================= -->
+                            <!-- CERTIFICATE DETAILS -->
+                            <!-- ========================= -->
+
+                            <div class="certificate-details">
+
+                                {% if certificate.issued_at %}
+
+                                    <div>
+
+                                        <small>
+                                            Issued
+                                        </small>
+
+                                        <strong>
+                                            {{ certificate.issued_at.strftime('%d %B %Y') }}
+                                        </strong>
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                {% if certificate.certificate_number %}
+
+                                    <div>
+
+                                        <small>
+                                            Certificate ID
+                                        </small>
+
+                                        <strong>
+                                            {{ certificate.certificate_number }}
+                                        </strong>
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- ========================= -->
+                            <!-- ACTIONS -->
+                            <!-- ========================= -->
+
+                            <div class="certificate-actions">
+
+                                <a
+                                    href="{{ url_for(
+                                        'certificate',
+                                        certificate_id=certificate.id
+                                    ) }}"
+                                    class="btn btn-primary"
+                                >
+                                    View Certificate
+                                </a>
+
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <!-- ========================= -->
+                <!-- EMPTY STATE -->
+                <!-- ========================= -->
+
+                <div class="certificates-empty-state">
+
+                    <div class="empty-icon">
+                        ★
+                    </div>
+
+                    <span class="section-label">
+                        No Certificates Yet
+                    </span>
+
+                    <h2>
+                        Your first certificate is waiting for you.
+                    </h2>
+
+                    <p>
+                        Complete a skill roadmap, finish the required
+                        practical tasks and earn your skill level to
+                        unlock your certificate.
+                    </p>
+
+                    <a
+                        href="{{ url_for('progress') }}"
+                        class="btn btn-primary"
+                    >
+                        Continue Learning
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- IN-PROGRESS SKILLS -->
+        <!-- ========================= -->
+
+        <div class="certificate-section">
+
+            <div class="certificate-section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        Almost There
+                    </span>
+
+                    <h2>
+                        Skills In Progress
+                    </h2>
+
+                    <p>
+                        Keep learning to unlock more certificates.
+                    </p>
+
+                </div>
+
+                <a
+                    href="{{ url_for('progress') }}"
+                    class="text-link"
+                >
+                    View Progress →
+                </a>
+
+            </div>
+
+
+            {% if in_progress_skills %}
+
+                <div class="certificate-progress-grid">
+
+                    {% for item in in_progress_skills %}
+
+                        <div class="certificate-progress-card">
+
+                            <div class="certificate-progress-header">
+
+                                <div>
+
+                                    <span class="section-label">
+                                        {{ item.category|default('Skill') }}
+                                    </span>
+
+                                    <h3>
+                                        {{ item.skill_name }}
+                                    </h3>
+
+                                </div>
+
+
+                                <strong>
+                                    {{ item.percentage|default(0) }}%
+                                </strong>
+
+                            </div>
+
+
+                            <div class="progress-bar">
+
+                                <div class="progress-bar">
+    <div
+        class="progress-bar-fill"
+        data-progress="{{ item.percentage|default(0) }}"
+    ></div>
+</div>
+
+                            </div>
+
+
+                            <div class="certificate-progress-info">
+
+                                <span>
+
+                                    {{ item.completed_topics|default(0) }}
+
+                                    /
+
+                                    {{ item.total_topics|default(0) }}
+
+                                    topics
+
+                                </span>
+
+
+                                {% if item.level %}
+
+                                    <span>
+                                        {{ item.level }}
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            {% if item.next_topic %}
+
+                                <a
+                                    href="{{ url_for(
+                                        'topic_learning',
+                                        skill=item.skill_slug,
+                                        topic_id=item.next_topic.id
+                                    ) }}"
+                                    class="btn btn-secondary"
+                                >
+                                    Continue →
+                                </a>
+
+                            {% else %}
+
+                                <a
+                                    href="{{ url_for(
+                                        'roadmap',
+                                        skill=item.skill_slug
+                                    ) }}"
+                                    class="btn btn-secondary"
+                                >
+                                    View Roadmap →
+                                </a>
+
+                            {% endif %}
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="certificate-no-progress">
+
+                    <p>
+                        No skills are currently in progress.
+                    </p>
+
+                    <a
+                        href="{{ url_for('skills') }}"
+                        class="btn btn-secondary"
+                    >
+                        Explore Skills
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- HOW CERTIFICATES WORK -->
+        <!-- ========================= -->
+
+        <div class="certificate-info-section">
+
+            <div class="certificate-info-content">
+
+                <span class="section-label">
+                    How It Works
+                </span>
+
+                <h2>
+                    Your certificate is earned,
+                    not simply claimed.
+                </h2>
+
+                <p>
+                    SkillSwap uses your assessment and learning
+                    progress to recognize your achievement.
+                    Completing content alone is not enough.
+                </p>
+
+            </div>
+
+
+            <div class="certificate-steps">
+
+                <div class="certificate-step">
+
+                    <span>
+                        01
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Take the Assessment
+                        </strong>
+
+                        <p>
+                            Earn your level based on your actual skill.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="certificate-step">
+
+                    <span>
+                        02
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Follow the Roadmap
+                        </strong>
+
+                        <p>
+                            Learn every topic in the required sequence.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="certificate-step">
+
+                    <span>
+                        03
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Complete Practical Tasks
+                        </strong>
+
+                        <p>
+                            Demonstrate what you learned through practice.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="certificate-step">
+
+                    <span>
+                        04
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Earn Your Certificate
+                        </strong>
+
+                        <p>
+                            Complete the roadmap and unlock your
+                            SkillSwap certificate.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- BOTTOM ACTIONS -->
+        <!-- ========================= -->
+
+        <div class="certificate-bottom-actions">
+
+            <a
+                href="{{ url_for('progress') }}"
+                class="btn btn-secondary"
+            >
+                View Learning Progress
+            </a>
+
+            <a
+                href="{{ url_for('matches') }}"
+                class="btn btn-primary"
+            >
+                Find a Skill Partner
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

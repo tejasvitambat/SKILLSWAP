@@ -1,0 +1,326 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Complete Your Profile — SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile_setup.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<section class="profile-setup-page">
+
+    <div class="setup-container">
+
+        <!-- HEADER -->
+        <div class="setup-header">
+
+            <span class="auth-label">
+                Profile Setup
+            </span>
+
+            <h1>
+                Tell us a little
+                <span>about yourself.</span>
+            </h1>
+
+            <p>
+                Complete your profile so SkillSwap can understand
+                your interests and help you find the right learning
+                partner.
+            </p>
+
+            <!-- PROGRESS -->
+            <div class="setup-progress">
+
+                <div class="progress-step active">
+                    <span>1</span>
+                    <p>Profile</p>
+                </div>
+
+                <div class="progress-line"></div>
+
+                <div class="progress-step">
+                    <span>2</span>
+                    <p>Skills</p>
+                </div>
+
+                <div class="progress-line"></div>
+
+                <div class="progress-step">
+                    <span>3</span>
+                    <p>Assessment</p>
+                </div>
+
+                <div class="progress-line"></div>
+
+                <div class="progress-step">
+                    <span>4</span>
+                    <p>Match</p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FORM CARD -->
+        <div class="setup-card">
+
+            <form
+                action="{{ url_for('profile_setup') }}"
+                method="POST"
+                class="profile-form"
+                enctype="multipart/form-data"
+                novalidate
+            >
+
+                <!-- PROFILE PHOTO -->
+                <div class="profile-photo-section">
+
+                    <div class="profile-photo-preview">
+                        <span>+</span>
+                    </div>
+
+                    <div class="profile-photo-content">
+
+                        <label for="profile_photo">
+                            Profile photo
+                        </label>
+
+                        <p>
+                            Add a clear photo so your future
+                            skill partners can recognize you.
+                        </p>
+
+                        <input
+                            type="file"
+                            id="profile_photo"
+                            name="profile_photo"
+                            accept="image/png,image/jpeg,image/webp"
+                        >
+
+                        {% if errors and errors.get('profile_photo') %}
+                            <small class="form-error">
+                                {{ errors.get('profile_photo') }}
+                            </small>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- ABOUT YOU -->
+                <div class="form-group">
+
+                    <label for="bio">
+                        About you
+                    </label>
+
+                    <textarea
+                        id="bio"
+                        name="bio"
+                        rows="5"
+                        maxlength="500"
+                        placeholder="Tell your future skill partner about yourself, your interests and what you enjoy learning..."
+                    >{{ request.form.get('bio', '') }}</textarea>
+
+                    {% if errors and errors.get('bio') %}
+                        <small class="form-error">
+                            {{ errors.get('bio') }}
+                        </small>
+                    {% endif %}
+
+                </div>
+
+
+                <!-- LOCATION -->
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="city">
+                            City
+                        </label>
+
+                        <input
+                            type="text"
+                            id="city"
+                            name="city"
+                            placeholder="Enter your city"
+                            value="{{ request.form.get('city', '') }}"
+                            autocomplete="address-level2"
+                        >
+
+                        {% if errors and errors.get('city') %}
+                            <small class="form-error">
+                                {{ errors.get('city') }}
+                            </small>
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="country">
+                            Country
+                        </label>
+
+                        <input
+                            type="text"
+                            id="country"
+                            name="country"
+                            placeholder="Enter your country"
+                            value="{{ request.form.get('country', '') }}"
+                            autocomplete="country-name"
+                        >
+
+                        {% if errors and errors.get('country') %}
+                            <small class="form-error">
+                                {{ errors.get('country') }}
+                            </small>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- LEARNING PREFERENCE -->
+                <div class="form-group">
+
+                    <label for="learning_preference">
+                        How do you prefer to learn?
+                    </label>
+
+                    <select
+                        id="learning_preference"
+                        name="learning_preference"
+                    >
+
+                        <option value="">
+                            Select your preference
+                        </option>
+
+                        <option
+                            value="one_on_one"
+                            {% if request.form.get('learning_preference') == 'one_on_one' %}
+                                selected
+                            {% endif %}
+                        >
+                            One-on-one sessions
+                        </option>
+
+                        <option
+                            value="chat"
+                            {% if request.form.get('learning_preference') == 'chat' %}
+                                selected
+                            {% endif %}
+                        >
+                            Chat & discussion
+                        </option>
+
+                        <option
+                            value="practice"
+                            {% if request.form.get('learning_preference') == 'practice' %}
+                                selected
+                            {% endif %}
+                        >
+                            Practice together
+                        </option>
+
+                        <option
+                            value="mixed"
+                            {% if request.form.get('learning_preference') == 'mixed' %}
+                                selected
+                            {% endif %}
+                        >
+                            A mix of everything
+                        </option>
+
+                    </select>
+
+                    {% if errors and errors.get('learning_preference') %}
+                        <small class="form-error">
+                            {{ errors.get('learning_preference') }}
+                        </small>
+                    {% endif %}
+
+                </div>
+
+
+                <!-- WEEKLY AVAILABILITY -->
+                <div class="form-group">
+
+                    <label for="availability">
+                        Weekly availability
+                    </label>
+
+                    <select
+                        id="availability"
+                        name="availability"
+                    >
+
+                        <option value="">
+                            Select available time
+                        </option>
+
+                        <option value="1_2">
+                            1–2 hours per week
+                        </option>
+
+                        <option value="3_5">
+                            3–5 hours per week
+                        </option>
+
+                        <option value="6_10">
+                            6–10 hours per week
+                        </option>
+
+                        <option value="10_plus">
+                            10+ hours per week
+                        </option>
+
+                    </select>
+
+                    {% if errors and errors.get('availability') %}
+                        <small class="form-error">
+                            {{ errors.get('availability') }}
+                        </small>
+                    {% endif %}
+
+                </div>
+
+
+                <!-- ACTIONS -->
+                <div class="setup-actions">
+
+                    <a
+                        href="{{ url_for('dashboard') }}"
+                        class="btn btn-secondary"
+                    >
+                        Skip for now
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Continue to Skills
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

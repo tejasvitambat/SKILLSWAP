@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Create Account — SkillSwap
+{% endblock %}
+
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/signup.css') }}"
+>
+{% endblock %}
+
+
+{% block content %}
+
+<section class="auth-page signup-page">
+
+    <div class="auth-container">
+
+        <!-- =========================================
+             LEFT INTRO
+        ========================================== -->
+
+        <div class="auth-intro">
+
+            <span class="auth-label">
+                Join SkillSwap
+            </span>
+
+
+            <h1>
+                Learn together.
+                <span>Grow together.</span>
+            </h1>
+
+
+            <p>
+                Create your SkillSwap account and start building
+                meaningful skill connections with people who can
+                teach what you want to learn.
+            </p>
+
+
+            <!-- SIGNUP FLOW -->
+
+            <div class="signup-flow">
+
+                <!-- STEP 01 -->
+
+                <div class="signup-flow-item">
+
+                    <span class="flow-number">
+                        01
+                    </span>
+
+                    <div>
+                        <strong>
+                            Create your account
+                        </strong>
+
+                        <p>
+                            Set up your basic profile.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 02 -->
+
+                <div class="signup-flow-item">
+
+                    <span class="flow-number">
+                        02
+                    </span>
+
+                    <div>
+                        <strong>
+                            Select your skills
+                        </strong>
+
+                        <p>
+                            Choose what you can teach and want to learn.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 03 -->
+
+                <div class="signup-flow-item">
+
+                    <span class="flow-number">
+                        03
+                    </span>
+
+                    <div>
+                        <strong>
+                            Earn your level
+                        </strong>
+
+                        <p>
+                            Take assessments to unlock your actual skill level.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================================
+             SIGNUP CARD
+        ========================================== -->
+
+        <div class="auth-card">
+
+            <!-- CARD HEADER -->
+
+            <div class="auth-card-header">
+
+                <h2>
+                    Create account
+                </h2>
+
+                <p>
+                    Start your skill exchange journey.
+                </p>
+
+            </div>
+
+
+            <!-- =====================================
+                 SIGNUP FORM
+            ====================================== -->
+
+            <form
+                action="{{ url_for('signup') }}"
+                method="POST"
+                class="auth-form"
+                novalidate
+            >
+
+                <!-- FULL NAME -->
+
+                <div class="form-group">
+
+                    <label for="full_name">
+                        Full name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="full_name"
+                        name="full_name"
+                        placeholder="Enter your full name"
+                        value="{{ request.form.get('full_name', '') }}"
+                        autocomplete="name"
+                        required
+                    >
+
+                    {% if errors and errors.get('full_name') %}
+
+                        <small class="form-error">
+                            {{ errors.get('full_name') }}
+                        </small>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- USERNAME -->
+
+                <div class="form-group">
+
+                    <label for="username">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Choose a username"
+                        value="{{ request.form.get('username', '') }}"
+                        autocomplete="username"
+                        required
+                    >
+
+                    {% if errors and errors.get('username') %}
+
+                        <small class="form-error">
+                            {{ errors.get('username') }}
+                        </small>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        value="{{ request.form.get('email', '') }}"
+                        autocomplete="email"
+                        required
+                    >
+
+                    {% if errors and errors.get('email') %}
+
+                        <small class="form-error">
+                            {{ errors.get('email') }}
+                        </small>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    {% if errors and errors.get('password') %}
+
+                        <small class="form-error">
+                            {{ errors.get('password') }}
+                        </small>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- CONFIRM PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="confirm_password">
+                        Confirm password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirm_password"
+                        name="confirm_password"
+                        placeholder="Confirm your password"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    {% if errors and errors.get('confirm_password') %}
+
+                        <small class="form-error">
+                            {{ errors.get('confirm_password') }}
+                        </small>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =================================
+                     TERMS & CONDITIONS
+                ================================== -->
+
+                <div class="form-options">
+
+                    <label class="checkbox-label">
+
+                        <input
+                            type="checkbox"
+                            name="terms"
+                            value="1"
+                            required
+                        >
+
+                        <span>
+
+                            I agree to the
+
+                            <a href="{{ url_for('terms') }}">
+                                Terms & Conditions
+                            </a>
+
+                            and
+
+                            <a href="{{ url_for('privacy') }}">
+                                Privacy Policy
+                            </a>.
+
+                        </span>
+
+                    </label>
+
+
+                    {% if errors and errors.get('terms') %}
+
+                        <small class="form-error">
+                            {{ errors.get('terms') }}
+                        </small>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =================================
+                     SUBMIT BUTTON
+                ================================== -->
+
+                <button
+                    type="submit"
+                    class="btn btn-primary auth-submit"
+                >
+                    Create Account
+                </button>
+
+            </form>
+
+
+            <!-- =====================================
+                 ACCOUNT SWITCH
+            ====================================== -->
+
+            <div class="auth-switch">
+
+                <p>
+                    Already have an account?
+                </p>
+
+                <a href="{{ url_for('login') }}">
+                    Sign in
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

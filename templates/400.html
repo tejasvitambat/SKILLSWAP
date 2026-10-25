@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Bad Request — SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/400.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="error-page error-400-page">
+
+    <div class="error-bg" aria-hidden="true">
+        <span class="error-orb error-orb-one"></span>
+        <span class="error-orb error-orb-two"></span>
+        <span class="error-orb error-orb-three"></span>
+
+        <span class="error-sparkle sparkle-one">✦</span>
+        <span class="error-sparkle sparkle-two">✧</span>
+        <span class="error-sparkle sparkle-three">✦</span>
+        <span class="error-sparkle sparkle-four">·</span>
+        <span class="error-sparkle sparkle-five">✧</span>
+    </div>
+
+
+    <div class="error-container">
+
+        <div class="error-visual">
+
+            <div class="error-ring ring-one"></div>
+            <div class="error-ring ring-two"></div>
+
+            <div class="error-message-icon">
+                <span class="icon-dot"></span>
+                <span class="icon-dot"></span>
+                <span class="icon-dot"></span>
+            </div>
+
+        </div>
+
+
+        <div class="error-code">
+            400
+        </div>
+
+
+        <div class="error-content">
+
+            <span class="section-label">
+                Bad Request
+            </span>
+
+            <h1>
+                That request
+                <span>got a little mixed up.</span>
+            </h1>
+
+            <p>
+                We couldn't understand the request you just made.
+                Try returning to the previous page or start again from your
+                SkillSwap learning space.
+            </p>
+
+        </div>
+
+
+        <div class="error-actions">
+
+            <a
+                href="{{ url_for('home') }}"
+                class="btn btn-primary"
+            >
+                <span>Back to Home</span>
+                <span class="btn-arrow">→</span>
+            </a>
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="btn btn-secondary"
+            >
+                <span>Open Dashboard</span>
+                <span class="btn-arrow">→</span>
+            </a>
+
+        </div>
+
+
+        <div class="error-quick-links">
+
+            <span class="quick-label">
+                Or continue exploring
+            </span>
+
+            <a href="{{ url_for('skills') }}">
+                Skills
+            </a>
+
+            <span class="quick-dot">•</span>
+
+            <a href="{{ url_for('matches') }}">
+                Matches
+            </a>
+
+            <span class="quick-dot">•</span>
+
+            <a href="{{ url_for('how_it_works') }}">
+                How It Works
+            </a>
+
+        </div>
+
+
+        <div class="error-note">
+
+            <span class="error-note-icon">
+                ✦
+            </span>
+
+            <div>
+
+                <strong>
+                    Let's try that again.
+                </strong>
+
+                <span>
+                    Your SkillSwap journey is still right where you left it.
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

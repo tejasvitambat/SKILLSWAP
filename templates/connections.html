@@ -1,0 +1,734 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Connections — SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/connections.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="connections-page">
+
+    <!-- BACKGROUND EFFECTS -->
+    <div class="connections-orb connections-orb-one"></div>
+    <div class="connections-orb connections-orb-two"></div>
+    <div class="connections-orb connections-orb-three"></div>
+
+    <span class="connections-sparkle sparkle-one">✦</span>
+    <span class="connections-sparkle sparkle-two">✧</span>
+    <span class="connections-sparkle sparkle-three">✦</span>
+
+
+    <div class="connections-container">
+
+        <!-- PAGE HEADER -->
+
+        <div class="connections-header">
+
+            <span class="auth-label">
+                My Connections
+            </span>
+
+            <h1>
+                Your skill
+                <span>exchange circle.</span>
+            </h1>
+
+            <p>
+                Manage your skill partners, connection requests
+                and active learning relationships from one place.
+            </p>
+
+        </div>
+
+
+        <!-- CONNECTION SUMMARY -->
+
+        <div class="connection-summary">
+
+            <div class="connection-summary-item">
+
+                <div class="summary-icon">
+                    ⇄
+                </div>
+
+                <div class="summary-content">
+
+                    <span class="summary-label">
+                        Active connections
+                    </span>
+
+                    <strong>
+                        {{ active_connections|length }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="connection-summary-item">
+
+                <div class="summary-icon">
+                    ♡
+                </div>
+
+                <div class="summary-content">
+
+                    <span class="summary-label">
+                        Incoming requests
+                    </span>
+
+                    <strong>
+                        {{ incoming_requests|length }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="connection-summary-item">
+
+                <div class="summary-icon">
+                    ↑
+                </div>
+
+                <div class="summary-content">
+
+                    <span class="summary-label">
+                        Sent requests
+                    </span>
+
+                    <strong>
+                        {{ sent_requests|length }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             INCOMING REQUESTS
+        ================================================= -->
+
+        <div class="connection-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="auth-label">
+                        Requests
+                    </span>
+
+                    <h2>
+                        Connection requests
+                    </h2>
+                </div>
+
+                {% if incoming_requests %}
+                    <span class="section-count">
+                        {{ incoming_requests|length }} pending
+                    </span>
+                {% endif %}
+
+            </div>
+
+
+            <div class="connection-list">
+
+                {% for request in incoming_requests %}
+
+                    <article class="connection-card request-card">
+
+                        <div class="connection-card-top">
+
+                            <!-- PERSON -->
+
+                            <div class="connection-person">
+
+                                <div class="connection-avatar">
+
+                                    {% if request.sender.profile_photo %}
+
+                                        <img
+                                            src="{{ url_for(
+                                                'uploaded_file',
+                                                filename=request.sender.profile_photo
+                                            ) }}"
+                                            alt="{{ request.sender.full_name }}"
+                                        >
+
+                                    {% else %}
+
+                                        <span>
+                                            {{ request.sender.full_name[0]|upper }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="connection-person-info">
+
+                                    <h3>
+                                        {{ request.sender.full_name }}
+                                    </h3>
+
+                                    <p>
+                                        @{{ request.sender.username }}
+                                    </p>
+
+                                    {% if request.sender.city %}
+
+                                        <span class="person-location">
+                                            <span>⌖</span>
+                                            {{ request.sender.city }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                            <span class="request-status">
+                                New request
+                            </span>
+
+                        </div>
+
+
+                        <!-- REQUEST MESSAGE -->
+
+                        <div class="connection-message">
+
+                            <span class="message-label">
+                                Message
+                            </span>
+
+                            {% if request.message %}
+
+                                <p>
+                                    “{{ request.message }}”
+                                </p>
+
+                            {% else %}
+
+                                <p>
+                                    Wants to connect with you
+                                    for a skill exchange.
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- REQUEST ACTIONS -->
+
+                        <div class="connection-actions">
+
+                            <a
+                                href="{{ url_for(
+                                    'view_profile',
+                                    username=request.sender.username
+                                ) }}"
+                                class="btn btn-secondary"
+                            >
+                                View Profile
+                            </a>
+
+
+                            <form
+                                action="{{ url_for(
+                                    'decline_connection_request',
+                                    connection_id=request.id
+                                ) }}"
+                                method="POST"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-secondary"
+                                >
+                                    Decline
+                                </button>
+
+                            </form>
+
+
+                            <form
+                                action="{{ url_for(
+                                    'accept_connection_request',
+                                    connection_id=request.id
+                                ) }}"
+                                method="POST"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                >
+                                    Accept
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </article>
+
+                {% else %}
+
+                    <div class="empty-connection">
+
+                        <div class="empty-icon">
+                            ♡
+                        </div>
+
+                        <h3>
+                            No new requests
+                        </h3>
+
+                        <p>
+                            When someone wants to exchange skills
+                            with you, their request will appear here.
+                        </p>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             ACTIVE CONNECTIONS
+        ================================================= -->
+
+        <div class="connection-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="auth-label">
+                        Connected
+                    </span>
+
+                    <h2>
+                        Active skill partners
+                    </h2>
+                </div>
+
+                {% if active_connections %}
+                    <span class="section-count">
+                        {{ active_connections|length }} active
+                    </span>
+                {% endif %}
+
+            </div>
+
+
+            <div class="connection-list">
+
+                {% for connection in active_connections %}
+
+    {% if connection.sender_id == current_user.id %}
+        {% set partner = connection.receiver %}
+    {% else %}
+        {% set partner = connection.sender %}
+    {% endif %}
+
+                    <article class="connection-card active-connection-card">
+
+                        <!-- PARTNER -->
+
+                        <div class="connection-card-top">
+
+                            <div class="connection-person">
+
+                                <div class="connection-avatar active-avatar">
+
+                                    {% if partner.profile_photo %}
+
+                                        <img
+                                            src="{{ url_for(
+                                                'uploaded_file',
+                                                filename=partner.profile_photo
+                                            ) }}"
+                                            alt="{{ partner.full_name }}"
+                                        >
+
+                                    {% else %}
+
+                                        <span>
+                                            {{ partner.full_name[0]|upper }}
+                                        </span>
+
+                                    {% endif %}
+
+                                    <span class="online-dot"></span>
+
+                                </div>
+
+
+                                <div class="connection-person-info">
+
+                                    <div class="connection-name-row">
+
+                                        <h3>
+                                            {{ partner.full_name }}
+                                        </h3>
+
+                                        {% if partner.is_verified %}
+
+                                            <span class="verified-badge">
+                                                ✓
+                                            </span>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                    <p>
+                                        @{{ partner.username }}
+                                    </p>
+
+                                    <span class="connection-status">
+                                        <span>●</span>
+                                        Connected
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- SKILL EXCHANGE -->
+
+                        <div class="connection-skill-exchange">
+
+                            <div class="exchange-column">
+
+                                <div class="exchange-heading">
+
+                                    <span class="exchange-mini-icon">
+                                        ↓
+                                    </span>
+
+                                    <span>
+                                        You learn
+                                    </span>
+
+                                </div>
+
+                                <div class="skill-pills">
+
+                                    <span class="skill-pill">
+                                        Skill exchange
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="exchange-icon">
+                                ⇄
+                            </div>
+
+
+                            <div class="exchange-column">
+
+                                <div class="exchange-heading">
+
+                                    <span class="exchange-mini-icon">
+                                        ↑
+                                    </span>
+
+                                    <span>
+                                        You teach
+                                    </span>
+
+                                </div>
+
+                                <div class="skill-pills">
+
+                                    <span class="skill-pill">
+                                        Skill exchange
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- CONNECTION ACTIONS -->
+
+                        <div class="connection-actions">
+
+                            <a
+                                href="{{ url_for(
+                                    'view_profile',
+                                    username=partner.username
+                                ) }}"
+                                class="btn btn-secondary"
+                            >
+                                Profile
+                            </a>
+
+
+                            <a
+                                href="{{ url_for(
+                                    'chat',
+                                    connection_id=connection.id
+                                ) }}"
+                                class="btn btn-secondary"
+                            >
+                                Message
+                            </a>
+
+
+                            <a
+                                href="{{ url_for(
+                                    'schedule_session',
+                                    connection_id=connection.id
+                                ) }}"
+                                class="btn btn-primary"
+                            >
+                                Schedule Session
+                                <span>→</span>
+                            </a>
+
+                        </div>
+
+                    </article>
+
+                {% else %}
+
+                    <div class="empty-connection">
+
+                        <div class="empty-icon">
+                            ⇄
+                        </div>
+
+                        <h3>
+                            No active connections yet
+                        </h3>
+
+                        <p>
+                            Find someone who can teach what you want
+                            to learn and start your first skill exchange.
+                        </p>
+
+                        <a
+                            href="{{ url_for('matches') }}"
+                            class="btn btn-primary"
+                        >
+                            Find Skill Matches
+                            <span>→</span>
+                        </a>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             SENT REQUESTS
+        ================================================= -->
+
+        <div class="connection-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="auth-label">
+                        Pending
+                    </span>
+
+                    <h2>
+                        Requests you've sent
+                    </h2>
+                </div>
+
+                {% if sent_requests %}
+                    <span class="section-count">
+                        {{ sent_requests|length }} pending
+                    </span>
+                {% endif %}
+
+            </div>
+
+
+            <div class="connection-list">
+
+                {% for request in sent_requests %}
+
+                    <article class="connection-card sent-request-card">
+
+                        <div class="connection-card-top">
+
+                            <div class="connection-person">
+
+                                <div class="connection-avatar">
+
+                                    {% if request.receiver.profile_photo %}
+
+                                        <img
+                                            src="{{ url_for(
+                                                'uploaded_file',
+                                                filename=request.receiver.profile_photo
+                                            ) }}"
+                                            alt="{{ request.receiver.full_name }}"
+                                        >
+
+                                    {% else %}
+
+                                        <span>
+                                            {{ request.receiver.full_name[0]|upper }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="connection-person-info">
+
+                                    <h3>
+                                        {{ request.receiver.full_name }}
+                                    </h3>
+
+                                    <p>
+                                        @{{ request.receiver.username }}
+                                    </p>
+
+                                    <span class="connection-status pending">
+                                        <span>●</span>
+                                        Request pending
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="connection-actions">
+
+                            <a
+                                href="{{ url_for(
+                                    'view_profile',
+                                    username=request.receiver.username
+                                ) }}"
+                                class="btn btn-secondary"
+                            >
+                                View Profile
+                            </a>
+
+
+                            <form
+                                action="{{ url_for(
+                                    'cancel_connection_request',
+                                    connection_id=request.id
+                                ) }}"
+                                method="POST"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-secondary"
+                                >
+                                    Cancel Request
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </article>
+
+                {% else %}
+
+                    <div class="empty-connection compact">
+
+                        <p>
+                            You haven't sent any pending requests.
+                        </p>
+
+                        <a
+                            href="{{ url_for('matches') }}"
+                            class="btn btn-secondary"
+                        >
+                            Explore Matches
+                        </a>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             CONNECTION RULE
+        ================================================= -->
+
+        <div class="connection-info">
+
+            <div class="connection-info-icon">
+                ✦
+            </div>
+
+            <div class="connection-info-content">
+
+                <span class="auth-label">
+                    SkillSwap Connection
+                </span>
+
+                <h2>
+                    One active learning relationship at a time.
+                </h2>
+
+                <p>
+                    Your current SkillSwap experience focuses on
+                    one active partner at a time. Once connected,
+                    you can chat, discuss goals, schedule sessions,
+                    learn together and track your progress.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

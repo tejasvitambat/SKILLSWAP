@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+{% block title %}
+    Assessment Result — SkillSwap
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/assessment_result.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+         <section class="assessment-result-page">
+
+    <div class="result-container">
+
+        <!-- HEADER -->
+        <div class="result-header">
+
+            <span class="auth-label">
+                Assessment Complete
+            </span>
+
+            <h1>
+                Your
+                <span>{{ skill_name }}</span>
+                level is earned.
+            </h1>
+
+            <p>
+                Your result is based on your assessment performance.
+                Keep learning and practicing to improve your level.
+            </p>
+
+        </div>
+
+
+        <!-- PROGRESS -->
+        <div class="setup-progress">
+
+            <div class="progress-step completed">
+                <span>✓</span>
+                <p>Profile</p>
+            </div>
+
+            <div class="progress-line completed"></div>
+
+            <div class="progress-step completed">
+                <span>✓</span>
+                <p>Skills</p>
+            </div>
+
+            <div class="progress-line completed"></div>
+
+            <div class="progress-step completed">
+                <span>✓</span>
+                <p>Assessment</p>
+            </div>
+
+            <div class="progress-line active"></div>
+
+            <div class="progress-step active">
+                <span>4</span>
+                <p>Match</p>
+            </div>
+
+        </div>
+
+
+        <!-- RESULT CARD -->
+        <div class="result-card">
+
+            <!-- SCORE -->
+            <div class="result-score">
+
+                <span class="result-label">
+                    Your Score
+                </span>
+
+                <strong>
+                    {{ score }}%
+                </strong>
+
+                {% if total_questions %}
+                    <p>
+                        {{ correct_answers }} out of
+                        {{ total_questions }} answers correct
+                    </p>
+                {% endif %}
+
+            </div>
+
+
+            <!-- LEVEL -->
+            <div class="earned-level">
+
+                <span class="result-label">
+                    Earned Skill Level
+                </span>
+
+                <div class="level-badge">
+                    {{ earned_level }}
+                </div>
+
+                <p>
+                    {{ skill_name }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- RESULT SUMMARY -->
+        <div class="result-summary">
+
+            <div class="summary-item">
+
+                <span class="summary-icon">
+                    ✓
+                </span>
+
+                <div>
+                    <strong>
+                        Assessment completed
+                    </strong>
+
+                    <p>
+                        Your assessment has been successfully evaluated.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="summary-item">
+
+                <span class="summary-icon">
+                    ↗
+                </span>
+
+                <div>
+                    <strong>
+                        Level earned
+                    </strong>
+
+                    <p>
+                        Your {{ skill_name }} level has been added
+                        to your SkillSwap profile.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="summary-item">
+
+                <span class="summary-icon">
+                    →
+                </span>
+
+                <div>
+                    <strong>
+                        Continue your journey
+                    </strong>
+
+                    <p>
+                        Complete assessments for your other selected
+                        skills to build your complete skill profile.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- LEVEL EXPLANATION -->
+        <div class="level-explanation">
+
+            <h2>
+                What does your level mean?
+            </h2>
+
+            {% if earned_level == "Beginner" %}
+
+                <p>
+                    You have established the basics of
+                    {{ skill_name }}. Follow the roadmap,
+                    practice regularly and build your confidence
+                    through real tasks.
+                </p>
+
+            {% elif earned_level == "Intermediate" %}
+
+                <p>
+                    You have a solid working knowledge of
+                    {{ skill_name }}. Continue with practical
+                    projects and deeper topics to strengthen
+                    your skills.
+                </p>
+
+            {% elif earned_level == "Pro" %}
+
+                <p>
+                    Your assessment demonstrates strong knowledge
+                    of {{ skill_name }}. You can continue mastering
+                    advanced topics and may become eligible to
+                    teach this skill to other learners.
+                </p>
+
+            {% else %}
+
+                <p>
+                    Your assessment result has been recorded.
+                    Continue learning and practicing through your
+                    personalized roadmap.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ACTIONS -->
+        <div class="result-actions">
+
+            <a
+                href="{{ url_for('skills') }}"
+                class="btn btn-secondary"
+            >
+                View My Skills
+            </a>
+
+            <a
+                href="{{ url_for('matches') }}"
+                class="btn btn-primary"
+            >
+                Find My Skill Match
+            </a>
+
+        </div>
+
+
+        <!-- OPTIONAL ROADMAP -->
+        <div class="result-next-step">
+
+            <div>
+
+                <span class="auth-label">
+                    Recommended Next Step
+                </span>
+
+                <h2>
+                    Start your {{ skill_name }} roadmap.
+                </h2>
+
+                <p>
+                    Learn topic by topic, complete practical tasks
+                    and track your progress as you grow.
+                </p>
+
+            </div>
+
+            <a
+                href="{{ url_for('roadmap', skill=skill) }}"
+                class="btn btn-primary"
+            >
+                View Roadmap
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,730 @@
+/* =========================================================
+   SKILLSWAP — 404 PAGE
+   Baby Pink + White + Soft Rose
+   Premium Glassmorphism
+========================================================= */
+
+:root {
+    --pink: #f5b7bd;
+    --pink-light: #ffecef;
+    --pink-soft: #fff5f7;
+
+    --rose: #d96b7c;
+    --rose-dark: #b84f63;
+
+    --white: #ffffff;
+
+    --text: #4a3037;
+    --text-soft: #765d64;
+
+    --border: rgba(217, 107, 124, 0.16);
+
+    --shadow:
+        0 30px 90px rgba(180, 79, 99, 0.12);
+}
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.error-404-page {
+    position: relative;
+
+    min-height: calc(100vh - 150px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 70px 22px 90px;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 15% 20%,
+            rgba(245, 183, 189, 0.28),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 85% 75%,
+            rgba(255, 236, 239, 0.95),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #fff8f9 48%,
+            #ffffff 100%
+        );
+}
+
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+.error-bg {
+    position: absolute;
+    inset: 0;
+
+    overflow: hidden;
+
+    pointer-events: none;
+}
+
+.error-orb {
+    position: absolute;
+
+    border-radius: 50%;
+
+    filter: blur(3px);
+
+    animation: orbFloat 10s ease-in-out infinite;
+}
+
+.error-orb-one {
+    width: 430px;
+    height: 430px;
+
+    top: -190px;
+    left: -180px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(245, 183, 189, 0.34),
+            transparent 70%
+        );
+}
+
+.error-orb-two {
+    width: 500px;
+    height: 500px;
+
+    right: -250px;
+    bottom: -230px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(217, 107, 124, 0.13),
+            transparent 70%
+        );
+
+    animation-delay: -3s;
+}
+
+.error-orb-three {
+    width: 260px;
+    height: 260px;
+
+    top: 42%;
+    left: 55%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(245, 183, 189, 0.14),
+            transparent 70%
+        );
+
+    animation-delay: -6s;
+}
+
+@keyframes orbFloat {
+
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate3d(0, -22px, 0) scale(1.05);
+    }
+}
+
+
+/* =========================================================
+   SPARKLES
+========================================================= */
+
+.error-sparkle {
+    position: absolute;
+
+    color: var(--rose);
+
+    font-size: 19px;
+
+    opacity: 0.35;
+
+    animation:
+        sparkleFloat 5s ease-in-out infinite,
+        sparklePulse 2.5s ease-in-out infinite alternate;
+}
+
+.sparkle-one {
+    top: 15%;
+    left: 18%;
+}
+
+.sparkle-two {
+    top: 25%;
+    right: 18%;
+
+    animation-delay: -1s;
+}
+
+.sparkle-three {
+    bottom: 22%;
+    left: 12%;
+
+    animation-delay: -2s;
+}
+
+.sparkle-four {
+    bottom: 17%;
+    right: 20%;
+
+    font-size: 32px;
+
+    animation-delay: -3s;
+}
+
+.sparkle-five {
+    top: 62%;
+    right: 8%;
+
+    animation-delay: -4s;
+}
+
+@keyframes sparkleFloat {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-13px) rotate(15deg);
+    }
+}
+
+@keyframes sparklePulse {
+
+    from {
+        opacity: 0.18;
+    }
+
+    to {
+        opacity: 0.65;
+    }
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.error-container {
+    position: relative;
+    z-index: 2;
+
+    width: min(100%, 850px);
+
+    padding: 58px 45px;
+
+    text-align: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.9);
+
+    border-radius: 38px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.92),
+            rgba(255, 245, 247, 0.80)
+        );
+
+    box-shadow: var(--shadow);
+
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+
+    overflow: hidden;
+
+    animation: errorAppear 0.8s ease both;
+}
+
+.error-container::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    border-radius: inherit;
+
+    padding: 1px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(245, 183, 189, 0.45),
+            rgba(255, 255, 255, 0.95),
+            rgba(217, 107, 124, 0.16)
+        );
+
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+
+    -webkit-mask-composite: xor;
+
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+
+    mask-composite: exclude;
+
+    pointer-events: none;
+}
+
+@keyframes errorAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(25px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* =========================================================
+   ERROR NUMBER
+========================================================= */
+
+.error-code-wrap {
+    position: relative;
+
+    display: inline-flex;
+
+    margin-bottom: 5px;
+}
+
+.error-code {
+    position: relative;
+    z-index: 2;
+
+    font-size: clamp(105px, 20vw, 190px);
+
+    line-height: 0.85;
+
+    font-weight: 950;
+
+    letter-spacing: -0.085em;
+
+    color: transparent;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--pink),
+            var(--rose),
+            #e58b99
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    text-shadow:
+        0 18px 50px rgba(217, 107, 124, 0.16);
+
+    animation: codeFloat 5s ease-in-out infinite;
+}
+
+@keyframes codeFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.error-code-glow {
+    position: absolute;
+
+    width: 230px;
+    height: 80px;
+
+    left: 50%;
+    bottom: -10px;
+
+    transform: translateX(-50%);
+
+    background:
+        radial-gradient(
+            ellipse,
+            rgba(217, 107, 124, 0.22),
+            transparent 70%
+        );
+
+    filter: blur(15px);
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.error-content {
+    position: relative;
+    z-index: 2;
+
+    max-width: 650px;
+
+    margin: 15px auto 0;
+}
+
+.section-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 8px 15px;
+
+    border-radius: 999px;
+
+    background: var(--pink-light);
+
+    border: 1px solid rgba(217, 107, 124, 0.14);
+
+    color: var(--rose);
+
+    font-size: 11px;
+    font-weight: 850;
+
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.error-content h1 {
+    margin: 20px 0 15px;
+
+    color: var(--text);
+
+    font-size: clamp(30px, 5vw, 48px);
+
+    line-height: 1.08;
+
+    letter-spacing: -0.04em;
+
+    font-weight: 900;
+}
+
+.error-content h1 span {
+    display: block;
+
+    color: var(--rose);
+
+    margin-top: 4px;
+}
+
+.error-content p {
+    max-width: 590px;
+
+    margin: 0 auto;
+
+    color: var(--text-soft);
+
+    font-size: 15px;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.error-actions {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 13px;
+
+    margin-top: 31px;
+}
+
+.error-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    min-width: 190px;
+    min-height: 51px;
+
+    padding: 0 20px;
+
+    border-radius: 15px;
+
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 850;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        background 0.3s ease;
+}
+
+.error-actions .btn:hover {
+    transform: translateY(-4px);
+}
+
+.btn-arrow {
+    font-size: 18px;
+
+    transition:
+        transform 0.3s ease;
+}
+
+.error-actions .btn:hover .btn-arrow {
+    transform: translateX(4px);
+}
+
+
+/* PRIMARY */
+
+.error-actions .btn-primary {
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--rose),
+            var(--rose-dark)
+        );
+
+    box-shadow:
+        0 13px 30px rgba(217, 107, 124, 0.25);
+}
+
+.error-actions .btn-primary:hover {
+    box-shadow:
+        0 18px 40px rgba(217, 107, 124, 0.34);
+}
+
+
+/* SECONDARY */
+
+.error-actions .btn-secondary {
+    color: var(--rose-dark);
+
+    background: rgba(255, 255, 255, 0.85);
+
+    border: 1px solid rgba(217, 107, 124, 0.18);
+
+    box-shadow:
+        0 9px 23px rgba(180, 79, 99, 0.07);
+}
+
+.error-actions .btn-secondary:hover {
+    background: var(--pink-soft);
+
+    border-color: rgba(217, 107, 124, 0.28);
+}
+
+
+/* =========================================================
+   QUICK LINKS
+========================================================= */
+
+.error-quick-links {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-top: 27px;
+}
+
+.quick-label {
+    color: #a08087;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.error-quick-links a {
+    color: var(--rose-dark);
+
+    font-size: 12px;
+    font-weight: 800;
+
+    text-decoration: none;
+
+    transition:
+        color 0.25s ease,
+        transform 0.25s ease;
+}
+
+.error-quick-links a:hover {
+    color: var(--rose);
+
+    transform: translateY(-2px);
+}
+
+.quick-dot {
+    color: var(--pink);
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   NOTE
+========================================================= */
+
+.error-note {
+    position: relative;
+    z-index: 2;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    max-width: 600px;
+
+    margin-top: 30px;
+    padding: 12px 17px;
+
+    border-radius: 14px;
+
+    background:
+        rgba(255, 236, 239, 0.65);
+
+    border: 1px solid rgba(217, 107, 124, 0.10);
+
+    color: #8b6971;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.error-note-icon {
+    color: var(--rose);
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .error-404-page {
+        min-height: calc(100vh - 120px);
+
+        padding: 45px 15px 65px;
+    }
+
+    .error-container {
+        padding: 43px 22px;
+
+        border-radius: 29px;
+    }
+
+    .error-content h1 {
+        font-size: 32px;
+    }
+
+    .error-content p {
+        font-size: 14px;
+    }
+
+    .error-actions {
+        flex-direction: column;
+
+        width: 100%;
+    }
+
+    .error-actions .btn {
+        width: 100%;
+    }
+
+    .error-quick-links {
+        gap: 8px;
+    }
+
+    .error-note {
+        align-items: flex-start;
+
+        text-align: left;
+    }
+}
+
+
+@media (max-width: 430px) {
+
+    .error-container {
+        padding: 37px 17px;
+    }
+
+    .error-code {
+        font-size: 105px;
+    }
+
+    .error-content h1 {
+        font-size: 28px;
+    }
+
+    .error-content p {
+        font-size: 13px;
+    }
+
+    .error-note {
+        font-size: 10px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .error-container,
+    .error-code,
+    .error-orb,
+    .error-sparkle,
+    .error-actions .btn,
+    .error-quick-links a {
+        animation: none !important;
+        transition: none !important;
+    }
+}

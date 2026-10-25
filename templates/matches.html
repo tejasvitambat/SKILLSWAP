@@ -1,0 +1,563 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Skill Matches — SkillSwap
+{% endblock %}
+
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/matches.css') }}"
+>
+{% endblock %}
+
+
+{% block content %}
+
+<section class="matches-page">
+
+    <div class="matches-container">
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <header class="matches-header">
+
+            <span class="auth-label">
+                Smart Matching
+            </span>
+
+            <h1>
+                People who can
+                <span>teach & learn with you.</span>
+            </h1>
+
+            <p>
+                SkillSwap finds people whose skills complement yours,
+                so both of you can learn and teach in the same connection.
+            </p>
+
+        </header>
+
+
+        <!-- =====================================================
+             MATCH SUMMARY
+        ====================================================== -->
+
+        <div class="match-summary">
+
+            <div class="match-summary-item">
+
+                <span class="summary-label">
+                    Your teaching skills
+                </span>
+
+                <strong>
+                    {{ user_teach_skills|length }}
+                </strong>
+
+            </div>
+
+
+            <div class="match-summary-item">
+
+                <span class="summary-label">
+                    Your learning skills
+                </span>
+
+                <strong>
+                    {{ user_learn_skills|length }}
+                </strong>
+
+            </div>
+
+
+            <div class="match-summary-item">
+
+                <span class="summary-label">
+                    Potential matches
+                </span>
+
+                <strong>
+                    {{ matches|length }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             FILTER TOOLBAR
+        ====================================================== -->
+
+        <form
+            method="GET"
+            action="{{ url_for('matches') }}"
+            class="matches-toolbar"
+        >
+
+            <div class="match-filter">
+
+                <label for="category">
+                    Category
+                </label>
+
+                <select
+                    id="category"
+                    name="category"
+                    onchange="this.form.submit()"
+                >
+
+                    <option value="">
+                        All categories
+                    </option>
+
+                    <option
+                        value="coding"
+                        {% if selected_category == 'coding' %}selected{% endif %}
+                    >
+                        Coding
+                    </option>
+
+                    <option
+                        value="languages"
+                        {% if selected_category == 'languages' %}selected{% endif %}
+                    >
+                        Languages
+                    </option>
+
+                    <option
+                        value="creative"
+                        {% if selected_category == 'creative' %}selected{% endif %}
+                    >
+                        Creative
+                    </option>
+
+                    <option
+                        value="marketing"
+                        {% if selected_category == 'marketing' %}selected{% endif %}
+                    >
+                        Marketing
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="match-filter">
+
+                <label for="minimum_match">
+                    Match strength
+                </label>
+
+                <select
+                    id="minimum_match"
+                    name="minimum_match"
+                    onchange="this.form.submit()"
+                >
+
+                    <option value="">
+                        Any match
+                    </option>
+
+                    <option
+                        value="90"
+                        {% if minimum_match == '90' %}selected{% endif %}
+                    >
+                        90%+
+                    </option>
+
+                    <option
+                        value="80"
+                        {% if minimum_match == '80' %}selected{% endif %}
+                    >
+                        80%+
+                    </option>
+
+                    <option
+                        value="70"
+                        {% if minimum_match == '70' %}selected{% endif %}
+                    >
+                        70%+
+                    </option>
+
+                </select>
+
+            </div>
+
+        </form>
+
+
+        <!-- =====================================================
+             MATCH LIST
+        ====================================================== -->
+
+        <div class="matches-list">
+
+            {% if matches %}
+
+                {% for match in matches %}
+
+                    <article class="match-card">
+
+
+                        <!-- =================================================
+                             PERSON
+                        ================================================== -->
+
+                        <div class="match-person">
+
+                            <div class="match-avatar">
+
+                                {% if match.user.profile_photo %}
+
+                                    <img
+                                        src="{{ url_for(
+                                            'uploaded_file',
+                                            filename=match.user.profile_photo
+                                        ) }}"
+                                        alt="{{ match.user.full_name }}"
+                                    >
+
+                                {% else %}
+
+                                    <span>
+                                        {{ match.user.full_name[0]|upper }}
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="match-person-info">
+
+                                <h2>
+                                    {{ match.user.full_name }}
+                                </h2>
+
+                                <p>
+                                    @{{ match.user.username }}
+                                </p>
+
+                                {% if match.user.city %}
+
+                                    <span class="match-location">
+                                        {{ match.user.city }}
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             MATCH SCORE
+                        ================================================== -->
+
+                        <div class="match-score">
+
+                            <span>
+                                Skill Match
+                            </span>
+
+                            <strong>
+                                {{ match.match_percentage }}%
+                            </strong>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             RECIPROCAL SKILLS
+                        ================================================== -->
+
+                        <div class="match-skills">
+
+
+                            <!-- YOU CAN LEARN -->
+
+                            <div class="match-skill-column">
+
+                                <span class="skill-column-label">
+                                    You can learn
+                                </span>
+
+                                <div class="skill-pills">
+
+                                    {% for skill in match.skills_you_can_learn %}
+
+                                        <span class="skill-pill">
+                                            {{ skill }}
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="empty-skill">
+                                            No direct learning match
+                                        </span>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- THEY CAN LEARN -->
+
+                            <div class="match-skill-column">
+
+                                <span class="skill-column-label">
+                                    They can learn
+                                </span>
+
+                                <div class="skill-pills">
+
+                                    {% for skill in match.skills_they_can_learn %}
+
+                                        <span class="skill-pill">
+                                            {{ skill }}
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="empty-skill">
+                                            No direct teaching match
+                                        </span>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             EARNED LEVELS
+                        ================================================== -->
+
+                        <div class="match-levels">
+
+                            <span class="skill-column-label">
+                                Their earned levels
+                            </span>
+
+                            <div class="level-list">
+
+                                {% for skill_level in match.earned_levels %}
+
+                                    <div class="level-item">
+
+                                        <span>
+                                            {{ skill_level.skill }}
+                                        </span>
+
+                                        <strong>
+                                            {{ skill_level.level }}
+                                        </strong>
+
+                                    </div>
+
+                                {% else %}
+
+                                    <div class="level-item">
+
+                                        <span>
+                                            No assessed skills yet
+                                        </span>
+
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             ACTIONS
+                        ================================================== -->
+
+                        <div class="match-actions">
+
+                            <a
+                                href="{{ url_for(
+                                    'view_profile',
+                                    username=match.user.username
+                                ) }}"
+                                class="btn btn-secondary"
+                            >
+                                View Profile
+                            </a>
+
+
+                            <form
+                                action="{{ url_for(
+                                    'send_connection_request',
+                                    user_id=match.user.id
+                                ) }}"
+                                method="POST"
+                                class="connect-form"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                >
+                                    Connect
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+
+            {% else %}
+
+                <!-- =================================================
+                     NO MATCHES
+                ================================================== -->
+
+                <div class="empty-matches">
+
+                    <div class="empty-icon">
+                        ✦
+                    </div>
+
+                    <h2>
+                        No strong matches yet.
+                    </h2>
+
+                    <p>
+                        Add more teaching or learning skills,
+                        complete your assessments and we'll find
+                        better reciprocal matches for you.
+                    </p>
+
+
+                    <div class="empty-actions">
+
+                        <a
+                            href="{{ url_for('skills') }}"
+                            class="btn btn-primary"
+                        >
+                            Update My Skills
+                        </a>
+
+
+                        <a
+                            href="{{ url_for('dashboard') }}"
+                            class="btn btn-secondary"
+                        >
+                            Back to Dashboard
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- =====================================================
+             HOW MATCHING WORKS
+        ====================================================== -->
+
+        <section class="matching-info">
+
+            <div class="matching-info-content">
+
+                <span class="auth-label">
+                    How matching works
+                </span>
+
+                <h2>
+                    SkillSwap looks for a
+                    two-way learning opportunity.
+                </h2>
+
+                <p>
+                    A strong match happens when you can teach a skill
+                    they want to learn, while they can teach a skill
+                    you want to learn. Earned skill levels and other
+                    compatibility signals can improve the match.
+                </p>
+
+            </div>
+
+
+            <!-- MATCHING EXAMPLE -->
+
+            <div class="matching-example">
+
+                <div class="example-person">
+
+                    <span>
+                        You
+                    </span>
+
+                    <div class="example-skills">
+
+                        <span>
+                            Teach: UI/UX
+                        </span>
+
+                        <span>
+                            Learn: Python
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="example-arrow">
+                    ⇄
+                </div>
+
+
+                <div class="example-person">
+
+                    <span>
+                        Partner
+                    </span>
+
+                    <div class="example-skills">
+
+                        <span>
+                            Teach: Python
+                        </span>
+
+                        <span>
+                            Learn: UI/UX
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</section>
+
+{% endblock %}
